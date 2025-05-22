@@ -26,6 +26,7 @@ export const encodeURIComponent_id = (uriComponent: string) =>
   encodeURIComponent(uriComponent.replaceAll(" ", "_"));
 
 export type Ref<A> = { value: A };
+export const Ref = <A>(value: A): Ref<A> => ({ value });
 
 export const intercalate = <A>(xss: A[][], sep: A[]) => {
   const ys: A[] = [];

@@ -1,9 +1,9 @@
-import build from "./src/build";
 import { do_ } from "./src/util";
 import fs from "fs/promises";
 import express from "express";
 import http from "http";
 import config from "./src/config.json";
+import { execFileSync, spawnSync } from "child_process";
 
 const RESET = "\x1b[0m";
 const FG_BLACK = "\x1b[30m";
@@ -22,9 +22,12 @@ do_(async () => {
   app.use(express.static(config.serve_static_dirpath));
   const server = http.createServer(app);
 
-  async function rebuild() {
+  async function rebuild(opts?: { clear?: boolean }) {
+    if (opts?.clear === true) console.clear();
     tell(`rebuild`);
-    await build();
+    spawnSync("tsx", ["./src/build.ts"], {
+      stdio: "inherit",
+    });
   }
 
   tell(`watching ${config.watchers_dirpaths}`);
@@ -36,7 +39,7 @@ do_(async () => {
           signal: watchers_ac.signal,
         });
         for await (const event of watcher) {
-          await rebuild();
+          await rebuild({ clear: true });
         }
       } catch (e: any) {
         if (e.name === "AbortError") return;
