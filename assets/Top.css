@@ -1,44 +1,41 @@
 :root {
-    color-scheme: light dark;
+    /* color-scheme: light dark; */
+    /* color-scheme: light; */
 
-    --main--background: light-dark(white, black);
-    --main--color: light-dark(black, white);
+    --primary--color: #a8577e;
+    --secondary--color: #63a088;
+    --darkest--color: #353a47;
+    --highlight--color: #ffbc42;
+    --neutral--color: #eadeda;
 
-    --target--background: color-mix(
+    /* --main--background: light-dark(white, black); */
+    --main--background: white;
+    /* --main--foreground: light-dark(black, white); */
+    --main--foreground: black;
+    --link--foreground: var(--highlight--color);
+
+    --target--box-shadow: 0 0 0 0.2em
+        color-mix(in hsl, var(--highlight--color), transparent 50%) inset;
+
+    --accent--background: color-mix(
         in hsl,
-        color-mix(in hsl, var(--main--color), blue 80%),
+        var(--primary--color),
+        transparent 50%
+    );
+    --accent--foreground: var(--main--foreground);
+    --accent--box-shadow: none;
+
+    --container-accent--background: color-mix(
+        in hsl,
+        var(--secondary--color),
+        transparent 50%
+    );
+    --container--border--color: var(--darkest--color);
+    --container--background: color-mix(
+        in hsl,
+        var(--darkest--color),
         transparent 90%
     );
-    --target--outline: 0.2em solid
-        color-mix(
-            in hsl,
-            color-mix(in hsl, var(--main--color), blue 80%),
-            transparent 50%
-        );
-
-    --secondary--background: color-mix(
-        in hsl,
-        color-mix(in hsl, var(--main--color), green 80%),
-        transparent 90%
-    );
-
-    --link--color: hsl(30deg 82% 56%);
-
-    --section--background: color-mix(
-        in hsl,
-        var(--main--color),
-        transparent 90%
-    );
-    /* --section--box-shadow: 0 0.2em 0.2em 0
-        color-mix(in hsl, var(--main--color), transparent 50%); */
-    /* --section--box-shadow: 0 0 0 0.2em
-        color-mix(in hsl, var(--main--color), transparent 50%); */
-    --section--box-shadow: none;
-    --section--color: var(--main--color);
-
-    /* --popout--box-shadow: 0 0 0.4em 0
-        color-mix(in hsl, var(--main--color), transparent 50%); */
-    --popout--box-shadow: none;
 }
 
 @font-face {
@@ -96,11 +93,11 @@ html {
         display: none;
     }
 
-    font-family: Spectral serif;
+    font-family: Spectral, serif;
 }
 
 code {
-    font-family: Iosevka monospace;
+    font-family: Iosevka, monospace;
 }
 
 body {
@@ -110,7 +107,7 @@ body {
     max-width: 600px;
 
     background: var(--main--background);
-    color: var(--main--color);
+    color: var(--main--foreground);
 
     font-size: 16pt;
 
@@ -120,16 +117,16 @@ body {
 }
 
 a {
-    background: color-mix(in hsl, var(--link--color), transparent 90%);
-    color: var(--main--color);
+    background: color-mix(in hsl, var(--link--foreground), transparent 90%);
+    color: var(--main--foreground);
     text-decoration: none;
 
     box-shadow: 0 -0.1em 0 0
-        color-mix(in hsl, var(--main--color), transparent 80%) inset;
+        color-mix(in hsl, var(--main--foreground), transparent 80%) inset;
 
     &:hover {
-        background: color-mix(in hsl, var(--link--color), transparent 70%);
-        box-shadow: 0 -0.1em 0 0 var(--link--color) inset;
+        background: color-mix(in hsl, var(--link--foreground), transparent 70%);
+        box-shadow: 0 -0.1em 0 0 var(--link--foreground) inset;
     }
 
     & > img.icon {
@@ -161,7 +158,7 @@ hr {
     width: 100%;
     height: 0.2em;
     border: none;
-    background-color: var(--main--color);
+    background-color: var(--main--foreground);
 }
 
 img {
@@ -170,10 +167,9 @@ img {
 
 pre {
     overflow: auto;
-    /* margin: 0.5em; */
     padding: 0.5em;
-    border-left: 0.2em solid var(--main--color);
-    background: var(--secondary--background);
+    border-left: 0.5em solid var(--container--border--color);
+    background: var(--container--background);
 
     font-size: 1em;
 
@@ -185,7 +181,7 @@ pre {
 blockquote {
     margin: 0.5em;
     padding: 0;
-    border-left: 0.2em solid var(--main--color);
+    border-left: 0.5em solid var(--container--border--color);
 }
 
 ul,
@@ -195,10 +191,8 @@ ol {
 
 table {
     border-collapse: collapse;
-    box-shadow: var(--popout--box-shadow);
 
     thead {
-        background: var(--secondary--background);
     }
 
     tbody {
@@ -206,12 +200,12 @@ table {
 
     th {
         padding: 0.5em;
-        border: 0.1em solid var(--main--color);
+        background: var(--container-accent--background);
     }
 
     td {
         padding: 0.5em;
-        border: 0.1em solid var(--main--color);
+        background: var(--container--background);
     }
 }
 
@@ -273,18 +267,10 @@ h6 {
     }
 }
 
-*:target {
-    /* background: var(--target--background); */
-    outline: var(--target--outline);
-}
-
 .section-header {
-    /* margin: 0.5em 0; */
     padding: 0.5em;
-    /* padding-bottom: 0; */
-    background: var(--section--background);
-    color: var(--section--color);
-    box-shadow: var(--section--box-shadow);
+    background: var(--accent--background);
+    color: var(--accent--foreground);
 }
 
 header {
@@ -309,8 +295,12 @@ header {
         font-weight: bold;
 
         &:hover {
-            background: color-mix(in hsl, var(--link--color), transparent 70%);
-            box-shadow: 0 0.1em 0 0 var(--link--color);
+            background: color-mix(
+                in hsl,
+                var(--link--foreground),
+                transparent 70%
+            );
+            box-shadow: 0 0.1em 0 0 var(--link--foreground);
         }
 
         .icon {
@@ -347,10 +337,10 @@ header {
             &:hover {
                 background: color-mix(
                     in hsl,
-                    var(--link--color),
+                    var(--link--foreground),
                     transparent 70%
                 );
-                box-shadow: 0 0.1em 0 0 var(--link--color);
+                box-shadow: 0 0.1em 0 0 var(--link--foreground);
             }
         }
     }
@@ -367,4 +357,8 @@ article {
 
 footer {
     margin: 0 !important;
+}
+
+*:target {
+    box-shadow: var(--target--box-shadow);
 }

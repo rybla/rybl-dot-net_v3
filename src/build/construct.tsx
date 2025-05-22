@@ -262,10 +262,11 @@ const remarkReferences: Plugin<
 
 const remarkTableOfContents: Plugin<[{}], mdast.Root, mdast.Root> =
   (opts) => (root) => {
-    const headings_forest: Tree<string>[] = [];
+    const headings_forest: Tree<{ id: string; value: string }>[] = [];
     visit(root, (node, index, parent) => {
       if (node.type === "heading") {
-        const id = encodeURIComponent_id(showNode(node));
+        const value = showNode(node);
+        const id = encodeURIComponent_id(value);
         node.data = { hProperties: { id, class: "section-header" } };
 
         if (node.depth === 1) return;
@@ -275,17 +276,21 @@ const remarkTableOfContents: Plugin<[{}], mdast.Root, mdast.Root> =
           headings_subforest = headings_subforest.at(-1)!.kids;
           depth++;
         }
-        headings_subforest.push({ value: id, kids: [] });
+        headings_subforest.push({ value: { id, value }, kids: [] });
       }
     });
 
-    const go_nodes = (nodes: Tree<string>[]): mdast.List => ({
+    const go_nodes = (
+      nodes: Tree<{ id: string; value: string }>[],
+    ): mdast.List => ({
       type: "list",
       ordered: true,
       children: nodes.map((kid) => go_node(kid)),
     });
 
-    const go_node = (node: Tree<string>): mdast.ListItem => ({
+    const go_node = (
+      node: Tree<{ id: string; value: string }>,
+    ): mdast.ListItem => ({
       type: "listItem",
       children: [
         [
@@ -294,9 +299,9 @@ const remarkTableOfContents: Plugin<[{}], mdast.Root, mdast.Root> =
             children: [
               {
                 type: "link",
-                url: `#${node.value}`,
-                title: node.value,
-                children: [{ type: "text", value: node.value }],
+                url: `#${node.value.id}`,
+                title: node.value.value,
+                children: [{ type: "text", value: node.value.value }],
               },
             ],
           } as mdast.Paragraph,
