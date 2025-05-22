@@ -1,5 +1,6 @@
 import config from "@/config.json";
 import Effect from "@/effect";
+import * as hast from "hast";
 import {
   addResource,
   Post,
@@ -80,12 +81,13 @@ async function constructPost(filepath: string): Promise<Post> {
       .use(remarkFrontmatter, ["yaml"])
       .use(remarkPostMetadata, { metadataRef })
       .use(remarkTitle, { titleRef })
-      .use(remarkReferences, { referencesRef })
-      .use(remarkTableOfContents, {})
       .use(remarkGfm)
       .use(remarkMath)
+      .use(remarkReferences, { referencesRef })
+      .use(remarkTableOfContents, {})
       .use(remarkRehype)
       .use(rehypeMathJaxSvg)
+      .use(rehypeCustomHeaders, {})
       .use(rehypeStringify)
       .process(await Effect.inputFile_text(filepath)),
   );
@@ -148,42 +150,66 @@ const remarkReferences: Plugin<
 > = (opts) => async (root) => {
   // have to do this `visit` pass first before inserting images into links since
   // otherwise those images would be included in these image references
-  visit(root, (node) => {
-    if (node.type === "image") {
-      const icon_url = getIconUrl(new URL(node.url));
-      opts.referencesRef.value.push({
-        name:
-          node.alt !== undefined && node.alt !== null && node.alt !== ""
-            ? node.alt
-            : node.url,
-        url: node.url,
-        icon_url,
-      });
-    }
-  });
 
-  visit(root, (node) => {
-    if (node.type === "link") {
-      console.log(`reference: ${showNode(node)}`);
-      const icon_url = do_(() => {
-        if (node.url.startsWith("#")) {
-          return config.website_url;
-        } else {
-          return getIconUrl(new URL(node.url));
-        }
-      });
-      opts.referencesRef.value.push({
-        name: showNode(node),
-        url: node.url,
-        icon_url,
-      });
-      node.children.splice(0, 0, {
-        type: "image",
-        alt: "",
-        url: icon_url,
-      });
-    }
-  });
+  {
+    const promises: Promise<void>[] = [];
+    visit(root, (node) => {
+      if (node.type === "image") {
+        promises.push(
+          do_(async () => {
+            const icon_url = await getIconUrl(node.url);
+            opts.referencesRef.value.push({
+              name:
+                node.alt !== undefined && node.alt !== null && node.alt !== ""
+                  ? node.alt
+                  : node.url,
+              url: node.url,
+              icon_url,
+            });
+          }),
+        );
+      }
+    });
+    await Promise.all(promises);
+  }
+
+  {
+    const promises: Promise<void>[] = [];
+    visit(root, (node) => {
+      if (node.type === "link") {
+        promises.push(
+          do_(async () => {
+            // console.log(`reference: ${showNode(node)}`);
+            const icon_url = await do_(async () => {
+              if (node.url.startsWith("#")) {
+                return config.website_url;
+              } else {
+                return await getIconUrl(node.url);
+              }
+            });
+            opts.referencesRef.value.push({
+              name: showNode(node),
+              url: node.url,
+              icon_url,
+            });
+            if (icon_url !== undefined) {
+              node.children.splice(0, 0, {
+                type: "image",
+                alt: "",
+                url: icon_url,
+                data: {
+                  hProperties: {
+                    class: "icon",
+                  },
+                },
+              });
+            }
+          }),
+        );
+      }
+    });
+    await Promise.all(promises);
+  }
 
   root.children.push(
     {
@@ -201,7 +227,7 @@ const remarkReferences: Plugin<
             children: [
               {
                 type: "link",
-                title: "TODO",
+                title: reference.name ?? reference.url,
                 url: reference.url,
                 children: [
                   reference.icon_url === undefined
@@ -211,6 +237,11 @@ const remarkReferences: Plugin<
                           type: "image",
                           alt: "",
                           url: reference.icon_url,
+                          data: {
+                            hProperties: {
+                              class: "icon",
+                            },
+                          },
                         } as mdast.Image,
                       ],
                   [
@@ -234,13 +265,17 @@ const remarkTableOfContents: Plugin<[{}], mdast.Root, mdast.Root> =
     const headings_forest: Tree<string>[] = [];
     visit(root, (node, index, parent) => {
       if (node.type === "heading") {
+        const id = encodeURIComponent_id(showNode(node));
+        node.data = { hProperties: { id, class: "section-header" } };
+
+        if (node.depth === 1) return;
         let headings_subforest = headings_forest;
         let depth = 1;
         while (headings_subforest.length > 0 && depth + 1 < node.depth) {
           headings_subforest = headings_subforest.at(-1)!.kids;
           depth++;
         }
-        headings_subforest.push({ value: showNode(node), kids: [] });
+        headings_subforest.push({ value: id, kids: [] });
       }
     });
 
@@ -259,7 +294,7 @@ const remarkTableOfContents: Plugin<[{}], mdast.Root, mdast.Root> =
             children: [
               {
                 type: "link",
-                url: `#${encodeURIComponent_id(node.value)}`,
+                url: `#${node.value}`,
                 title: node.value,
                 children: [{ type: "text", value: node.value }],
               },
@@ -280,13 +315,36 @@ const remarkTableOfContents: Plugin<[{}], mdast.Root, mdast.Root> =
     }
   };
 
-// const rehypeLinkIcons: Plugin<[{}], mdast.Root, mdast.Root> =
-//   (opts) => (root) => {
-//     visit(root, (node) => {
-//       if (node.)
-//     });
-//   };
+const rehypeCustomHeaders: Plugin<[{}], hast.Root, hast.Root> =
+  (opts) => (root) => {
+    visit(root, (node) => {
+      if (node.type === "element" && RegExp(/^(h[1-6])$/).test(node.tagName)) {
+        node.children = [
+          {
+            type: "element",
+            tagName: "a",
+            properties: {
+              href: `#${node.properties.id}`,
+            },
+            children: node.children,
+          },
+        ];
+      }
+    });
+  };
+
+const plugin: Plugin<[{}], mdast.Root, mdast.Root> = (opts) => (root) => {};
 
 // TODO: customize the size
-const getIconUrl = (url: URL) =>
-  `https://s2.googleusercontent.com/s2/favicons?domain=${url.hostname}&sz=${18}`;
+// async function getIconUrl(url: URL) {
+//   return `https://s2.googleusercontent.com/s2/favicons?domain=${url.hostname}&sz=${18}`;
+// }
+async function getIconUrl(url_raw: string): Promise<string | undefined> {
+  const url = new URL(url_raw);
+  const favicon_url = `${url.protocol}//${url.hostname}/favicon.ico`;
+  const response = await fetch(favicon_url);
+  if (!response.ok) return undefined;
+  const favicon_filepath_relative = `${url.hostname}.favicon.ico`;
+  Effect.useRemoteFile(favicon_url, favicon_filepath_relative);
+  return favicon_filepath_relative;
+}

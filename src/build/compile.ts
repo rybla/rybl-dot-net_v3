@@ -17,7 +17,7 @@ export default async function compile(website: Website) {
     } else if (resource.type === "post") {
       Effect.outputFile_text(resource.route, resource.content);
     } else if (resource.type === "raw") {
-      Effect.useFile(resource.route);
+      Effect.useLocalFile(resource.route);
     } else {
       // @ts-expect-error
       const _: Resource = resource;

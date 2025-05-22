@@ -6,7 +6,14 @@ export default function PostComponent(props: {
   children: HTML.Children;
 }) {
   return (
-    <TopComponent title={props.title} content_head={<></>}>
+    <TopComponent
+      title={props.title}
+      content_head={
+        <>
+          <link rel="stylesheet" href="Post.css" />
+        </>
+      }
+    >
       <article>{props.children}</article>
     </TopComponent>
   );

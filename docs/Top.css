@@ -1,0 +1,370 @@
+:root {
+    color-scheme: light dark;
+
+    --main--background: light-dark(white, black);
+    --main--color: light-dark(black, white);
+
+    --target--background: color-mix(
+        in hsl,
+        color-mix(in hsl, var(--main--color), blue 80%),
+        transparent 90%
+    );
+    --target--outline: 0.2em solid
+        color-mix(
+            in hsl,
+            color-mix(in hsl, var(--main--color), blue 80%),
+            transparent 50%
+        );
+
+    --secondary--background: color-mix(
+        in hsl,
+        color-mix(in hsl, var(--main--color), green 80%),
+        transparent 90%
+    );
+
+    --link--color: hsl(30deg 82% 56%);
+
+    --section--background: color-mix(
+        in hsl,
+        var(--main--color),
+        transparent 90%
+    );
+    /* --section--box-shadow: 0 0.2em 0.2em 0
+        color-mix(in hsl, var(--main--color), transparent 50%); */
+    /* --section--box-shadow: 0 0 0 0.2em
+        color-mix(in hsl, var(--main--color), transparent 50%); */
+    --section--box-shadow: none;
+    --section--color: var(--main--color);
+
+    /* --popout--box-shadow: 0 0 0.4em 0
+        color-mix(in hsl, var(--main--color), transparent 50%); */
+    --popout--box-shadow: none;
+}
+
+@font-face {
+    font-family: Spectral;
+    src: url("Spectral-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Spectral;
+    src: url("Spectral-Italic.ttf") format("truetype");
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: Spectral;
+    src: url("Spectral-Bold.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Spectral;
+    src: url("Spectral-BoldItalic.ttf") format("truetype");
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: Iosevka;
+    src: url("Iosevka-Regular.ttc") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Iosevka;
+    src: url("Iosevka-Bold.ttc") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+}
+
+html {
+    scroll-behavior: smooth;
+
+    margin: 0;
+    padding: 0;
+
+    /* disable scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    font-family: Spectral;
+}
+
+code {
+    font-family: Iosevka;
+}
+
+body {
+    margin: auto;
+    padding: 0;
+
+    max-width: 600px;
+
+    background: var(--main--background);
+    color: var(--main--color);
+
+    font-size: 16pt;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+a {
+    background: color-mix(in hsl, var(--link--color), transparent 90%);
+    color: var(--main--color);
+    text-decoration: none;
+
+    box-shadow: 0 -0.1em 0 0
+        color-mix(in hsl, var(--main--color), transparent 80%) inset;
+
+    &:hover {
+        background: color-mix(in hsl, var(--link--color), transparent 70%);
+        box-shadow: 0 -0.1em 0 0 var(--link--color) inset;
+    }
+
+    & > img.icon {
+        height: 1em;
+        width: 1em;
+        margin-bottom: -0.1em;
+        margin-right: 0.4em;
+    }
+}
+
+sup {
+    & > a {
+        display: inline-block;
+        padding: 0 0.2em;
+        box-shadow: none;
+    }
+}
+
+p {
+    margin: 0;
+    padding: 0 0.5em;
+}
+
+p:has(> img) {
+    padding: 0;
+}
+
+hr {
+    width: 100%;
+    height: 0.2em;
+    border: none;
+    background-color: var(--main--color);
+}
+
+img {
+    width: 100%;
+}
+
+pre {
+    overflow: auto;
+    /* margin: 0.5em; */
+    padding: 0.5em;
+    border-left: 0.2em solid var(--main--color);
+    background: var(--secondary--background);
+
+    font-size: 1em;
+
+    code {
+        font-size: 0.8em;
+    }
+}
+
+blockquote {
+    margin: 0.5em;
+    padding: 0;
+    border-left: 0.2em solid var(--main--color);
+}
+
+ul,
+ol {
+    /* margin: 0 0.5em; */
+}
+
+table {
+    border-collapse: collapse;
+    box-shadow: var(--popout--box-shadow);
+
+    thead {
+        background: var(--secondary--background);
+    }
+
+    tbody {
+    }
+
+    th {
+        padding: 0.5em;
+        border: 0.1em solid var(--main--color);
+    }
+
+    td {
+        padding: 0.5em;
+        border: 0.1em solid var(--main--color);
+    }
+}
+
+& > .tableOfContents {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+
+    & > .depth-1 {
+        margin-left: calc(0 * 1em);
+    }
+    & > .depth-2 {
+        margin-left: calc(1 * 1em);
+    }
+    & > .depth-3 {
+        margin-left: calc(2 * 1em);
+    }
+    & > .depth-4 {
+        margin-left: calc(3 * 1em);
+    }
+    & > .depth-5 {
+        margin-left: calc(4 * 1em);
+    }
+    & > .depth-6 {
+        margin-left: calc(5 * 1em);
+    }
+}
+
+& > .references {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+
+    & > .title {
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+    & > .content {
+        padding: 0.5em;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+    }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    line-height: 1.5em;
+    margin: 0;
+    padding: 0;
+
+    a {
+        background: none;
+        box-shadow: none;
+    }
+}
+
+*:target {
+    /* background: var(--target--background); */
+    outline: var(--target--outline);
+}
+
+.section-header {
+    /* margin: 0.5em 0; */
+    padding: 0.5em;
+    /* padding-bottom: 0; */
+    background: var(--section--background);
+    color: var(--section--color);
+    box-shadow: var(--section--box-shadow);
+}
+
+header {
+    margin-top: 0 !important;
+
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    align-items: center;
+    /* align-items: flex-start; */
+
+    font-size: 1.2em;
+
+    & > .title {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        box-shadow: none;
+        background: transparent;
+
+        font-weight: bold;
+
+        &:hover {
+            background: color-mix(in hsl, var(--link--color), transparent 70%);
+            box-shadow: 0 0.1em 0 0 var(--link--color);
+        }
+
+        .icon {
+            height: 1.5em;
+            width: 1.5em;
+
+            @media (prefers-color-scheme: dark) {
+                filter: invert(1);
+            }
+        }
+    }
+
+    & > .menu {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 1em;
+
+        line-height: 0;
+
+        & > * {
+            font-size: 1.5em;
+            box-shadow: none;
+            background: transparent;
+
+            svg {
+                height: 0.8em;
+                width: 0.8em;
+            }
+
+            &:hover {
+                background: color-mix(
+                    in hsl,
+                    var(--link--color),
+                    transparent 70%
+                );
+                box-shadow: 0 0.1em 0 0 var(--link--color);
+            }
+        }
+    }
+}
+
+main,
+article {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+
+    line-height: 1.5em;
+}
+
+footer {
+    margin: 0 !important;
+}

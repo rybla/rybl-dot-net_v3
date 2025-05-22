@@ -16,7 +16,7 @@ export default function TopComponent(props: {
             content="width=device-width, initial-scale=1.0"
           />
           <title safe>{props.title}</title>
-          <link href="Top.css" />
+          <link rel="stylesheet" href="Top.css" />
           {props.content_head as "safe"}
         </head>
         <body>
