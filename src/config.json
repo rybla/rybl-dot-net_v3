@@ -1,0 +1,7 @@
+{
+  "serve_static_dirpath": "./docs",
+  "serve_port": 3000,
+  "website_base_url": "https://rybl.net/",
+  "website_title": "rybl.net",
+  "watchers_dirpaths": ["./src"]
+}

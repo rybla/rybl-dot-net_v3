@@ -1,0 +1,27 @@
+{
+  "name": "rybl-dot-net_v3",
+  "author": "Henry Blanchette",
+  "dependencies": {
+    "@kitajs/html": "^4.2.9",
+    "@kitajs/ts-html-plugin": "^4.1.1",
+    "@mdx-js/esbuild": "^3.1.0",
+    "esbuild": "^0.25.4",
+    "express": "^5.1.0",
+    "http-server": "^14.1.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "rehype-stringify": "^10.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "unified": "^11.0.5",
+    "zod": "^3.25.7"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.2",
+    "@types/node": "^22.15.19",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.5"
+  }
+}
