@@ -1,0 +1,10 @@
+.Tag {
+    /* height: 1em; */
+    padding: 0 0.2em;
+    display: inline-flex;
+
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.2em;
+}

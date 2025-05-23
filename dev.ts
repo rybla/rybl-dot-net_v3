@@ -1,9 +1,9 @@
-import { do_ } from "./src/util";
-import fs from "fs/promises";
+import { spawnSync } from "child_process";
 import express from "express";
+import fs from "fs/promises";
 import http from "http";
 import config from "./src/config.json";
-import { execFileSync, spawnSync } from "child_process";
+import { do_ } from "./src/util";
 
 const RESET = "\x1b[0m";
 const FG_BLACK = "\x1b[30m";

@@ -1,0 +1,82 @@
+:root {
+    /* color-scheme: light dark; */
+    /* color-scheme: light; */
+
+    --main--width: 600px;
+
+    /* --primary--color: #a8577e; */
+    --primary--color: #a44a3f;
+    --secondary--color: #63a088;
+    --darkest--color: #353a47;
+    --highlight--color: #ffbc42;
+    --neutral--color: #eadeda;
+
+    --body--foreground: transparent;
+    --body--foreground: black;
+
+    --link--background: var(--highlight--color);
+
+    --target--box-shadow: 0 -0.1em black inset;
+
+    --accent--background: color-mix(
+        in hsl,
+        var(--primary--color),
+        transparent 50%
+    );
+    --accent--foreground: var(--body--foreground);
+    --accent--box-shadow: none;
+
+    --container-accent--background: color-mix(
+        in hsl,
+        var(--secondary--color),
+        transparent 50%
+    );
+    --container--border--color: var(--darkest--color);
+    --container--background: color-mix(
+        in hsl,
+        var(--darkest--color),
+        transparent 90%
+    );
+}
+
+@font-face {
+    font-family: Spectral;
+    src: url("Spectral-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Spectral;
+    src: url("Spectral-Italic.ttf") format("truetype");
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: Spectral;
+    src: url("Spectral-Bold.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Spectral;
+    src: url("Spectral-BoldItalic.ttf") format("truetype");
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: Iosevka;
+    src: url("Iosevka-Regular.ttc") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Iosevka;
+    src: url("Iosevka-Bold.ttc") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+}

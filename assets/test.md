@@ -1,9 +1,8 @@
 ---
 type: post
 tags:
-  - test1
-  - test2
-  - test3
+  - example
+  - test
 ---
 
 :::thumbnail{title="This is Google" url="https://www.google.com"}

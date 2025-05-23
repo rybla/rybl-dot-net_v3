@@ -7,14 +7,14 @@ export default function PostComponent(props: {
 }) {
   return (
     <TopComponent
-      title={props.title}
+      resource_name={props.title}
       content_head={
         <>
           <link rel="stylesheet" href="Post.css" />
         </>
       }
     >
-      <article>{props.children}</article>
+      {props.children}
     </TopComponent>
   );
 }

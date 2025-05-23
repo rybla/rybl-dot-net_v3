@@ -1,44 +1,13 @@
 import config from "@/config.json";
 import Effect from "@/effect";
+import { Reference, ResourceMetadata, ResourceMetadata_Schema } from "@/types";
+import { defined, do_, encodeURIComponent_id, Ref, Tree } from "@/util";
 import * as hast from "hast";
-import {
-  addResource,
-  HtmlResource,
-  ResourceMetadata,
-  ResourceMetadata_Schema,
-  Reference,
-  Website,
-  Resource,
-  fromResourceToReference,
-} from "@/types";
-import {
-  defined,
-  do_,
-  encodeURIComponent_id,
-  ifDefined,
-  indentString,
-  intercalate,
-  Ref,
-  render_jsx,
-  Tree,
-} from "@/util";
 import * as mdast from "mdast";
-import remarkDirective from "remark-directive";
-import rehypeMathJaxSvg from "rehype-mathjax";
-import rehypeStringify from "rehype-stringify";
-import remarkFrontmatter from "remark-frontmatter";
-import remarkGfm from "remark-gfm";
-import remarkMath from "remark-math";
-import remarkParse from "remark-parse";
-import remarkRehype from "remark-rehype";
-import { Plugin, unified } from "unified";
+import { Plugin } from "unified";
 import * as unist from "unist";
 import { visit } from "unist-util-visit";
 import YAML from "yaml";
-import PostComponent from "@/build/component/Post";
-import TopComponent from "@/build/component/Top";
-import Icon from "@/build/component/Icon";
-import PostTeaser from "@/build/component/PostTeaser";
 
 export function showNode(node: mdast.Node): string {
   if ("value" in node) {
@@ -283,6 +252,7 @@ export const rehypeCustomHeaders: Plugin<
           tagName: "a",
           properties: {
             href: `#${node.properties.id}`,
+            class: "no_background",
           },
           children: node.children,
         },
@@ -361,6 +331,6 @@ export async function getIconUrl(url_raw: string): Promise<string | undefined> {
   const response = await fetch(favicon_url);
   if (!response.ok) return undefined;
   const favicon_filepath_relative = `${url.hostname}.favicon.ico`;
-  Effect.useRemoteFile(favicon_url, favicon_filepath_relative);
+  await Effect.useRemoteFile(favicon_url, favicon_filepath_relative);
   return favicon_filepath_relative;
 }

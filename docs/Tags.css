@@ -1,0 +1,26 @@
+.Tags {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+
+    & > .heading {
+        padding: 0.5em;
+        font-size: 1.5em;
+
+        & > .Tag {
+            padding: 0.2em;
+
+            background: none;
+            box-shadow: none;
+            backdrop-filter: unset;
+
+            &:hover {
+                background: none;
+                box-shadow: 0 -0.1em 0 0
+                    color-mix(in hsl, var(--body--foreground), transparent 0%)
+                    inset;
+                backdrop-filter: unset;
+            }
+        }
+    }
+}

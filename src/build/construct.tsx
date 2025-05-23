@@ -1,44 +1,5 @@
-import config from "@/config.json";
-import Effect from "@/effect";
-import * as hast from "hast";
-import {
-  addResource,
-  HtmlResource,
-  ResourceMetadata,
-  ResourceMetadata_Schema,
-  Reference,
-  Website,
-  Resource,
-  fromResourceToReference,
-} from "@/types";
-import {
-  defined,
-  do_,
-  encodeURIComponent_id,
-  ifDefined,
-  indentString,
-  intercalate,
-  Ref,
-  render_jsx,
-  Tree,
-} from "@/util";
-import * as mdast from "mdast";
-import remarkDirective from "remark-directive";
-import rehypeMathJaxSvg from "rehype-mathjax";
-import rehypeStringify from "rehype-stringify";
-import remarkFrontmatter from "remark-frontmatter";
-import remarkGfm from "remark-gfm";
-import remarkMath from "remark-math";
-import remarkParse from "remark-parse";
-import remarkRehype from "remark-rehype";
-import { Plugin, unified } from "unified";
-import * as unist from "unist";
-import { visit } from "unist-util-visit";
-import YAML from "yaml";
-import PostComponent from "@/build/component/Post";
+import PostPreview from "@/build/component/PostPreview";
 import TopComponent from "@/build/component/Top";
-import Icon from "@/build/component/Icon";
-import PostTeaser from "@/build/component/PostTeaser";
 import {
   rehypeCustomHeaders,
   remarkCustomDirectives,
@@ -48,6 +9,29 @@ import {
   remarkTitle,
   showNode,
 } from "@/build/unified_plugins";
+import config from "@/config.json";
+import Effect from "@/effect";
+import {
+  addResource,
+  fromResourceToReference,
+  HtmlResource,
+  Reference,
+  ResourceMetadata,
+  Website,
+} from "@/types";
+import { encodeURIComponent_id, indentString, Ref, render_jsx } from "@/util";
+import * as mdast from "mdast";
+import rehypeMathJaxSvg from "rehype-mathjax";
+import rehypeStringify from "rehype-stringify";
+import remarkDirective from "remark-directive";
+import remarkFrontmatter from "remark-frontmatter";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import { unified } from "unified";
+import Icon from "@/build/component/Icon";
+import Tag from "@/build/component/Tag";
 
 const extname_Markdown = ".md";
 
@@ -92,6 +76,12 @@ export default async function constructWebsite(): Promise<Website> {
     console.error(indentString(1, e.toString()));
   }
 
+  try {
+    addResource(website, await constructAbout());
+  } catch (e: any) {
+    console.error(indentString(1, e.toString()));
+  }
+
   return website;
 }
 
@@ -106,17 +96,19 @@ async function constructIndex(posts: HtmlResource[]): Promise<HtmlResource> {
     metadata: { type: "page" },
     content: await render_jsx(
       <TopComponent
-        title={name}
+        resource_name={name}
         content_head={
           <>
             <link rel="stylesheet" href="Index.css" />
-            <link rel="stylesheet" href="PostTeaser.css" />
+            <link rel="stylesheet" href="PostPreview.css" />
           </>
         }
       >
-        {posts.map((post) => (
-          <PostTeaser post={post} />
-        ))}
+        <div class="previews">
+          {posts.map((post) => (
+            <PostPreview post={post} />
+          ))}
+        </div>
       </TopComponent>,
     ),
   };
@@ -126,7 +118,9 @@ async function constructIndex(posts: HtmlResource[]): Promise<HtmlResource> {
 
 async function constructTags(posts: HtmlResource[]): Promise<HtmlResource> {
   console.log("constructTags");
-  const tags = posts.flatMap((post) => post.metadata.tags ?? []);
+  const tags: Set<string> = new Set(
+    posts.flatMap((post) => post.metadata.tags ?? []),
+  );
 
   const resource: HtmlResource = {
     route: "Tags.html",
@@ -138,33 +132,60 @@ async function constructTags(posts: HtmlResource[]): Promise<HtmlResource> {
     },
     content: await render_jsx(
       <TopComponent
-        title="Tags"
+        resource_name="Tags"
         content_head={
           <>
             <link rel="stylesheet" href="Tags.css" />
-            <link rel="stylesheet" href="PostTeaser.css" />
+            <link rel="stylesheet" href="PostPreview.css" />
           </>
         }
       >
-        {tags.map((tag) => {
-          const id = encodeURIComponent_id(tag);
-          return (
-            <>
-              <h2 id={id}>
-                <a href={`#${id}`} safe>
-                  #{tag}
-                </a>
-              </h2>
-              {posts.map((post) =>
-                !post.metadata.tags?.includes(tag) ? (
-                  <></>
-                ) : (
-                  <PostTeaser post={post} />
-                ),
-              )}
-            </>
-          );
-        })}
+        <div class="Tags">
+          {Array.from(tags).map((tag) => {
+            const id = encodeURIComponent_id(tag);
+            return (
+              <>
+                <div id={id} class="heading">
+                  <Tag tag={tag} />
+                </div>
+                {posts.map((post) =>
+                  !post.metadata.tags?.includes(tag) ? (
+                    <></>
+                  ) : (
+                    <PostPreview post={post} />
+                  ),
+                )}
+              </>
+            );
+          })}
+        </div>
+      </TopComponent>,
+    ),
+  };
+
+  return resource;
+}
+
+async function constructAbout(): Promise<HtmlResource> {
+  const resource: HtmlResource = {
+    route: "About.html",
+    name: "About",
+    references: [],
+    type: "html",
+    metadata: {
+      type: "page",
+    },
+    content: await render_jsx(
+      <TopComponent
+        resource_name="About"
+        content_head={
+          <>
+            <link rel="stylesheet" href="About.css" />
+            <link rel="stylesheet" href="PostPreview.css" />
+          </>
+        }
+      >
+        TODO: write about me
       </TopComponent>,
     ),
   };
@@ -215,8 +236,8 @@ async function constructMarkdown(filepath: string): Promise<HtmlResource> {
     type: "html",
     metadata: metadataRef.value,
     content: await render_jsx(
-      <TopComponent title={titleString} content_head={<></>}>
-        {content as "safe"}
+      <TopComponent resource_name={titleString} content_head={<></>}>
+        <article>{content as "safe"}</article>
       </TopComponent>,
     ),
   };
