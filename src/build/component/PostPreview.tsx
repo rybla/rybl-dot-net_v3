@@ -1,7 +1,10 @@
 import Tag from "@/build/component/Tag";
-import { remarkCustomDirectives } from "@/build/unified_plugins";
-import { HtmlResource } from "@/types";
-import { ifDefined, intercalate } from "@/util";
+import {
+  remarkCustomDirectives,
+  remarkReferences,
+} from "@/build/unified_plugins";
+import { HtmlResource, Reference, ResourceMetadata } from "@/types";
+import { ifDefined, intercalate, Ref } from "@/util";
 import rehypeMathJaxSvg from "rehype-mathjax";
 import rehypeStringify from "rehype-stringify";
 import remarkDirective from "remark-directive";
@@ -47,16 +50,22 @@ export default function PostPreview(props: {
             <i>Abstract.</i>{" "}
             {
               String(
-                unified()
+                await unified()
                   .use(remarkParse)
                   .use(remarkDirective)
                   .use(remarkCustomDirectives, {})
                   .use(remarkGfm)
                   .use(remarkMath)
+                  .use(remarkReferences, {
+                    metadataRef: Ref<ResourceMetadata>({
+                      type: "page",
+                    }),
+                    referencesRef: Ref<Reference[]>([]),
+                  })
                   .use(remarkRehype)
                   .use(rehypeMathJaxSvg)
                   .use(rehypeStringify)
-                  .processSync(abstract),
+                  .process(abstract),
               ) as "safe"
             }
           </div>

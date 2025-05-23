@@ -21,7 +21,7 @@
     --accent--background: color-mix(
         in hsl,
         var(--primary--color),
-        transparent 50%
+        transparent 80%
     );
     --accent--foreground: var(--body--foreground);
     --accent--box-shadow: none;

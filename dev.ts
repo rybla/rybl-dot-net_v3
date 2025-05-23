@@ -24,10 +24,11 @@ do_(async () => {
 
   async function rebuild(opts?: { clear?: boolean }) {
     if (opts?.clear === true) console.clear();
-    tell(`rebuild`);
+    tell(`rebuild ...`);
     spawnSync("tsx", ["./src/build.ts"], {
       stdio: "inherit",
     });
+    tell(`rebuild ✅`);
   }
 
   tell(`watching ${config.watchers_dirpaths}`);

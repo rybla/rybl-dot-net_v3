@@ -6,7 +6,9 @@ export default function Tag(props: { tag: string }) {
   return (
     <a class="Tag" href={`Tags.html#${id}`}>
       <Icon.Tag />
-      <div safe>{props.tag}</div>
+      <div class="name" safe>
+        {props.tag}
+      </div>
     </a>
   );
 }

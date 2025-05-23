@@ -4,8 +4,9 @@
 
 #raindrop_container {
     position: fixed;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    max-width: 100%;
+    height: 100vh;
     /* background: linear-gradient(to bottom, #5b8bab, #4584a3); */
     background: linear-gradient(to bottom, #dee3ff, #689fba);
 

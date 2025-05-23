@@ -97,16 +97,40 @@ export const remarkReferences: Plugin<
               icon_url,
             });
             if (icon_url !== undefined) {
-              node.children.splice(0, 0, {
-                type: "image",
-                alt: "",
-                url: icon_url,
-                data: {
-                  hProperties: {
-                    class: "icon",
+              node.children = [
+                {
+                  type: "image",
+                  alt: "",
+                  url: icon_url,
+                  data: {
+                    hProperties: {
+                      class: "icon",
+                    },
                   },
                 },
-              });
+                {
+                  type: "textDirective",
+                  name: "span",
+                  data: {
+                    hName: "span",
+                    hProperties: {
+                      class: "name",
+                    },
+                  },
+                  children: node.children,
+                },
+              ];
+
+              // node.children.splice(0, 0, {
+              //   type: "image",
+              //   alt: "",
+              //   url: icon_url,
+              //   data: {
+              //     hProperties: {
+              //       class: "icon",
+              //     },
+              //   },
+              // });
             }
           }),
         );

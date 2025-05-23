@@ -9,7 +9,9 @@ article {
 }
 
 a {
-    display: inline-block;
+    display: inline-flex;
+    flex-direction: row;
+    gap: 0.2em;
 
     color: var(--body--foreground);
     background: color-mix(in hsl, var(--link--background), transparent 90%);
@@ -25,8 +27,11 @@ a {
     }
 
     & > .icon {
-        margin-bottom: -0.1em;
-        margin-right: 0.2em;
+        align-self: center;
+    }
+
+    & > .name {
+        align-self: baseline;
     }
 
     &.no_background {

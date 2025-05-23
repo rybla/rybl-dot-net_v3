@@ -1,6 +1,6 @@
 .PostPreview {
     padding: 1em;
-    background: color-mix(in hsl, var(--primary--color), transparent 80%);
+    background: var(--accent--background);
 
     display: flex;
     flex-direction: column;

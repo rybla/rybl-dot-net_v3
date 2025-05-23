@@ -38,7 +38,7 @@ main {
     flex-direction: column;
 
     margin: auto;
-    max-width: var(--main--width);
+    max-width: calc(min(var(--main--width), 100vw));
 }
 
 *:target {

@@ -17,7 +17,7 @@ export default function Header(props: { resource_name: string }) {
         </div>
       </div>
       <div class="menu">
-        <a href="Index.html" class="item no_background">
+        <a href="index.html" class="item no_background">
           <Icon.Library />
         </a>
         <a href="Tags.html" class="item no_background">

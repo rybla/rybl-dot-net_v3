@@ -1,6 +1,8 @@
 header {
-    padding-top: 0.5em;
-    padding-bottom: 1em;
+    padding: 1em 0;
+
+    margin: auto;
+    max-width: calc(min(var(--main--width), 100vw));
 
     display: flex;
     flex-direction: column;
@@ -54,7 +56,6 @@ header {
     & > .menu {
         width: var(--menu-width);
 
-        flex: 1 1 auto;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
@@ -62,12 +63,9 @@ header {
         justify-content: flex-end;
         gap: 1em;
 
-        & > .item {
-            line-height: 1em;
-
-            & > .icon {
-                margin: 0;
-            }
+        & > a {
+            /* this is needed since there's no text in the row */
+            padding-bottom: 0.2em;
         }
     }
 }
