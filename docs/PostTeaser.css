@@ -1,0 +1,22 @@
+.PostTeaser {
+    padding: 1em;
+    background: color-mix(in hsl, var(--primary--color), transparent 80%);
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+
+    & > .name {
+        font-weight: bold;
+    }
+
+    & > .pubDate {
+    }
+
+    & > .tags {
+    }
+
+    & > .abstract {
+        /* margin-top: 0.5em; */
+    }
+}
