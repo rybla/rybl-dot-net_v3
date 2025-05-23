@@ -1,8 +1,9 @@
 ---
+type: post
 pubDate: 2025-05-19
 tags:
   - example
-summary: |
+abstract: |
   This is an example post to demonstrate Markdown features.
 ---
 

@@ -32,7 +32,7 @@ export async function addResource(website: Website, resource: Resource) {
 /**
  * A thing that exists in a {@link Website}.
  */
-export type Resource = Post | Page | Raw;
+export type Resource = HtmlResource | RawResource;
 
 /**
  * A type common to all {@link Resource}s.
@@ -41,36 +41,26 @@ export type ResourceBase = {
   route: string;
   name: string;
   /**
-   * All the {@link Reference}s refered to in this {@link Resource}.
+   * All the {@link Reference}s referred to in this {@link Resource}.
    */
   references: Reference[];
 };
 
-/**
- * A simple {@link Resource} that just has some {@link HtmlString} content to be inserted into a `<main>`.
- */
-export type Page = ResourceBase & {
-  type: "page";
-  content: HtmlString;
+export type HtmlResource = ResourceBase & {
+  type: "html";
+  content: string;
+  metadata: ResourceMetadata;
 };
 
-/**
- * A {@link Resource} that has {@link HtmlString} content to be inserted into
- * an `<article>` tag.
- */
-export type Post = ResourceBase & {
-  type: "post";
-  content: HtmlString;
-} & PostMetadata;
-
-export type PostMetadata = z.infer<typeof PostMetadata_Schema>;
-export const PostMetadata_Schema = z.object({
+export type ResourceMetadata = z.infer<typeof ResourceMetadata_Schema>;
+export const ResourceMetadata_Schema = z.object({
+  type: z.enum(["page", "post"]),
   pubDate: z.optional(z.string()),
   tags: z.optional(z.array(z.string())),
-  summary: z.optional(z.string()),
+  abstract: z.optional(z.string()),
 });
 
-export type Raw = ResourceBase & {
+export type RawResource = ResourceBase & {
   type: "raw";
 };
 
@@ -79,8 +69,3 @@ export type Reference = {
   name?: string;
   icon_url?: string;
 };
-
-/**
- * Html serialized as a string.
- */
-export type HtmlString = string;

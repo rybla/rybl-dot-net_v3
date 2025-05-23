@@ -34,3 +34,9 @@ export const intercalate = <A>(xss: A[][], sep: A[]) => {
   for (const xs of xss.slice(-1)) ys.push(...xs);
   return ys;
 };
+
+export const defined = <A>(a: A | undefined | null): A => {
+  if (a === undefined) throw Error("expected to be defined, but was undefined");
+  if (a === null) throw Error("expected to be defined, but was null");
+  return a;
+};

@@ -1,4 +1,4 @@
-import { addResource, Post, Website } from "@/types";
+import { addResource, HtmlResource, Website } from "@/types";
 import path from "path";
 import config from "@/config.json";
 import Effect from "@/effect";
@@ -12,9 +12,7 @@ export default async function compile(website: Website) {
   console.log("compile");
   for (const resource of website.resources) {
     console.log(`compile: ${resource.route}`);
-    if (resource.type === "page") {
-      Effect.outputFile_text(resource.route, resource.content);
-    } else if (resource.type === "post") {
+    if (resource.type === "html") {
       Effect.outputFile_text(resource.route, resource.content);
     } else if (resource.type === "raw") {
       Effect.useLocalFile(resource.route);

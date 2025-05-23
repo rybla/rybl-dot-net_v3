@@ -3,13 +3,14 @@ import Effect from "@/effect";
 import * as hast from "hast";
 import {
   addResource,
-  Post,
-  PostMetadata,
-  PostMetadata_Schema,
+  HtmlResource,
+  ResourceMetadata,
+  ResourceMetadata_Schema,
   Reference,
   Website,
 } from "@/types";
 import {
+  defined,
   do_,
   encodeURIComponent_id,
   indentString,
@@ -18,6 +19,7 @@ import {
   Tree,
 } from "@/util";
 import * as mdast from "mdast";
+import remarkDirective from "remark-directive";
 import rehypeMathJaxSvg from "rehype-mathjax";
 import rehypeStringify from "rehype-stringify";
 import remarkFrontmatter from "remark-frontmatter";
@@ -30,9 +32,9 @@ import * as unist from "unist";
 import { visit } from "unist-util-visit";
 import YAML from "yaml";
 import PostComponent from "./component/Post";
+import TopComponent from "./component/Top";
 
-const extname_Page = ".page.md";
-const extname_Post = ".post.md";
+const extname_Markdown = ".md";
 
 export default async function constructWebsite(): Promise<Website> {
   console.log("construct");
@@ -44,8 +46,8 @@ export default async function constructWebsite(): Promise<Website> {
 
   for (const filepath of await Effect.inputDir(".")) {
     try {
-      if (filepath.endsWith(extname_Post)) {
-        addResource(website, await constructPost(filepath));
+      if (filepath.endsWith(extname_Markdown)) {
+        addResource(website, await constructMarkdown(filepath));
       } else {
         addResource(website, {
           route: filepath,
@@ -55,24 +57,27 @@ export default async function constructWebsite(): Promise<Website> {
         });
       }
     } catch (e: any) {
-      console.error(indentString(1, e.toString()));
+      // console.error(indentString(1, e.toString()));
+      throw e;
     }
   }
 
   return website;
 }
 
-async function constructPost(filepath: string): Promise<Post> {
+async function constructMarkdown(filepath: string): Promise<HtmlResource> {
   console.log(`constructPost: ${filepath}`);
 
-  const filename = filepath.slice(0, -extname_Post.length);
+  const filename = filepath.slice(0, -extname_Markdown.length);
 
   const titleRef: Ref<mdast.Heading> = Ref({
     type: "heading",
     depth: 1,
     children: [{ type: "text", value: filename }],
   });
-  const metadataRef: Ref<PostMetadata> = Ref({});
+  const metadataRef: Ref<ResourceMetadata> = Ref({
+    type: "post",
+  });
   const referencesRef: Ref<Reference[]> = Ref([]);
 
   const content = String(
@@ -80,30 +85,32 @@ async function constructPost(filepath: string): Promise<Post> {
       .use(remarkParse)
       .use(remarkFrontmatter, ["yaml"])
       .use(remarkPostMetadata, { metadataRef })
-      .use(remarkTitle, { titleRef })
+      .use(remarkTitle, { metadataRef, titleRef })
+      .use(remarkDirective)
+      .use(remarkCustomDirectives, { metadataRef })
       .use(remarkGfm)
       .use(remarkMath)
-      .use(remarkReferences, { referencesRef })
-      .use(remarkTableOfContents, {})
+      .use(remarkReferences, { metadataRef, referencesRef })
+      .use(remarkTableOfContents, { metadataRef })
       .use(remarkRehype)
       .use(rehypeMathJaxSvg)
-      .use(rehypeCustomHeaders, {})
+      .use(rehypeCustomHeaders, { metadataRef })
       .use(rehypeStringify)
       .process(await Effect.inputFile_text(filepath)),
   );
 
   const titleString = showNode(titleRef.value);
 
-  const post: Post = {
+  const post: HtmlResource = {
     route: `${filename}.html`,
     name: titleString,
     references: referencesRef.value,
-    type: "post",
-    pubDate: metadataRef.value.pubDate,
-    tags: metadataRef.value.tags,
-    summary: metadataRef.value.summary,
+    type: "html",
+    metadata: metadataRef.value,
     content: await render_jsx(
-      <PostComponent title={titleString}>{content as "safe"}</PostComponent>,
+      <TopComponent title={titleString} content_head={<></>}>
+        {content as "safe"}
+      </TopComponent>,
     ),
   };
 
@@ -119,10 +126,11 @@ function showNode(node: mdast.Node): string {
 }
 
 const remarkTitle: Plugin<
-  [{ titleRef: Ref<mdast.Heading> }],
+  [{ metadataRef: Ref<ResourceMetadata>; titleRef: Ref<mdast.Heading> }],
   mdast.Root,
   mdast.Root
 > = (opts) => async (root) => {
+  // console.log("remarkTitle");
   visit(root, (node, index, parent) => {
     if (node.type === "heading" && node.depth === 1) {
       opts.titleRef.value = node;
@@ -131,26 +139,30 @@ const remarkTitle: Plugin<
 };
 
 const remarkPostMetadata: Plugin<
-  [{ metadataRef: Ref<PostMetadata> }],
+  [{ metadataRef: Ref<ResourceMetadata> }],
   mdast.Root,
   mdast.Root
 > = (opts) => async (root) => {
+  // console.log("remarkPostMetadata");
   visit(root, (node) => {
     if (node.type === "yaml") {
       const frontmatter = YAML.parse(node.value);
-      opts.metadataRef.value = PostMetadata_Schema.parse(frontmatter);
+      const metadata = ResourceMetadata_Schema.parse(frontmatter);
+      opts.metadataRef.value = metadata;
     }
   });
 };
 
 const remarkReferences: Plugin<
-  [{ referencesRef: Ref<Reference[]> }],
+  [{ metadataRef: Ref<ResourceMetadata>; referencesRef: Ref<Reference[]> }],
   mdast.Root,
   mdast.Root
 > = (opts) => async (root) => {
+  // console.log("remarkReferences");
+  if (["page"].includes(opts.metadataRef.value.type)) return;
+
   // have to do this `visit` pass first before inserting images into links since
   // otherwise those images would be included in these image references
-
   {
     const promises: Promise<void>[] = [];
     visit(root, (node) => {
@@ -211,6 +223,8 @@ const remarkReferences: Plugin<
     await Promise.all(promises);
   }
 
+  if (opts.referencesRef.value.length === 0) return;
+
   root.children.push(
     {
       type: "heading",
@@ -260,85 +274,162 @@ const remarkReferences: Plugin<
   );
 };
 
-const remarkTableOfContents: Plugin<[{}], mdast.Root, mdast.Root> =
-  (opts) => (root) => {
-    const headings_forest: Tree<{ id: string; value: string }>[] = [];
-    visit(root, (node, index, parent) => {
-      if (node.type === "heading") {
-        const value = showNode(node);
-        const id = encodeURIComponent_id(value);
-        node.data = { hProperties: { id, class: "section-header" } };
+const remarkTableOfContents: Plugin<
+  [{ metadataRef: Ref<ResourceMetadata> }],
+  mdast.Root,
+  mdast.Root
+> = (opts) => (root) => {
+  if (["page"].includes(opts.metadataRef.value.type)) return;
 
-        if (node.depth === 1) return;
-        let headings_subforest = headings_forest;
-        let depth = 1;
-        while (headings_subforest.length > 0 && depth + 1 < node.depth) {
-          headings_subforest = headings_subforest.at(-1)!.kids;
-          depth++;
-        }
-        headings_subforest.push({ value: { id, value }, kids: [] });
+  const headings_forest: Tree<{ id: string; value: string }>[] = [];
+  visit(root, (node, index, parent) => {
+    if (node.type === "heading") {
+      const value = showNode(node);
+      const id = encodeURIComponent_id(value);
+      node.data = node.data ?? {};
+      node.data.hProperties = node.data.hProperties ?? {};
+      node.data.hProperties.id = id;
+      node.data.hProperties.class = "section-header";
+
+      if (node.depth === 1) return;
+      let headings_subforest = headings_forest;
+      let depth = 1;
+      while (headings_subforest.length > 0 && depth + 1 < node.depth) {
+        headings_subforest = headings_subforest.at(-1)!.kids;
+        depth++;
       }
-    });
-
-    const go_nodes = (
-      nodes: Tree<{ id: string; value: string }>[],
-    ): mdast.List => ({
-      type: "list",
-      ordered: true,
-      children: nodes.map((kid) => go_node(kid)),
-    });
-
-    const go_node = (
-      node: Tree<{ id: string; value: string }>,
-    ): mdast.ListItem => ({
-      type: "listItem",
-      children: [
-        [
-          {
-            type: "paragraph" as "paragraph",
-            children: [
-              {
-                type: "link",
-                url: `#${node.value.id}`,
-                title: node.value.value,
-                children: [{ type: "text", value: node.value.value }],
-              },
-            ],
-          } as mdast.Paragraph,
-        ],
-        node.kids.length === 0 ? [] : [go_nodes(node.kids)],
-      ].flat<mdast.BlockContent[][]>(),
-    });
-
-    const tableOfContents = go_nodes(headings_forest);
-
-    const title_index = root.children.findIndex(
-      (node) => node.type === "heading" && node.depth === 1,
-    );
-    if (title_index !== -1) {
-      root.children.splice(title_index + 1, 0, tableOfContents);
+      headings_subforest.push({ value: { id, value }, kids: [] });
     }
-  };
+  });
 
-const rehypeCustomHeaders: Plugin<[{}], hast.Root, hast.Root> =
-  (opts) => (root) => {
-    visit(root, (node) => {
-      if (node.type === "element" && RegExp(/^(h[1-6])$/).test(node.tagName)) {
-        node.children = [
-          {
-            type: "element",
-            tagName: "a",
-            properties: {
-              href: `#${node.properties.id}`,
+  const go_nodes = (
+    nodes: Tree<{ id: string; value: string }>[],
+  ): mdast.List => ({
+    type: "list",
+    ordered: true,
+    children: nodes.map((kid) => go_node(kid)),
+  });
+
+  const go_node = (
+    node: Tree<{ id: string; value: string }>,
+  ): mdast.ListItem => ({
+    type: "listItem",
+    children: [
+      [
+        {
+          type: "paragraph" as "paragraph",
+          children: [
+            {
+              type: "link",
+              url: `#${node.value.id}`,
+              title: node.value.value,
+              children: [{ type: "text", value: node.value.value }],
             },
-            children: node.children,
-          },
-        ];
-      }
-    });
-  };
+          ],
+        } as mdast.Paragraph,
+      ],
+      node.kids.length === 0 ? [] : [go_nodes(node.kids)],
+    ].flat<mdast.BlockContent[][]>(),
+  });
 
-const plugin: Plugin<[{}], mdast.Root, mdast.Root> = (opts) => (root) => {};
+  const tableOfContents = go_nodes(headings_forest);
+
+  if (tableOfContents.children.length === 0) return;
+
+  const title_index = root.children.findIndex(
+    (node) => node.type === "heading" && node.depth === 1,
+  );
+  if (title_index !== -1) {
+    root.children.splice(title_index + 1, 0, tableOfContents);
+  }
+};
+
+const rehypeCustomHeaders: Plugin<
+  [{ metadataRef: Ref<ResourceMetadata> }],
+  hast.Root,
+  hast.Root
+> = (opts) => (root) => {
+  // console.log("rehypeCustomHeaders");
+  if (["page"].includes(opts.metadataRef.value.type)) return;
+
+  visit(root, (node) => {
+    if (node.type === "element" && RegExp(/^(h[1-6])$/).test(node.tagName)) {
+      node.children = [
+        {
+          type: "element",
+          tagName: "a",
+          properties: {
+            href: `#${node.properties.id}`,
+          },
+          children: node.children,
+        },
+      ];
+    }
+  });
+};
+
+const remarkCustomDirectives: Plugin<
+  [{ metadataRef: Ref<ResourceMetadata> }],
+  mdast.Root,
+  mdast.Root
+> = (opts) => (root) => {
+  // console.log("remarkCustomDirectives");
+  visit(root, (node) => {
+    if (
+      node.type === "containerDirective" &&
+      node.name === "example_containerDirective"
+    ) {
+      node.data = node.data ?? {};
+      node.data.hProperties = node.data.hProperties ?? {};
+      node.data.hProperties.class = "example_containerDirective";
+    } else if (
+      node.type === "leafDirective" &&
+      node.name === "example_leafDirective"
+    ) {
+      node.data = node.data ?? {};
+      node.data.hProperties = node.data.hProperties ?? {};
+      node.data.hProperties.class = "example_leafDirective";
+      node.children = [{ type: "text", value: "example_leafDirective" }];
+    } else if (
+      node.type === "textDirective" &&
+      node.name === "example_textDirective"
+    ) {
+      node.data = node.data ?? {};
+      node.data.hName = "span";
+      node.data.hProperties = node.data.hProperties ?? {};
+      node.data.hProperties.class = "example_textDirective";
+      node.children = [{ type: "text", value: "example_textDirective" }];
+    } else if (
+      node.type === "containerDirective" &&
+      node.name === "thumbnail"
+    ) {
+      node.data = node.data ?? {};
+      node.data.hProperties = node.data.hProperties ?? {};
+      node.data.hProperties.class = "containerDirective_thumbnail";
+      const attributes = defined(node.attributes);
+      const title = defined(attributes.title);
+      const url = defined(attributes.url);
+      node.children.splice(0, 0, {
+        type: "heading",
+        depth: 2,
+        children: [
+          {
+            type: "text",
+            value: title,
+          },
+        ],
+      });
+    } else if (node.type === "leafDirective" && node.name === "youtube") {
+      console.log(JSON.stringify(node, null, 4));
+    }
+  });
+};
+
+const plugin: Plugin<
+  [{ metadataRef: Ref<ResourceMetadata> }],
+  mdast.Root,
+  mdast.Root
+> = (opts) => (root) => {};
 
 // TODO: customize the size
 // async function getIconUrl(url: URL) {

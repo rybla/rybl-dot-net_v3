@@ -96,6 +96,19 @@ html {
     font-family: Spectral, serif;
 }
 
+main,
+article {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+
+    line-height: 1.5em;
+}
+
+footer {
+    margin: 0 !important;
+}
+
 code {
     font-family: Iosevka, monospace;
 }
@@ -346,17 +359,9 @@ header {
     }
 }
 
-main,
-article {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5em;
-
-    line-height: 1.5em;
-}
-
-footer {
-    margin: 0 !important;
+.containerDirective_thumbnail {
+    padding: 1em;
+    background: color-mix(in hsl, var(--secondary--color), transparent 30%);
 }
 
 *:target {
