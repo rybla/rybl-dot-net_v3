@@ -368,7 +368,6 @@ export async function getIconUrl(url_raw: string): Promise<string | undefined> {
       hostname = hostname_parts
         .slice(hostname_parts.length - 2, hostname_parts.length)
         .join(".");
-      console.log(`truncated hostname: ${hostname}`);
     }
 
     const favicon_url = await extract_faviconUrl_from_url(
