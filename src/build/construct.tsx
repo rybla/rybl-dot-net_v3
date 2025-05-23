@@ -8,12 +8,16 @@ import {
   ResourceMetadata_Schema,
   Reference,
   Website,
+  Resource,
+  fromResourceToReference,
 } from "@/types";
 import {
   defined,
   do_,
   encodeURIComponent_id,
+  ifDefined,
   indentString,
+  intercalate,
   Ref,
   render_jsx,
   Tree,
@@ -33,6 +37,7 @@ import { visit } from "unist-util-visit";
 import YAML from "yaml";
 import PostComponent from "./component/Post";
 import TopComponent from "./component/Top";
+import Icon from "./component/Icon";
 
 const extname_Markdown = ".md";
 
@@ -44,10 +49,14 @@ export default async function constructWebsite(): Promise<Website> {
     resources: [],
   };
 
+  const posts: HtmlResource[] = [];
+
   for (const filepath of await Effect.inputDir(".")) {
     try {
       if (filepath.endsWith(extname_Markdown)) {
-        addResource(website, await constructMarkdown(filepath));
+        const resource = await constructMarkdown(filepath);
+        addResource(website, resource);
+        if (resource.metadata.type === "post") posts.push(resource);
       } else {
         addResource(website, {
           route: filepath,
@@ -57,23 +66,107 @@ export default async function constructWebsite(): Promise<Website> {
         });
       }
     } catch (e: any) {
-      // console.error(indentString(1, e.toString()));
-      throw e;
+      console.error(indentString(1, e.toString()));
     }
+  }
+
+  try {
+    addResource(website, await constructIndex(posts));
+  } catch (e: any) {
+    console.error(indentString(1, e.toString()));
   }
 
   return website;
 }
 
+async function constructIndex(posts: HtmlResource[]): Promise<HtmlResource> {
+  console.log("constructIndex");
+  const name = "Index";
+  const index: HtmlResource = {
+    route: `index.html`,
+    name,
+    references: posts.map(fromResourceToReference),
+    type: "html",
+    metadata: { type: "page" },
+    content: await render_jsx(
+      <TopComponent
+        title={name}
+        content_head={
+          <>
+            <link rel="stylesheet" href="Index.css" />
+          </>
+        }
+      >
+        {posts.map((post) => (
+          <div class="post">
+            {ifDefined(post.name, <></>, (name) => (
+              <div class="name">
+                <h2>
+                  <a href={post.route} safe>
+                    {name}
+                  </a>
+                </h2>
+              </div>
+            ))}
+            {ifDefined(post.metadata.pubDate, <></>, (pubDate) => (
+              <div class="pubDate">
+                <i>Published.</i> <span safe>{pubDate}</span>
+              </div>
+            ))}
+            {ifDefined(post.metadata.tags, <></>, (tags) => (
+              <div class="tags">
+                <i>Tags.</i>{" "}
+                {intercalate<JSX.Element>(
+                  tags.map((tag) => [
+                    <a href={`/tags#${encodeURIComponent_id(tag)}`} safe>
+                      #{tag}
+                    </a>,
+                  ]),
+                  [<>, </>],
+                )}
+              </div>
+            ))}
+            {ifDefined<string, JSX.Element>(
+              post.metadata.abstract,
+              <></>,
+              async (abstract) => (
+                <div class="abstract">
+                  <i>Abstract.</i>{" "}
+                  {
+                    String(
+                      unified()
+                        .use(remarkParse)
+                        .use(remarkDirective)
+                        .use(remarkCustomDirectives, {})
+                        .use(remarkGfm)
+                        .use(remarkMath)
+                        .use(remarkRehype)
+                        .use(rehypeMathJaxSvg)
+                        .use(rehypeStringify)
+                        .processSync(abstract),
+                    ) as "safe"
+                  }
+                </div>
+              ),
+            )}
+          </div>
+        ))}
+      </TopComponent>,
+    ),
+  };
+
+  return index;
+}
+
 async function constructMarkdown(filepath: string): Promise<HtmlResource> {
   console.log(`constructPost: ${filepath}`);
 
-  const filename = filepath.slice(0, -extname_Markdown.length);
+  const filebasename = filepath.slice(0, -extname_Markdown.length);
 
   const titleRef: Ref<mdast.Heading> = Ref({
     type: "heading",
     depth: 1,
-    children: [{ type: "text", value: filename }],
+    children: [{ type: "text", value: filebasename }],
   });
   const metadataRef: Ref<ResourceMetadata> = Ref({
     type: "post",
@@ -87,7 +180,7 @@ async function constructMarkdown(filepath: string): Promise<HtmlResource> {
       .use(remarkPostMetadata, { metadataRef })
       .use(remarkTitle, { metadataRef, titleRef })
       .use(remarkDirective)
-      .use(remarkCustomDirectives, { metadataRef })
+      .use(remarkCustomDirectives, {})
       .use(remarkGfm)
       .use(remarkMath)
       .use(remarkReferences, { metadataRef, referencesRef })
@@ -102,7 +195,7 @@ async function constructMarkdown(filepath: string): Promise<HtmlResource> {
   const titleString = showNode(titleRef.value);
 
   const post: HtmlResource = {
-    route: `${filename}.html`,
+    route: `${filebasename}.html`,
     name: titleString,
     references: referencesRef.value,
     type: "html",
@@ -368,62 +461,59 @@ const rehypeCustomHeaders: Plugin<
   });
 };
 
-const remarkCustomDirectives: Plugin<
-  [{ metadataRef: Ref<ResourceMetadata> }],
-  mdast.Root,
-  mdast.Root
-> = (opts) => (root) => {
-  // console.log("remarkCustomDirectives");
-  visit(root, (node) => {
-    if (
-      node.type === "containerDirective" &&
-      node.name === "example_containerDirective"
-    ) {
-      node.data = node.data ?? {};
-      node.data.hProperties = node.data.hProperties ?? {};
-      node.data.hProperties.class = "example_containerDirective";
-    } else if (
-      node.type === "leafDirective" &&
-      node.name === "example_leafDirective"
-    ) {
-      node.data = node.data ?? {};
-      node.data.hProperties = node.data.hProperties ?? {};
-      node.data.hProperties.class = "example_leafDirective";
-      node.children = [{ type: "text", value: "example_leafDirective" }];
-    } else if (
-      node.type === "textDirective" &&
-      node.name === "example_textDirective"
-    ) {
-      node.data = node.data ?? {};
-      node.data.hName = "span";
-      node.data.hProperties = node.data.hProperties ?? {};
-      node.data.hProperties.class = "example_textDirective";
-      node.children = [{ type: "text", value: "example_textDirective" }];
-    } else if (
-      node.type === "containerDirective" &&
-      node.name === "thumbnail"
-    ) {
-      node.data = node.data ?? {};
-      node.data.hProperties = node.data.hProperties ?? {};
-      node.data.hProperties.class = "containerDirective_thumbnail";
-      const attributes = defined(node.attributes);
-      const title = defined(attributes.title);
-      const url = defined(attributes.url);
-      node.children.splice(0, 0, {
-        type: "heading",
-        depth: 2,
-        children: [
-          {
-            type: "text",
-            value: title,
-          },
-        ],
-      });
-    } else if (node.type === "leafDirective" && node.name === "youtube") {
-      console.log(JSON.stringify(node, null, 4));
-    }
-  });
-};
+const remarkCustomDirectives: Plugin<[{}], mdast.Root, mdast.Root> =
+  (opts) => (root) => {
+    // console.log("remarkCustomDirectives");
+    visit(root, (node) => {
+      if (
+        node.type === "containerDirective" &&
+        node.name === "example_containerDirective"
+      ) {
+        node.data = node.data ?? {};
+        node.data.hProperties = node.data.hProperties ?? {};
+        node.data.hProperties.class = "example_containerDirective";
+      } else if (
+        node.type === "leafDirective" &&
+        node.name === "example_leafDirective"
+      ) {
+        node.data = node.data ?? {};
+        node.data.hProperties = node.data.hProperties ?? {};
+        node.data.hProperties.class = "example_leafDirective";
+        node.children = [{ type: "text", value: "example_leafDirective" }];
+      } else if (
+        node.type === "textDirective" &&
+        node.name === "example_textDirective"
+      ) {
+        node.data = node.data ?? {};
+        node.data.hName = "span";
+        node.data.hProperties = node.data.hProperties ?? {};
+        node.data.hProperties.class = "example_textDirective";
+        node.children = [{ type: "text", value: "example_textDirective" }];
+      } else if (
+        node.type === "containerDirective" &&
+        node.name === "thumbnail"
+      ) {
+        node.data = node.data ?? {};
+        node.data.hProperties = node.data.hProperties ?? {};
+        node.data.hProperties.class = "containerDirective_thumbnail";
+        const attributes = defined(node.attributes);
+        const title = defined(attributes.title);
+        const url = defined(attributes.url);
+        node.children.splice(0, 0, {
+          type: "heading",
+          depth: 2,
+          children: [
+            {
+              type: "text",
+              value: title,
+            },
+          ],
+        });
+      } else if (node.type === "leafDirective" && node.name === "youtube") {
+        console.log(JSON.stringify(node, null, 4));
+      }
+    });
+  };
 
 const plugin: Plugin<
   [{ metadataRef: Ref<ResourceMetadata> }],

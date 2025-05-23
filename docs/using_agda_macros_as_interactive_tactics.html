@@ -1,0 +1,126 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Using Agda Macros as Interactive Tactics</title><link rel="stylesheet" href="Top.css"/></head><body><main><h1 id="Using_Agda_Macros_as_Interactive_Tactics" class="section-header"><a href="#Using_Agda_Macros_as_Interactive_Tactics">Using Agda Macros as Interactive Tactics</a></h1>
+<ol>
+<li>
+<p><a href="#Interactive_Tactics_(not_in_Agda)" title="Interactive Tactics (not in Agda)">Interactive Tactics (not in Agda)</a></p>
+</li>
+<li>
+<p><a href="#Agda&#x27;s_Typed_Holes_and_Macros" title="Agda&#x27;s Typed Holes and Macros">Agda's Typed Holes and Macros</a></p>
+<ol>
+<li><a href="#Example_of_Macro-Hole_Interaction" title="Example of Macro-Hole Interaction">Example of Macro-Hole Interaction</a></li>
+</ol>
+</li>
+<li>
+<p><a href="#Proposal%3A_Quoted_Holes" title="Proposal: Quoted Holes">Proposal: Quoted Holes</a></p>
+<ol>
+<li>
+<p><a href="#Example_Usage" title="Example Usage">Example Usage</a></p>
+</li>
+<li>
+<p><a href="#More_about_Quoted_Holes" title="More about Quoted Holes">More about Quoted Holes</a></p>
+<ol>
+<li><a href="#Desugaring" title="Desugaring">Desugaring</a></li>
+<li><a href="#Multiply-spliced_Quoted_Holes%3F%3F" title="Multiply-spliced Quoted Holes??">Multiply-spliced Quoted Holes??</a></li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p><a href="#References" title="References">References</a></p>
+</li>
+</ol>
+<h2 id="Interactive_Tactics_(not_in_Agda)" class="section-header"><a href="#Interactive_Tactics_(not_in_Agda)">Interactive Tactics (not in Agda)</a></h2>
+<p>Interactive tactics, such as <a href="https://rocq-prover.org/doc/v8.19/refman/proof-engine/ltac.html"><img src="rocq-prover.org.favicon.ico" alt="" class="icon">LTac</a> in <a href="https://rocq-prover.org/"><img src="rocq-prover.org.favicon.ico" alt="" class="icon">Coq/Rocq</a>, support an interesting and often useful workflow: to interactively run a tactic script (which can leverage metaprogramming), viewing the context and expected type of the rest of the tactic script (in a nested fashion) at each step. In this way, you as a programmer can view the intermediate states that are yielded by metaprogrammatic computations which would otherwise be inaccessible if you were only able to view the final output of the tactic script.</p>
+<h2 id="Agda&#x27;s_Typed_Holes_and_Macros" class="section-header"><a href="#Agda&#x27;s_Typed_Holes_and_Macros">Agda's Typed Holes and Macros</a></h2>
+<p><a href="https://agda.readthedocs.io/en/latest/index.html"><img src="agda.readthedocs.io.favicon.ico" alt="" class="icon">Agda</a> has an interactive editing mode that provides some similar features to this workflow. In particular, <a href="https://agda.readthedocs.io/en/latest/language/lexical-structure.html#holes"><img src="agda.readthedocs.io.favicon.ico" alt="" class="icon">typed holes</a> let you as a programmer view the intermediate state (context and expected type) of the typechecker at any point in your program. This is a very interesting and useful feature for many of the same reasons as is interactively running a tactic script.</p>
+<p>Agda <em>also</em> has a <a href="https://agda.readthedocs.io/en/stable/language/reflection.html"><img src="agda.readthedocs.io.favicon.ico" alt="" class="icon">macro system</a>. These macros allow for all the same computations that can be performed in tactic languages such as LTac, in particular because it allows the macro programmer to inspect that current context and expected type of the macro expansion's result. However, the macro system <em>does not</em> provide the same interactive experience as interactive tactic scripts because of the way that holes and macros interact: when a hole is given as an argument to a macro, that hole is evaluated (where the evaluation immediately gets stuck, since its a hole after all) <em>before</em> the macro starts expanding (just like any other argument to the macro), and so that hole's expected type and context can only be considered in the context and expected type <em>at the macro's invocation</em>. Interactivity would require the hole's evaluation to be delayed until <em>after</em> the macro is expanded, since this would allow the macro to splice the hole into a different context and expected type.</p>
+<h3 id="Example_of_Macro-Hole_Interaction" class="section-header"><a href="#Example_of_Macro-Hole_Interaction">Example of Macro-Hole Interaction</a></h3>
+<p>Imports:</p>
+<pre><code class="language-agda">open import Reflection using (_>>=_)
+open import Agda.Builtin.Reflection
+open import Data.Unit using (⊤)
+open import Data.Nat using (ℕ; zero; suc)
+open import Agda.Builtin.String using (primShowNat)
+open import Data.String using (String; _++_)
+</code></pre>
+<p>Consider the following simple Agda macro:</p>
+<pre><code class="language-agda">intro-helper : ℕ → Type → Term → TC Term
+intro-helper i (pi _ (abs _ b)) rest = do
+  body ← intro-helper (suc i) b rest
+  returnTC (lam visible (abs ("x" ++ primShowNat i) body))
+intro-helper _ _ rest = returnTC rest
+
+-- introduces as many arguments as the goal type allows
+macro
+  intros : Term → Term → TC ⊤
+  intros rest hole = do
+    α ← inferType hole
+    hole′ ← intro-helper zero α rest
+    unify hole hole′
+</code></pre>
+<p>In the macro <code>intros</code>, the <code>rest</code> argument corresponds to the "rest" of what should happen after the arguments have been introduced. For example,</p>
+<pre><code class="language-agda">_ : ℕ → ℕ → ℕ
+_ = intros zero
+</code></pre>
+<p>demonstrates how <code>intros</code> is used to introduce the two arguments (via <code>λ x0 x1 → ...</code>) and then <code>zero</code> is spliced in as the innermost body to yield <code>λ x0 x1 → zero</code>. This works.</p>
+<p>However, suppose we wanted to see the intermediate state of the context and expected type at where <code>zero</code> is provided, but before actually providing <code>zero</code>? We could put a hole there, like so:</p>
+<pre><code class="language-agda">_ : ℕ → ℕ → ℕ
+_ = intros ?
+</code></pre>
+<p>But this is interpreted differently than it might first appear. Agda is going to complain that it gets blocked at the hole (where <code>_64</code> is the value of the hole):</p>
+<pre><code class="language-agda">———— Error ———————————
+Failed to solve the following constraints:
+  unquote
+  (λ hole →
+     bindTC (inferType hole)
+     (λ α → bindTC (intro-helper zero α _64) (unify hole)))
+    (blocked on _64)
+</code></pre>
+<p>This is because <code>unquote</code> is blocked when trying to evaluate the hole, and so macro expansion doesn't even get started. Because of this, we <em>can't</em> inspect that intermediate state in the same way we could if this was a function application rather than a macro invocation.</p>
+<h2 id="Proposal%3A_Quoted_Holes" class="section-header"><a href="#Proposal%3A_Quoted_Holes">Proposal: Quoted Holes</a></h2>
+<p>What would be desirable in this instance,</p>
+<pre><code class="language-agda">_ : ℕ → ℕ → ℕ
+_ = intros ?
+</code></pre>
+<p>is that we actually get a typed hole there that is <em>spliced</em> into the result of the macro invocation. In this case, the hole would actually be in a context with two new entries that are not present where the macro is invoked.</p>
+<p>We can do this with non-hole terms via quotation e.g. something like</p>
+<pre><code class="language-agda">intros (x + y)
+</code></pre>
+<p>would literally splice the <code>x + y</code> into the result of the macro expansion without first evaluating the expression. But this doesn't work with holes since holes can't be quoted.</p>
+<p>And that's exactly what we need: <em>quoted holes</em>.</p>
+<p>A quoted hole behaves like so:</p>
+<ul>
+<li>When quoted, is assigned an id that corresponds to its source position and to-be-generated metavariable type.</li>
+<li>The first time the quoted hole is spliced, a metavariable is freshly generated in the context of that splice, and the quoted hole's id is associated with that metavariable.</li>
+<li>The subsequent times the quoted hole is spliced (identified by the quoted hole's id), the metavariable associated with that quoted hole's type is used as the type of the new splice as well.</li>
+</ul>
+<p>Note that quoted holes do not require any new features of Agda's type theory -- they are purely a UI phenomenon.</p>
+<h3 id="Example_Usage" class="section-header"><a href="#Example_Usage">Example Usage</a></h3>
+<p>This feature will allow you to write something like</p>
+<pre><code class="language-agda">_ : ℕ → ℕ → ℕ
+_ = intros ?
+</code></pre>
+<p>and then inspect the hole to see the context and expected type:</p>
+<pre><code class="language-agda">Goal: ℕ
+————————————————————
+x1 : ℕ
+x0 : ℕ
+</code></pre>
+<p>Ultimately, this gives you exactly the kind of interactivity as interactively running tactic scripts in Coq. Most of the feature is already implemented in how Agda's typed holes work -- it just needs this one extra feature to to be able to quote and splice holes!</p>
+<h3 id="More_about_Quoted_Holes" class="section-header"><a href="#More_about_Quoted_Holes">More about Quoted Holes</a></h3>
+<h4 id="Desugaring" class="section-header"><a href="#Desugaring">Desugaring</a></h4>
+<p>In the example, the idea is that the macro invocation <code>intros ?</code> to <a href="https://agda.readthedocs.io/en/v2.8.0-rc1/language/reflection.html#macros"><img src="agda.readthedocs.io.favicon.ico" alt="" class="icon">desugars</a> to</p>
+<pre><code class="language-agda">unquote (intros (quoteTerm ?))
+</code></pre>
+<p>So, <code>quoteTerm</code> needs to handle quoting holes properly.</p>
+<h4 id="Multiply-spliced_Quoted_Holes%3F%3F" class="section-header"><a href="#Multiply-spliced_Quoted_Holes%3F%3F">Multiply-spliced Quoted Holes??</a></h4>
+<p>A quoted hole is more special than other quoted terms, since it must remember its original source. A quoted term is spliced as a completely new copy of the term that was quoted. In contrast, all splices of the same quoted hole (identified by their shared id) share a metavariable as their types. This is critical because the user will only interact with one instance of the quoted hole, so all ways that it can be spliced must be satisfied by the same context and type, which the user will see when they inspect that information at the quoted hole.</p>
+<p>However, note that this requirement <em>only</em> holds for quote holes, not other quoted terms which are copied when they are spliced. So, this proposal for quoted holes doesn't allow you to put a quoted hole <em>anywhere</em> when using a macro. Since sometimes, a quoted term will be able to be spliced into different contexts with different expected types, which is not allowed for a spliced quoted hole (in particular, think of splicing a macro that will expand). But I think that's mostly ok. An alternative would be to make a special kind of metavariable for quoted holes that can accumulate multiple contexts and expected types and not try to unify.</p>
+<h2 id="References" class="section-header"><a href="#References">References</a></h2>
+<ul>
+<li><a href="https://agda.readthedocs.io/en/latest/language/lexical-structure.html#holes" title="typed holes"><img src="agda.readthedocs.io.favicon.ico" alt="" class="icon">typed holes</a></li>
+<li><a href="https://agda.readthedocs.io/en/stable/language/reflection.html" title="macro system"><img src="agda.readthedocs.io.favicon.ico" alt="" class="icon">macro system</a></li>
+<li><a href="https://agda.readthedocs.io/en/latest/index.html" title="Agda"><img src="agda.readthedocs.io.favicon.ico" alt="" class="icon">Agda</a></li>
+<li><a href="https://agda.readthedocs.io/en/v2.8.0-rc1/language/reflection.html#macros" title="desugars"><img src="agda.readthedocs.io.favicon.ico" alt="" class="icon">desugars</a></li>
+<li><a href="https://rocq-prover.org/" title="Coq/Rocq"><img src="rocq-prover.org.favicon.ico" alt="" class="icon">Coq/Rocq</a></li>
+<li><a href="https://rocq-prover.org/doc/v8.19/refman/proof-engine/ltac.html" title="LTac"><img src="rocq-prover.org.favicon.ico" alt="" class="icon">LTac</a></li>
+</ul></main></body></html>

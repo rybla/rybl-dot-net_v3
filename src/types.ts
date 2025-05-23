@@ -69,3 +69,9 @@ export type Reference = {
   name?: string;
   icon_url?: string;
 };
+
+export const fromResourceToReference = (resource: Resource): Reference => ({
+  name: resource.name,
+  url: resource.route,
+  icon_url: `favicon.ico`,
+});

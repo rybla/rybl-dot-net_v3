@@ -1,10 +1,10 @@
 ---
-type: page
+type: post
 tags:
-  - test
+  - test1
+  - test2
+  - test3
 ---
-
-# Test
 
 :::thumbnail{title="This is Google" url="https://www.google.com"}
 

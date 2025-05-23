@@ -2,20 +2,19 @@
     /* color-scheme: light dark; */
     /* color-scheme: light; */
 
-    --primary--color: #a8577e;
+    /* --primary--color: #a8577e; */
+    --primary--color: #a44a3f;
     --secondary--color: #63a088;
     --darkest--color: #353a47;
     --highlight--color: #ffbc42;
     --neutral--color: #eadeda;
 
-    /* --main--background: light-dark(white, black); */
     --main--background: white;
-    /* --main--foreground: light-dark(black, white); */
     --main--foreground: black;
-    --link--foreground: var(--highlight--color);
 
-    --target--box-shadow: 0 0 0 0.2em
-        color-mix(in hsl, var(--highlight--color), transparent 50%) inset;
+    --link--background: var(--highlight--color);
+
+    --target--box-shadow: 0 -0.1em black inset, 0 0.1em black inset;
 
     --accent--background: color-mix(
         in hsl,
@@ -130,7 +129,7 @@ body {
 }
 
 a {
-    background: color-mix(in hsl, var(--link--foreground), transparent 90%);
+    background: color-mix(in hsl, var(--link--background), transparent 90%);
     color: var(--main--foreground);
     text-decoration: none;
 
@@ -138,11 +137,11 @@ a {
         color-mix(in hsl, var(--main--foreground), transparent 80%) inset;
 
     &:hover {
-        background: color-mix(in hsl, var(--link--foreground), transparent 70%);
-        box-shadow: 0 -0.1em 0 0 var(--link--foreground) inset;
+        background: color-mix(in hsl, var(--link--background), transparent 50%);
+        box-shadow: 0 -0.1em 0 0 var(--main--foreground) inset;
     }
 
-    & > img.icon {
+    & > .icon {
         height: 1em;
         width: 1em;
         margin-bottom: -0.1em;
@@ -277,6 +276,10 @@ h6 {
     a {
         background: none;
         box-shadow: none;
+
+        &:hover {
+            background: none;
+        }
     }
 }
 
@@ -310,10 +313,10 @@ header {
         &:hover {
             background: color-mix(
                 in hsl,
-                var(--link--foreground),
+                var(--link--background),
                 transparent 70%
             );
-            box-shadow: 0 0.1em 0 0 var(--link--foreground);
+            box-shadow: 0 0.1em 0 0 var(--link--background);
         }
 
         .icon {
@@ -350,10 +353,10 @@ header {
             &:hover {
                 background: color-mix(
                     in hsl,
-                    var(--link--foreground),
+                    var(--link--background),
                     transparent 70%
                 );
-                box-shadow: 0 0.1em 0 0 var(--link--foreground);
+                box-shadow: 0 0.1em 0 0 var(--link--background);
             }
         }
     }
