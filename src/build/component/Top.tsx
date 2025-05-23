@@ -17,12 +17,61 @@ export default function TopComponent(props: {
           />
           <title safe>{props.title}</title>
           <link rel="stylesheet" href="Top.css" />
+          <link rel="stylesheet" href="Raindrops.css" />
           {props.content_head as "safe"}
         </head>
         <body>
+          <Raindrops />
           <main>{props.children}</main>
         </body>
       </html>
     </>
+  );
+}
+
+function Raindrops(props: {}) {
+  return (
+    <div id="raindrop_container">
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+      <div class="raindrop"></div>
+    </div>
   );
 }

@@ -92,16 +92,37 @@ html {
         display: none;
     }
 
+    background: var(--main--background);
+    color: var(--main--foreground);
+
     font-family: Spectral, serif;
+    font-size: 16pt;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+
+    background: transparent;
 }
 
 main,
 article {
+    z-index: 0;
+
+    margin: auto;
+    max-width: 600px;
+
     display: flex;
     flex-direction: column;
     gap: 0.5em;
 
     line-height: 1.5em;
+}
+
+main {
+    backdrop-filter: blur(5px);
+    background: color-mix(in hsl, black, transparent 95%);
 }
 
 footer {
@@ -110,22 +131,6 @@ footer {
 
 code {
     font-family: Iosevka, monospace;
-}
-
-body {
-    margin: auto;
-    padding: 0;
-
-    max-width: 600px;
-
-    background: var(--main--background);
-    color: var(--main--foreground);
-
-    font-size: 16pt;
-
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
 }
 
 a {
