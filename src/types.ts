@@ -54,7 +54,7 @@ export type HtmlResource = ResourceBase & {
 
 export type ResourceMetadata = z.infer<typeof ResourceMetadata_Schema>;
 export const ResourceMetadata_Schema = z.object({
-  type: z.enum(["page", "post"]),
+  type: z.enum(["page", "post", "excerpt"]),
   pubDate: z.optional(z.string()),
   tags: z.optional(z.array(z.string())),
   abstract: z.optional(z.string()),

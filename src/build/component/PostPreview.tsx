@@ -58,7 +58,7 @@ export default function PostPreview(props: {
                   .use(remarkMath)
                   .use(remarkReferences, {
                     metadataRef: Ref<ResourceMetadata>({
-                      type: "page",
+                      type: "excerpt",
                     }),
                     referencesRef: Ref<Reference[]>([]),
                   })

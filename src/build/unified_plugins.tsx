@@ -1,7 +1,15 @@
 import config from "@/config.json";
 import Effect from "@/effect";
 import { Reference, ResourceMetadata, ResourceMetadata_Schema } from "@/types";
-import { defined, do_, encodeURIComponent_id, Ref, Tree } from "@/util";
+import {
+  defined,
+  do_,
+  encodeURIComponent_id,
+  indentString,
+  Ref,
+  Tree,
+} from "@/util";
+import { extract_faviconUrl_from_url } from "@/web_util";
 import * as hast from "hast";
 import * as mdast from "mdast";
 import { Plugin } from "unified";
@@ -120,17 +128,6 @@ export const remarkReferences: Plugin<
                   children: node.children,
                 },
               ];
-
-              // node.children.splice(0, 0, {
-              //   type: "image",
-              //   alt: "",
-              //   url: icon_url,
-              //   data: {
-              //     hProperties: {
-              //       class: "icon",
-              //     },
-              //   },
-              // });
             }
           }),
         );
@@ -139,7 +136,11 @@ export const remarkReferences: Plugin<
     await Promise.all(promises);
   }
 
-  if (opts.referencesRef.value.length === 0) return;
+  if (
+    opts.metadataRef.value.type === "excerpt" ||
+    opts.referencesRef.value.length === 0
+  )
+    return;
 
   root.children.push(
     {
@@ -350,11 +351,40 @@ const plugin: Plugin<
 //   return `https://s2.googleusercontent.com/s2/favicons?domain=${url.hostname}&sz=${18}`;
 // }
 export async function getIconUrl(url_raw: string): Promise<string | undefined> {
-  const url = new URL(url_raw);
-  const favicon_url = `${url.protocol}//${url.hostname}/favicon.ico`;
-  const response = await fetch(favicon_url);
-  if (!response.ok) return undefined;
-  const favicon_filepath_relative = `${url.hostname}.favicon.ico`;
-  await Effect.useRemoteFile(favicon_url, favicon_filepath_relative);
-  return favicon_filepath_relative;
+  if (url_raw.startsWith("/")) {
+    return "favicon.ico";
+  } else {
+    const url = do_(() => {
+      try {
+        return new URL(url_raw);
+      } catch (e: any) {
+        console.error(indentString(1, `problem with url_raw: ${url_raw}`));
+        throw e;
+      }
+    });
+    let hostname = url.hostname;
+    const hostname_parts = hostname.split(".");
+    if (hostname_parts.length > 0) {
+      hostname = hostname_parts
+        .slice(hostname_parts.length - 2, hostname_parts.length)
+        .join(".");
+      console.log(`truncated hostname: ${hostname}`);
+    }
+
+    const favicon_url = await extract_faviconUrl_from_url(
+      `${url.protocol}//${hostname}`,
+    );
+
+    if (favicon_url === undefined) return undefined;
+    // console.log({ favicon_url });
+
+    const favicon_href = favicon_url.href;
+    const favicon_extname = favicon_url.pathname.split(".").pop() || "ico";
+
+    const response = await fetch(favicon_href);
+    if (!response.ok) return undefined;
+    const favicon_filepath_relative = `${url.hostname}.favicon.${favicon_extname}`;
+    await Effect.useRemoteFile(favicon_href, favicon_filepath_relative);
+    return favicon_filepath_relative;
+  }
 }
