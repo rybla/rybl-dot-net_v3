@@ -1,4 +1,4 @@
 article {
-    backdrop-filter: blur(2px);
-    background: color-mix(in hsl, black, transparent 95%);
+    backdrop-filter: blur(3px);
+    background: color-mix(in hsl, white, transparent 95%);
 }

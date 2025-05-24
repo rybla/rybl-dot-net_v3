@@ -350,7 +350,7 @@ const plugin: Plugin<
 // async function getIconUrl(url: URL) {
 //   return `https://s2.googleusercontent.com/s2/favicons?domain=${url.hostname}&sz=${18}`;
 // }
-export async function getIconUrl(url_raw: string): Promise<string | undefined> {
+export async function getIconUrl(url_raw: string): Promise<string> {
   if (url_raw.startsWith("/")) {
     return "favicon.ico";
   } else {
@@ -359,7 +359,7 @@ export async function getIconUrl(url_raw: string): Promise<string | undefined> {
         return new URL(url_raw);
       } catch (e: any) {
         console.error(indentString(1, `problem with url_raw: ${url_raw}`));
-        throw e;
+        throw new Error(`getIconUrl: ${e.toString()}`);
       }
     });
     let hostname = url.hostname;
@@ -374,15 +374,26 @@ export async function getIconUrl(url_raw: string): Promise<string | undefined> {
       `${url.protocol}//${hostname}`,
     );
 
-    if (favicon_url === undefined) return undefined;
-    // console.log({ favicon_url });
+    const { favicon_href, favicon_filepath_relative } = await do_(async () => {
+      const default_result = {
+        favicon_href: config.placeholder_favicon_filepath,
+        favicon_filepath_relative: config.placeholder_favicon_filepath,
+      };
 
-    const favicon_href = favicon_url.href;
-    const favicon_extname = favicon_url.pathname.split(".").pop() || "ico";
+      if (favicon_url === undefined) return default_result;
 
-    const response = await fetch(favicon_href);
-    if (!response.ok) return undefined;
-    const favicon_filepath_relative = `${url.hostname}.favicon.${favicon_extname}`;
+      const favicon_href = favicon_url.href;
+      const favicon_extname = favicon_url.pathname.split(".").pop() || "ico";
+
+      const response = await fetch(favicon_href);
+      if (!response.ok) return default_result;
+      const name = url.hostname.replaceAll(".", "_");
+      return {
+        favicon_href,
+        favicon_filepath_relative: `${name}_favicon.${favicon_extname}`,
+      };
+    });
+
     await Effect.useRemoteFile(favicon_href, favicon_filepath_relative);
     return favicon_filepath_relative;
   }

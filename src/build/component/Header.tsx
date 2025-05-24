@@ -4,7 +4,9 @@ import Icon from "@/build/component/Icon";
 export default function Header(props: { resource_name: string }) {
   return (
     <header>
-      <img src="profile.png" class="logo" />
+      <div class="logo">
+        <img src="profile.png" />
+      </div>
       <div class="name">
         <div class="website_name">
           <a class="no_background" href="/" safe>

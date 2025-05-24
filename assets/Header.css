@@ -2,24 +2,39 @@ header {
     padding: 1em 0;
 
     margin: auto;
-    max-width: calc(min(var(--main--width), 100vw));
+    width: calc(min(var(--main--width), 100vw));
+    /* width: 100vw; */
+
+    /*
+    TODO:
+        - children of header to stretch horizontally
+            - &>.logo should center its contents horizontally
+        - children of &>.name stretch vertically
+    */
 
     display: flex;
     flex-direction: column;
     gap: 0.2em;
-    align-items: center;
-    justify-content: center;
+    align-items: stretch;
+    justify-content: stretch;
 
     & > .logo {
-        width: 1.8em;
-        height: 1.8em;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        & > img {
+            width: 1.8em;
+            height: 1.8em;
+        }
     }
 
     & > .name {
         display: flex;
         flex-direction: row;
         align-items: stretch;
-        justify-content: center;
+        /* justify-content: center; */
         /* gap: 0.5em; */
         min-height: 2em;
 
@@ -55,13 +70,11 @@ header {
     }
 
     & > .menu {
-        width: var(--menu-width);
-
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        align-items: center;
-        justify-content: flex-end;
+        align-items: stretch;
+        justify-content: center;
         gap: 1em;
 
         & > a {

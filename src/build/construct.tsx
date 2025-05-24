@@ -1,4 +1,5 @@
 import PostPreview from "@/build/component/PostPreview";
+import Tag from "@/build/component/Tag";
 import TopComponent from "@/build/component/Top";
 import {
   rehypeCustomHeaders,
@@ -19,7 +20,7 @@ import {
   ResourceMetadata,
   Website,
 } from "@/types";
-import { encodeURIComponent_id, indentString, Ref, render_jsx } from "@/util";
+import { encodeURIComponent_id, Ref, render_jsx } from "@/util";
 import * as mdast from "mdast";
 import rehypeMathJaxSvg from "rehype-mathjax";
 import rehypeStringify from "rehype-stringify";
@@ -30,8 +31,6 @@ import remarkMath from "remark-math";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
-import Icon from "@/build/component/Icon";
-import Tag from "@/build/component/Tag";
 
 const extname_Markdown = ".md";
 
@@ -60,26 +59,26 @@ export default async function constructWebsite(): Promise<Website> {
         });
       }
     } catch (e: any) {
-      console.error(indentString(1, e.toString()));
+      console.error(e.toString());
     }
   }
 
   try {
     addResource(website, await constructIndex(posts));
   } catch (e: any) {
-    console.error(indentString(1, e.toString()));
+    console.error(e.toString());
   }
 
   try {
     addResource(website, await constructTags(posts));
   } catch (e: any) {
-    console.error(indentString(1, e.toString()));
+    console.error(e.toString());
   }
 
   try {
     addResource(website, await constructAbout());
   } catch (e: any) {
-    console.error(indentString(1, e.toString()));
+    console.error(e.toString());
   }
 
   return website;
@@ -236,7 +235,14 @@ async function constructMarkdown(filepath: string): Promise<HtmlResource> {
     type: "html",
     metadata: metadataRef.value,
     content: await render_jsx(
-      <TopComponent resource_name={titleString} content_head={<></>}>
+      <TopComponent
+        resource_name={titleString}
+        content_head={
+          <>
+            <link rel="stylesheet" href="Post.css" />
+          </>
+        }
+      >
         <article>{content as "safe"}</article>
       </TopComponent>,
     ),

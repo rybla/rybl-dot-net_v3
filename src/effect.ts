@@ -50,8 +50,9 @@ namespace Effect {
       const blob = await response.blob();
       const arrayBuffer = await blob.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
+      await fs.mkdir(path.dirname(filepath_output), { recursive: true });
       await fs.writeFile(filepath_output, buffer);
-      console.log(`downloaded ${url} to ${filepath_output}`);
+      console.log(`Downloaded ${url} to ${filepath_output}`);
     }
   }
 }

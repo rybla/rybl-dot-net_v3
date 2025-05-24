@@ -1,5 +1,6 @@
 :root {
-    --raindrop_slowness: 50;
+    /* --raindrop_slowness: 50; */
+    --raindrop_slowness: 10;
 
     --raindrop_container--background-color--top: color-mix(
         in hsl,

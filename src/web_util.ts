@@ -64,6 +64,9 @@ export async function extract_faviconUrl_from_url(
           //   `Invalid or unresolvable href for selector ${selector}: "${linkElement.href}" on page ${pageUrl.toString()}`,
           //   e,
           // );
+          console.warn(
+            `Invalid or unresolvable href for selector ${selector}: "${linkElement.href}" on page ${pageUrl.toString()}`,
+          );
         }
       }
     }
@@ -126,7 +129,8 @@ export async function extract_faviconUrl_from_url(
 
     return undefined;
   } catch (error) {
-    console.error(`Error processing ${pageUrlString}:`, error);
+    // console.error(`Error processing ${pageUrlString}:`, error);
+    console.error(`Error extracting favicon from ${pageUrlString}`);
     return undefined;
   }
 }

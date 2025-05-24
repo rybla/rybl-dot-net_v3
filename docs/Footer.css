@@ -2,7 +2,7 @@ footer {
     padding: 1em 0;
 
     margin: auto;
-    max-width: calc(min(var(--main--width), 100vw));
+    width: calc(min(var(--main--width), 100vw));
 
     display: flex;
     flex-direction: column;

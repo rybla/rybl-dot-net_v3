@@ -5,5 +5,6 @@
   "website_name": "rybl.net",
   "watchers_dirpaths": ["./src", "./assets"],
   "output_dir": "./docs",
-  "input_dir": "./assets"
+  "input_dir": "./assets",
+  "placeholder_favicon_filepath": "placeholder_favicon.png"
 }
