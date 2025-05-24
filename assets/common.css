@@ -11,7 +11,7 @@
     --highlight--color: #ffbc42;
     --neutral--color: #eadeda;
 
-    --body--foreground: transparent;
+    --body--background: transparent;
     --body--foreground: black;
 
     --link--background: var(--highlight--color);

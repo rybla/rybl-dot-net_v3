@@ -1,14 +1,28 @@
 :root {
     --raindrop_slowness: 50;
+
+    --raindrop_container--background-color--top: color-mix(
+        in hsl,
+        var(--darkest--color),
+        transparent 90%
+    );
+    --raindrop_container--background-color--bottom: color-mix(
+        in hsl,
+        var(--darkest--color),
+        transparent 80%
+    );
 }
 
 #raindrop_container {
     position: fixed;
     width: 100vw;
-    max-width: 100%;
     height: 100vh;
     /* background: linear-gradient(to bottom, #5b8bab, #4584a3); */
-    background: linear-gradient(to bottom, #dee3ff, #689fba);
+    background: linear-gradient(
+        to bottom,
+        hsl(224deg, 17%, 80%),
+        hsl(224deg, 17%, 50%)
+    );
 
     z-index: -1;
 }

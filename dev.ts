@@ -1,4 +1,4 @@
-import { spawnSync } from "child_process";
+import { ChildProcessByStdio, spawn, spawnSync } from "child_process";
 import express from "express";
 import fs from "fs/promises";
 import http from "http";
@@ -22,25 +22,40 @@ do_(async () => {
   app.use(express.static(config.serve_static_dirpath));
   const server = http.createServer(app);
 
-  async function rebuild(opts?: { clear?: boolean }) {
+  function rebuild(opts?: {
+    clear?: boolean;
+  }): ChildProcessByStdio<null, null, null> {
     if (opts?.clear === true) console.clear();
     tell(`rebuild ...`);
-    spawnSync("tsx", ["./src/build.ts"], {
-      stdio: "inherit",
+    const cp = spawn("tsx", ["./src/build.ts"], {
+      stdio: ["ignore", "inherit", "inherit"],
     });
-    tell(`rebuild ✅`);
+    cp.on("exit", (code) => {
+      if (code === 0) {
+        tell(`rebuild ✅`);
+      } else {
+        tell(`rebuild ❌`);
+      }
+    });
+    return cp;
   }
 
   tell(`watching ${config.watchers_dirpaths}`);
   for (const watcher_dirpath of config.watchers_dirpaths) {
     do_(async () => {
       try {
+        let current_rebuild: ChildProcessByStdio<null, null, null> | undefined =
+          undefined;
         const watcher = fs.watch(watcher_dirpath, {
           recursive: true,
           signal: watchers_ac.signal,
         });
-        for await (const event of watcher) {
-          await rebuild({ clear: true });
+        for await (const {} of watcher) {
+          if (current_rebuild !== undefined) {
+            current_rebuild.kill("SIGINT");
+            console.log("rebuild interrupted by a new rebuild");
+          }
+          current_rebuild = rebuild({ clear: true });
         }
       } catch (e: any) {
         if (e.name === "AbortError") return;
@@ -68,7 +83,7 @@ do_(async () => {
     process.exit(1);
   });
 
-  await rebuild();
+  rebuild();
 
   server.listen(config.serve_port, () => {
     console.log(

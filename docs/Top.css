@@ -23,7 +23,7 @@ body {
     display: flex;
     flex-direction: column;
 
-    background: var(--body--foreground);
+    background: var(--body--background);
     color: var(--body--foreground);
 
     font-family: Spectral, serif;
