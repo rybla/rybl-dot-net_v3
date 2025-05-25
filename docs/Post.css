@@ -1,4 +1,4 @@
 article {
-    backdrop-filter: blur(3px);
+    backdrop-filter: var(--panel--backdrop-filter);
     background: color-mix(in hsl, white, transparent 95%);
 }

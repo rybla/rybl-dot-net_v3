@@ -2,4 +2,8 @@
     display: flex;
     flex-direction: column;
     gap: 1em;
+
+    & > .PostPreview {
+        backdrop-filter: var(--panel--backdrop-filter);
+    }
 }

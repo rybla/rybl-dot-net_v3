@@ -10,6 +10,9 @@ namespace Effect {
   export namespace Ctx {
     export type T = {
       readonly depth: number;
+      readonly tell_mode:
+        | { type: "console" }
+        | { type: "writer"; tells: { depth: number; content: string }[] };
     };
 
     export const nest: (ctx: T) => T = (ctx) => ({
@@ -29,15 +32,25 @@ namespace Effect {
     `${name}(${JSON.stringify(args)}): ${content}`;
 
   export const tell: T<string> = (content) => async (ctx) => {
-    console.log(indentString(ctx.depth, content));
+    if (ctx.tell_mode.type === "console") {
+      console.log(indentString(ctx.depth, content));
+    } else if (ctx.tell_mode.type === "writer") {
+      ctx.tell_mode.tells.push({ depth: ctx.depth, content });
+    }
   };
 
   export const run: <A, B>(
-    opts: { label?: string; catch?: T<EffectError, B> },
+    opts: {
+      label?: string | ((input: A) => string);
+      catch?: T<EffectError, B>;
+    },
     t: T<A, B>,
   ) => T<A, B> = (opts, t) => (input) => async (ctx) => {
     const ctx_new: Ctx.T = opts.label === undefined ? ctx : Ctx.nest(ctx);
-    if (opts.label !== undefined) await tell(opts.label)(ctx);
+    if (opts.label !== undefined) {
+      if (typeof opts.label === "function") await tell(opts.label(input))(ctx);
+      else await tell(opts.label)(ctx);
+    }
     try {
       return await t(input)(ctx_new);
     } catch (e: any) {
@@ -154,6 +167,43 @@ namespace Effect {
       throw new EffectError("expected to be defined, but was null");
     return a;
   };
+
+  export const all =
+    <Input, Output>(input: {
+      opts: { batch_size?: number };
+      ks: T<Input, Output>[];
+      input: Input;
+    }) =>
+    async (ctx: Ctx.T): Promise<Output[]> => {
+      const batch_size = input.opts.batch_size ?? input.ks.length;
+      const batches: T<Input, Output>[][] = [];
+      for (let i = 0; i < input.ks.length; i += batch_size)
+        batches.push(input.ks.slice(i, i + batch_size));
+
+      const tellss: { depth: number; content: string }[][] = [];
+      const results: Output[] = [];
+
+      for (const batch of batches) {
+        results.push(
+          ...(await Promise.all(
+            batch.map((k, i) => {
+              const tells: { depth: number; content: string }[] = [];
+              tellss.push(tells);
+              return run({}, k)(input.input)({
+                ...ctx,
+                tell_mode: { type: "writer", tells },
+              });
+            }),
+          )),
+        );
+
+        for (const ts of tellss) {
+          for (const t of ts) await tell(t.content)({ ...ctx, depth: t.depth });
+        }
+      }
+
+      return results;
+    };
 }
 
 export default Effect;

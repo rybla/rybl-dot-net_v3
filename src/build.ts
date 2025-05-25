@@ -21,4 +21,5 @@ Effect.run(
   },
 )({})({
   depth: 0,
+  tell_mode: { type: "console" },
 });

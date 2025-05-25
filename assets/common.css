@@ -37,6 +37,8 @@
         var(--darkest--color),
         transparent 90%
     );
+
+    --panel--backdrop-filter: blur(3px);
 }
 
 @font-face {

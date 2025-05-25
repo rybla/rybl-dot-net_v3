@@ -37,50 +37,65 @@ export const constructWebsite: Effect.T<{ website: Website }> =
 
     const posts: HtmlResource[] = [];
 
-    const constructResource: Effect.T<{ filepath: string }> =
-      (input) => async (ctx) => {
-        if (input.filepath.endsWith(".md")) {
-          const resource = await constructMarkdown({
-            filepath: input.filepath,
-          })(ctx);
-          await addResource({ website, resource })(ctx);
-          if (resource.metadata.type === "post") posts.push(resource);
-        } else {
-          await addResource({
-            website,
-            resource: {
-              route: input.filepath,
-              name: input.filepath,
-              references: [],
-              type: "raw",
-            },
-          })(ctx);
-        }
-      };
-
-    for (const filepath of await Effect.inputDir({ dirpath_relative: "." })(
-      ctx,
-    )) {
-      await Effect.run(
+    const constructResourceFromFilepath: Effect.T<{ filepath: string }> =
+      Effect.run(
         {
-          label: `construct ${filepath}`,
+          label: (input) =>
+            `constructResourceFromFilepath("${input.filepath}")`,
           catch: (e) => async (ctx) => await Effect.tell(e.toString())(ctx),
         },
-        constructResource,
-      )({ filepath })(ctx);
-    }
+        (input) => async (ctx) => {
+          if (input.filepath.endsWith(".md")) {
+            const resource = await constructMarkdown({
+              filepath: input.filepath,
+            })(ctx);
+            await addResource({ website, resource })(ctx);
+            if (resource.metadata.type === "post") posts.push(resource);
+          } else {
+            await addResource({
+              website,
+              resource: {
+                route: input.filepath,
+                name: input.filepath,
+                references: [],
+                type: "raw",
+              },
+            })(ctx);
+          }
+        },
+      );
 
-    await addResource({
-      website,
-      resource: await constructIndex({ posts })(ctx),
+    const filepaths = await Effect.inputDir({ dirpath_relative: "." })(ctx);
+    await Effect.all({
+      opts: {
+        batch_size: 5,
+      },
+      input: {},
+      ks: filepaths.map(
+        (filepath) => () => constructResourceFromFilepath({ filepath }),
+      ),
     })(ctx);
-    await addResource({
-      website,
-      resource: await constructTags({ posts })(ctx),
-    })(ctx);
-    await addResource({
-      website,
-      resource: await constructAbout({})(ctx),
+
+    await Effect.all({
+      opts: {},
+      input: {},
+      ks: [
+        () => async (ctx) =>
+          await addResource({
+            website,
+            resource: await constructIndex({ posts })(ctx),
+          })(ctx),
+        () => async (ctx) =>
+          await addResource({
+            website,
+            resource: await constructTags({ posts })(ctx),
+          })(ctx),
+        () => async (ctx) =>
+          await addResource({
+            website,
+            resource: await constructAbout({})(ctx),
+          })(ctx),
+      ],
     })(ctx);
   };
 
