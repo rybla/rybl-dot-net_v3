@@ -2,16 +2,8 @@
     /* --raindrop_slowness: 50; */
     --raindrop_slowness: 10;
 
-    --raindrop_container--background-color--top: color-mix(
-        in hsl,
-        var(--darkest--color),
-        transparent 90%
-    );
-    --raindrop_container--background-color--bottom: color-mix(
-        in hsl,
-        var(--darkest--color),
-        transparent 80%
-    );
+    --raindrop_container--background-color--top: hsl(224deg, 17%, 50%);
+    --raindrop_container--background-color--bottom: hsl(224deg, 17%, 30%);
 }
 
 #raindrop_container {
@@ -21,8 +13,8 @@
     /* background: linear-gradient(to bottom, #5b8bab, #4584a3); */
     background: linear-gradient(
         to bottom,
-        hsl(224deg, 17%, 80%),
-        hsl(224deg, 17%, 50%)
+        var(--raindrop_container--background-color--top),
+        var(--raindrop_container--background-color--bottom)
     );
 
     z-index: -1;

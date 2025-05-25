@@ -8,5 +8,7 @@
   "input_dir": "./assets",
   "placeholder_favicon_filepath": "/placeholder_favicon.png",
   "using_cache": true,
-  "fetch_timeout": 5000
+  "fetch_timeout": 5000,
+  "using_batched_posts": true,
+  "batched_posts_batch_size": 10
 }

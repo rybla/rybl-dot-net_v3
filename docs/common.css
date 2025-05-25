@@ -10,7 +10,6 @@
     --darkest--color: #353a47;
     --highlight--color: #ffbc42;
     --neutral--color: #eadeda;
-
     --body--background: transparent;
     --body--foreground: black;
 
@@ -21,7 +20,7 @@
     --accent--background: color-mix(
         in hsl,
         var(--primary--color),
-        transparent 80%
+        transparent 40%
     );
     --accent--foreground: var(--body--foreground);
     --accent--box-shadow: none;

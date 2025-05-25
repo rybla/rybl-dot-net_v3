@@ -70,10 +70,10 @@ export const constructWebsite: Effect.T<{ website: Website }> =
       );
 
     const filepaths = await Effect.inputDir({ dirpath_relative: "." })(ctx);
-    if (false) {
+    if (config.using_batched_posts) {
       await Effect.all({
         opts: {
-          batch_size: 5,
+          batch_size: config.batched_posts_batch_size,
         },
         input: {},
         ks: filepaths.map(
