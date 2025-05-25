@@ -136,7 +136,9 @@ namespace Effect {
           const buffer = Buffer.from(arrayBuffer);
           await fs.mkdir(path.dirname(filepath_output), { recursive: true });
           await fs.writeFile(filepath_output, buffer);
-          console.log(`Downloaded ${input.url} to ${filepath_output}`);
+          await Effect.tell(`Downloaded ${input.url} to ${filepath_output}`)(
+            ctx,
+          );
         }
       } catch (e: any) {
         throw new EffectError(label("useRemoteFile", input, e.toString()));

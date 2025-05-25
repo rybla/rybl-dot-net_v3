@@ -3,6 +3,7 @@ import {
   remarkCustomDirectives,
   remarkReferences,
 } from "@/build/unified_plugins";
+import Effect from "@/Effect";
 import { HtmlResource, Reference, ResourceMetadata } from "@/types";
 import { ifDefined, intercalate, Ref } from "@/util";
 import rehypeMathJaxSvg from "rehype-mathjax";
@@ -15,6 +16,7 @@ import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 
 export default function PostPreview(props: {
+  ctx: Effect.Ctx.T;
   post: HtmlResource;
 }): JSX.Element {
   return (
@@ -53,10 +55,11 @@ export default function PostPreview(props: {
                 await unified()
                   .use(remarkParse)
                   .use(remarkDirective)
-                  .use(remarkCustomDirectives, {})
+                  .use(remarkCustomDirectives, { ctx: props.ctx })
                   .use(remarkGfm)
                   .use(remarkMath)
                   .use(remarkReferences, {
+                    ctx: props.ctx,
                     metadataRef: Ref<ResourceMetadata>({
                       type: "excerpt",
                     }),

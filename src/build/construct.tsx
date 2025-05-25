@@ -10,7 +10,6 @@ import {
   remarkTitle,
   showNode,
 } from "@/build/unified_plugins";
-import config from "@/config.json";
 import Effect from "@/Effect";
 import {
   addResource,
@@ -34,12 +33,7 @@ import { unified } from "unified";
 
 export const constructWebsite: Effect.T<{ website: Website }> =
   (input) => async (ctx) => {
-    console.log("construct");
-    const website: Website = {
-      url: config.website_url,
-      name: config.website_name,
-      resources: [],
-    };
+    const website = input.website;
 
     const posts: HtmlResource[] = [];
 
@@ -70,7 +64,7 @@ export const constructWebsite: Effect.T<{ website: Website }> =
       await Effect.run(
         {
           label: `construct ${filepath}`,
-          catch: (e) => Effect.tell(e.toString()),
+          catch: (e) => async (ctx) => await Effect.tell(e.toString())(ctx),
         },
         constructResource,
       )({ filepath })(ctx);
@@ -94,7 +88,6 @@ export default constructWebsite;
 
 const constructIndex: Effect.T<{ posts: HtmlResource[] }, HtmlResource> =
   Effect.run({ label: "constructIndex" }, (input) => async (ctx) => {
-    console.log("constructIndex");
     const name = "Index";
     const index: HtmlResource = {
       route: `index.html`,
@@ -114,7 +107,7 @@ const constructIndex: Effect.T<{ posts: HtmlResource[] }, HtmlResource> =
         >
           <div class="previews">
             {input.posts.map((post) => (
-              <PostPreview post={post} />
+              <PostPreview ctx={ctx} post={post} />
             ))}
           </div>
         </TopComponent>,
@@ -126,7 +119,6 @@ const constructIndex: Effect.T<{ posts: HtmlResource[] }, HtmlResource> =
 
 const constructTags: Effect.T<{ posts: HtmlResource[] }, HtmlResource> =
   Effect.run({ label: "constructTags" }, (input) => async (ctx) => {
-    console.log("constructTags");
     const tags: Set<string> = new Set(
       input.posts.flatMap((post) => post.metadata.tags ?? []),
     );
@@ -161,7 +153,7 @@ const constructTags: Effect.T<{ posts: HtmlResource[] }, HtmlResource> =
                     !post.metadata.tags?.includes(tag) ? (
                       <></>
                     ) : (
-                      <PostPreview post={post} />
+                      <PostPreview ctx={ctx} post={post} />
                     ),
                   )}
                 </>
@@ -207,8 +199,6 @@ const constructAbout: Effect.T<{}, HtmlResource> = Effect.run(
 
 const constructMarkdown: Effect.T<{ filepath: string }, HtmlResource> =
   Effect.run({ label: "constructMarkdown" }, (input) => async (ctx) => {
-    console.log(`constructPost: ${input.filepath}`);
-
     const filebasename = input.filepath.slice(0, -".md".length);
 
     const titleRef: Ref<mdast.Heading> = Ref({
@@ -225,17 +215,17 @@ const constructMarkdown: Effect.T<{ filepath: string }, HtmlResource> =
       await unified()
         .use(remarkParse)
         .use(remarkFrontmatter, ["yaml"])
-        .use(remarkPostMetadata, { metadataRef })
-        .use(remarkTitle, { metadataRef, titleRef })
+        .use(remarkPostMetadata, { ctx, metadataRef })
+        .use(remarkTitle, { ctx, metadataRef, titleRef })
         .use(remarkDirective)
-        .use(remarkCustomDirectives, {})
+        .use(remarkCustomDirectives, { ctx })
         .use(remarkGfm)
         .use(remarkMath)
-        .use(remarkReferences, { metadataRef, referencesRef })
-        .use(remarkTableOfContents, { metadataRef })
+        .use(remarkReferences, { ctx, metadataRef, referencesRef })
+        .use(remarkTableOfContents, { ctx, metadataRef })
         .use(remarkRehype)
         .use(rehypeMathJaxSvg)
-        .use(rehypeCustomHeaders, { metadataRef })
+        .use(rehypeCustomHeaders, { ctx, metadataRef })
         .use(rehypeStringify)
         .process(
           await Effect.inputFile_text({ filepath_relative: input.filepath })(

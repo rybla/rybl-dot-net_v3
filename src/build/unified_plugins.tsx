@@ -5,18 +5,41 @@ import { do_, encodeURIComponent_id, indentString, Ref, Tree } from "@/util";
 import { extract_faviconUrl_from_url } from "@/web_util";
 import * as hast from "hast";
 import * as mdast from "mdast";
+import * as mdast_directive from "mdast-util-directive";
 import { Plugin } from "unified";
 import * as unist from "unist";
 import { visit } from "unist-util-visit";
 import YAML from "yaml";
 
-export function showNode(node: mdast.Node): string {
-  if ("value" in node) {
-    return node.value as string;
-  } else {
-    return (node as unist.Parent).children.map((kid) => showNode(kid)).join("");
-  }
-}
+// -----------------------------------------------------------------------------
+// Template
+// -----------------------------------------------------------------------------
+
+const mkPlugin: <
+  Opts extends { [key: string]: any } & { ctx: Effect.Ctx.T },
+  Input extends unist.Node,
+  Output extends unist.Node,
+>(
+  label: string,
+  k: Effect.T<Opts & { root: Input }, void>,
+) => Plugin<[Opts], Input, Output> =
+  (label, k) =>
+  (opts) =>
+  // @ts-ignore
+  (root: Input) =>
+    Effect.run({ label }, k)({ ...opts, root })(opts.ctx);
+
+const examplePlugin: Plugin<
+  [{ ctx: Effect.Ctx.T; metadataRef: Ref<ResourceMetadata> }],
+  mdast.Root,
+  mdast.Root
+> = mkPlugin("TODO:label", (input) => async (ctx) => {
+  await Effect.tell("TODO")(ctx);
+});
+
+// -----------------------------------------------------------------------------
+// Plugins
+// -----------------------------------------------------------------------------
 
 export const remarkTitle: Plugin<
   [
@@ -28,29 +51,27 @@ export const remarkTitle: Plugin<
   ],
   mdast.Root,
   mdast.Root
-> = (opts) => async (root) => {
-  // console.log("remarkTitle");
-  visit(root, (node, index, parent) => {
+> = mkPlugin("remarkTitle", (input) => async (ctx) => {
+  visit(input.root, (node) => {
     if (node.type === "heading" && node.depth === 1) {
-      opts.titleRef.value = node;
+      input.titleRef.value = node;
     }
   });
-};
+});
 
 export const remarkPostMetadata: Plugin<
   [{ ctx: Effect.Ctx.T; metadataRef: Ref<ResourceMetadata> }],
   mdast.Root,
   mdast.Root
-> = (opts) => async (root) => {
-  // console.log("remarkPostMetadata");
-  visit(root, (node) => {
+> = mkPlugin("remarkPostMetadata", (input) => async (ctx) => {
+  visit(input.root, (node) => {
     if (node.type === "yaml") {
       const frontmatter = YAML.parse(node.value);
       const metadata = ResourceMetadata_Schema.parse(frontmatter);
-      opts.metadataRef.value = metadata;
+      input.metadataRef.value = metadata;
     }
   });
-};
+});
 
 export const remarkReferences: Plugin<
   [
@@ -62,92 +83,84 @@ export const remarkReferences: Plugin<
   ],
   mdast.Root,
   mdast.Root
-> = (opts) => async (root) => {
-  // console.log("remarkReferences");
-  if (["page"].includes(opts.metadataRef.value.type)) return;
+> = mkPlugin("remarkReferences", (input) => async (ctx) => {
+  if (["page"].includes(input.metadataRef.value.type)) return;
 
   // have to do this `visit` pass first before inserting images into links since
   // otherwise those images would be included in these image references
   {
-    const promises: Promise<void>[] = [];
-    visit(root, (node) => {
-      if (node.type === "image") {
-        promises.push(
-          do_(async () => {
-            const icon_url = await getIconUrl(node.url);
-            opts.referencesRef.value.push({
-              name:
-                node.alt !== undefined && node.alt !== null && node.alt !== ""
-                  ? node.alt
-                  : node.url,
-              url: node.url,
-              icon_url,
-            });
-          }),
-        );
-      }
+    const nodes: mdast.Image[] = [];
+    visit(input.root, (node) => {
+      if (node.type === "image") nodes.push(node);
     });
-    await Promise.all(promises);
+
+    for (const node of nodes) {
+      const icon_url = await getIconUrl({ url_raw: node.url })(input.ctx);
+      input.referencesRef.value.push({
+        name:
+          node.alt !== undefined && node.alt !== null && node.alt !== ""
+            ? node.alt
+            : node.url,
+        url: node.url,
+        icon_url,
+      });
+    }
   }
 
   {
-    const promises: Promise<void>[] = [];
-    visit(root, (node) => {
-      if (node.type === "link") {
-        promises.push(
-          do_(async () => {
-            // console.log(`reference: ${showNode(node)}`);
-            const icon_url = await do_(async () => {
-              if (node.url.startsWith("#")) {
-                return config.website_url;
-              } else {
-                return await getIconUrl(node.url);
-              }
-            });
-            opts.referencesRef.value.push({
-              name: showNode(node),
-              url: node.url,
-              icon_url,
-            });
-            if (icon_url !== undefined) {
-              node.children = [
-                {
-                  type: "image",
-                  alt: "",
-                  url: icon_url,
-                  data: {
-                    hProperties: {
-                      class: "icon",
-                    },
-                  },
-                },
-                {
-                  type: "textDirective",
-                  name: "span",
-                  data: {
-                    hName: "span",
-                    hProperties: {
-                      class: "name",
-                    },
-                  },
-                  children: node.children,
-                },
-              ];
-            }
-          }),
-        );
-      }
+    const nodes: mdast.Link[] = [];
+    visit(input.root, (node) => {
+      if (node.type === "link") nodes.push(node);
     });
-    await Promise.all(promises);
+
+    for (const node of nodes) {
+      const icon_url = await do_(async () => {
+        if (node.url.startsWith("#")) {
+          return config.website_url;
+        } else {
+          return await getIconUrl({ url_raw: node.url })(input.ctx);
+        }
+      });
+      input.referencesRef.value.push({
+        name: showNode(node),
+        url: node.url,
+        icon_url,
+      });
+      if (icon_url !== undefined) {
+        node.children = [
+          {
+            type: "image",
+            alt: "",
+            url: icon_url,
+            data: {
+              hProperties: {
+                class: "icon",
+              },
+            },
+          },
+          {
+            type: "textDirective",
+            name: "span",
+            data: {
+              hName: "span",
+              hProperties: {
+                class: "name",
+              },
+            },
+            children: node.children,
+          },
+        ];
+      }
+    }
   }
 
   if (
-    opts.metadataRef.value.type === "excerpt" ||
-    opts.referencesRef.value.length === 0
+    input.metadataRef.value.type === "excerpt" ||
+    input.referencesRef.value.length === 0
   )
     return;
 
-  root.children.push(
+  input.root.children.push(
     {
       type: "heading",
       depth: 2,
@@ -155,7 +168,7 @@ export const remarkReferences: Plugin<
     },
     {
       type: "list",
-      children: opts.referencesRef.value.map((reference) => ({
+      children: input.referencesRef.value.map((reference) => ({
         type: "listItem",
         children: [
           {
@@ -194,17 +207,17 @@ export const remarkReferences: Plugin<
       })),
     },
   );
-};
+});
 
 export const remarkTableOfContents: Plugin<
   [{ ctx: Effect.Ctx.T; metadataRef: Ref<ResourceMetadata> }],
   mdast.Root,
   mdast.Root
-> = (opts) => (root) => {
-  if (["page"].includes(opts.metadataRef.value.type)) return;
+> = mkPlugin("remarkTableOfContents", (input) => async (ctx) => {
+  if (["page"].includes(input.metadataRef.value.type)) return;
 
   const headings_forest: Tree<{ id: string; value: string }>[] = [];
-  visit(root, (node, index, parent) => {
+  visit(input.root, (node, index, parent) => {
     if (node.type === "heading") {
       const value = showNode(node);
       const id = encodeURIComponent_id(value);
@@ -258,198 +271,132 @@ export const remarkTableOfContents: Plugin<
 
   if (tableOfContents.children.length === 0) return;
 
-  const title_index = root.children.findIndex(
+  const title_index = input.root.children.findIndex(
     (node) => node.type === "heading" && node.depth === 1,
   );
   if (title_index !== -1) {
-    root.children.splice(title_index + 1, 0, tableOfContents);
+    input.root.children.splice(title_index + 1, 0, tableOfContents);
   }
-};
+});
 
 export const rehypeCustomHeaders: Plugin<
   [{ ctx: Effect.Ctx.T; metadataRef: Ref<ResourceMetadata> }],
   hast.Root,
   hast.Root
-> = (opts) => (root) => {
-  // console.log("rehypeCustomHeaders");
-  if (["page"].includes(opts.metadataRef.value.type)) return;
+> = mkPlugin("rehypeCustomHeaders", (input) => async (ctx) => {
+  if (["page"].includes(input.metadataRef.value.type)) return;
 
-  visit(root, (node) => {
-    if (node.type === "element" && RegExp(/^(h[1-6])$/).test(node.tagName)) {
-      node.children = [
-        {
-          type: "element",
-          tagName: "a",
-          properties: {
-            href: `#${node.properties.id}`,
-            class: "no_background",
-          },
-          children: node.children,
-        },
-      ];
-    }
+  const nodes: hast.Element[] = [];
+  visit(input.root, (node) => {
+    if (node.type === "element" && RegExp(/^(h[1-6])$/).test(node.tagName))
+      nodes.push(node);
   });
-};
 
-export const remarkCustomDirectives_: Plugin<
-  [{ ctx: Effect.Ctx.T }],
-  mdast.Root,
-  mdast.Root
-> = (opts) => (root) =>
-  Effect.run({ label: "remarkCustomDirectives" }, () => async (ctx) => {
-    const nodes: ContainerDirective | LeafDirective | TextDirective = [];
-    visit(root, (node) => {
-      if (
-        node.type === "containerDirective" ||
-        node.type === "leafDirective" ||
-        node.type === "textDirective"
-      )
-        nodes.push(node);
-    });
-
-    for (const node of nodes) {
-      if (
-        node.type === "containerDirective" &&
-        node.name === "example_containerDirective"
-      ) {
-        node.data = node.data ?? {};
-        node.data.hProperties = node.data.hProperties ?? {};
-        node.data.hProperties.class = "example_containerDirective";
-      } else if (
-        node.type === "leafDirective" &&
-        node.name === "example_leafDirective"
-      ) {
-        node.data = node.data ?? {};
-        node.data.hProperties = node.data.hProperties ?? {};
-        node.data.hProperties.class = "example_leafDirective";
-        node.children = [{ type: "text", value: "example_leafDirective" }];
-      } else if (
-        node.type === "textDirective" &&
-        node.name === "example_textDirective"
-      ) {
-        node.data = node.data ?? {};
-        node.data.hName = "span";
-        node.data.hProperties = node.data.hProperties ?? {};
-        node.data.hProperties.class = "example_textDirective";
-        node.children = [{ type: "text", value: "example_textDirective" }];
-      } else {
-        Effect.tell(`unhandled directive: ${JSON.stringify(node, null, 4)}`);
-      }
-    }
-  })({})(opts.ctx);
+  for (const node of nodes) {
+    node.children = [
+      {
+        type: "element",
+        tagName: "a",
+        properties: {
+          href: `#${node.properties.id}`,
+          class: "no_background",
+        },
+        children: node.children,
+      },
+    ];
+  }
+});
 
 export const remarkCustomDirectives: Plugin<
   [{ ctx: Effect.Ctx.T }],
   mdast.Root,
   mdast.Root
-> = (opts) => async (root) => {
-  // console.log("remarkCustomDirectives");
-  visit(root, (node) => {
+> = mkPlugin("remarkCustomDirectives", (input) => async (ctx) => {
+  const nodes: mdast_directive.Directives[] = [];
+  visit(input.root, (node) => {
     if (
-      node.type === "containerDirective" &&
-      node.name === "example_containerDirective"
-    ) {
-      node.data = node.data ?? {};
-      node.data.hProperties = node.data.hProperties ?? {};
-      node.data.hProperties.class = "example_containerDirective";
-    } else if (
-      node.type === "leafDirective" &&
-      node.name === "example_leafDirective"
-    ) {
-      node.data = node.data ?? {};
-      node.data.hProperties = node.data.hProperties ?? {};
-      node.data.hProperties.class = "example_leafDirective";
-      node.children = [{ type: "text", value: "example_leafDirective" }];
-    } else if (
-      node.type === "textDirective" &&
-      node.name === "example_textDirective"
-    ) {
-      node.data = node.data ?? {};
-      node.data.hName = "span";
-      node.data.hProperties = node.data.hProperties ?? {};
-      node.data.hProperties.class = "example_textDirective";
-      node.children = [{ type: "text", value: "example_textDirective" }];
-    } else if (
-      node.type === "containerDirective" &&
-      node.name === "thumbnail"
-    ) {
-      node.data = node.data ?? {};
-      node.data.hProperties = node.data.hProperties ?? {};
-      node.data.hProperties.class = "containerDirective_thumbnail";
-      const attributes = await Effect.defined(node.attributes);
-      const title = Effect.defined(attributes.title);
-      const url = Effect.defined(attributes.url);
-      node.children.splice(0, 0, {
-        type: "heading",
-        depth: 2,
-        children: [
-          {
-            type: "text",
-            value: title,
-          },
-        ],
-      });
-    } else if (node.type === "leafDirective" && node.name === "youtube") {
-      console.log(JSON.stringify(node, null, 4));
-    }
+      node.type === "containerDirective" ||
+      node.type === "leafDirective" ||
+      node.type === "textDirective"
+    )
+      nodes.push(node);
   });
-};
 
-const plugin: Plugin<
-  [{ ctx: Effect.Ctx.T; metadataRef: Ref<ResourceMetadata> }],
-  mdast.Root,
-  mdast.Root
-> = (opts) => (root) => {};
+  for (const node of nodes) {
+    if (node.type === "leafDirective" && node.name === "youtube") {
+      node.data = node.data ?? {};
+      node.data.hName = "iframe";
+      node.data.hProperties = node.data.hProperties ?? {};
+      node.data.hProperties.src = node.attributes!.src;
+    } else {
+      await Effect.tell(
+        `unhandled directive: ${JSON.stringify(node, null, 4)}`,
+      )(ctx);
+    }
+  }
+});
+
+// -----------------------------------------------------------------------------
+// Utilities
+// -----------------------------------------------------------------------------
 
 // TODO: customize the size
 // async function getIconUrl(url: URL) {
 //   return `https://s2.googleusercontent.com/s2/favicons?domain=${url.hostname}&sz=${18}`;
 // }
-export async function getIconUrl(url_raw: string): Promise<string> {
-  if (url_raw.startsWith("/")) {
-    return "favicon.ico";
-  } else {
-    const url = do_(() => {
-      try {
-        return new URL(url_raw);
-      } catch (e: any) {
-        console.error(indentString(1, `problem with url_raw: ${url_raw}`));
-        throw new Error(`getIconUrl: ${e.toString()}`);
+export const getIconUrl: Effect.T<{ url_raw: string }, string> =
+  (input) => async (ctx) => {
+    if (input.url_raw.startsWith("/")) {
+      return "favicon.ico";
+    } else {
+      const url = do_(() => {
+        try {
+          return new URL(input.url_raw);
+        } catch (e: any) {
+          console.error(
+            indentString(1, `problem with url_raw: ${input.url_raw}`),
+          );
+          throw new Error(`getIconUrl: ${e.toString()}`);
+        }
+      });
+      let hostname = url.hostname;
+      const hostname_parts = hostname.split(".");
+      if (hostname_parts.length > 0) {
+        hostname = hostname_parts
+          .slice(hostname_parts.length - 2, hostname_parts.length)
+          .join(".");
       }
-    });
-    let hostname = url.hostname;
-    const hostname_parts = hostname.split(".");
-    if (hostname_parts.length > 0) {
-      hostname = hostname_parts
-        .slice(hostname_parts.length - 2, hostname_parts.length)
-        .join(".");
-    }
 
-    const favicon_url = await extract_faviconUrl_from_url(
-      `${url.protocol}//${hostname}`,
-    )(opts.sctx);
+      const favicon_url = await extract_faviconUrl_from_url({
+        pageUrlString: `${url.protocol}//${hostname}`,
+      })(ctx);
 
-    const { favicon_href, favicon_filepath_relative } = await do_(async () => {
-      const default_result = {
-        favicon_href: config.placeholder_favicon_filepath,
-        favicon_filepath_relative: config.placeholder_favicon_filepath,
-      };
-
-      if (favicon_url === undefined) return default_result;
+      if (favicon_url === undefined) {
+        return config.placeholder_favicon_filepath;
+      }
 
       const favicon_href = favicon_url.href;
       const favicon_extname = favicon_url.pathname.split(".").pop() || "ico";
 
       const response = await fetch(favicon_href);
-      if (!response.ok) return default_result;
+      if (!response.ok) {
+        return config.placeholder_favicon_filepath;
+      }
       const name = url.hostname.replaceAll(".", "_");
-      return {
-        favicon_href,
-        favicon_filepath_relative: `${name}_favicon.${favicon_extname}`,
-      };
-    });
+      const favicon_filepath_relative = `${name}_favicon.${favicon_extname}`;
 
-    await Effect.useRemoteFile(favicon_href, favicon_filepath_relative);
-    return favicon_filepath_relative;
+      await Effect.useRemoteFile({
+        url: favicon_href,
+        filepath_relative: favicon_filepath_relative,
+      })(ctx);
+      return favicon_filepath_relative;
+    }
+  };
+
+export function showNode(node: mdast.Node): string {
+  if ("value" in node) {
+    return node.value as string;
+  } else {
+    return (node as unist.Parent).children.map((kid) => showNode(kid)).join("");
   }
 }
