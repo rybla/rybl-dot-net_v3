@@ -1,0 +1,317 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>rybl.net | Kelvin Versioning</title><link rel="stylesheet" href="common.css"/><link rel="stylesheet" href="Top.css"/><link rel="stylesheet" href="Header.css"/><link rel="stylesheet" href="Footer.css"/><link rel="stylesheet" href="Raindrops.css"/><link rel="stylesheet" href="Markdown.css"/><link rel="stylesheet" href="Tag.css"/><link rel="stylesheet" href="Post.css"/></head><body><div id="raindrop_container"><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div></div><header><div class="logo"><img src="profile.png"/></div><div class="name"><div class="website_name"><a class="no_background" href="/">rybl.net</a></div><div class="separator"></div><div class="resource_name"><div>Kelvin Versioning</div></div></div><div class="menu"><a href="index.html" class="item no_background"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon lucide lucide-library-icon lucide-library"><path d="m16 6 4 14"></path><path d="M12 6v14"></path><path d="M8 8v12"></path><path d="M4 4v16"></path></svg></a><a href="Tags.html" class="item no_background"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon lucide lucide-tag-icon lucide-tag"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"></path><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle></svg></a><a href="About.html" class="item no_background"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg></a><a href="https://github.com/rybla/" class="item no_background"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon lucide lucide-github-icon lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg></a></div></header><main><article><h1 id="Kelvin_Versioning" class="section-header"><a href="#Kelvin_Versioning" class="no_background">Kelvin Versioning</a></h1>
+<ol>
+<li>
+<p><a href="#Kelvin_Versioning" title="Kelvin Versioning">Kelvin Versioning</a></p>
+</li>
+<li>
+<p><a href="#Semantic_Versioning" title="Semantic Versioning">Semantic Versioning</a></p>
+</li>
+<li>
+<p><a href="#The_Purposes_of_Versioning_Schemes" title="The Purposes of Versioning Schemes">The Purposes of Versioning Schemes</a></p>
+<ol>
+<li><a href="#randver_%26_hashver" title="randver &#x26; hashver">randver &#x26; hashver</a></li>
+<li><a href="#natver" title="natver">natver</a></li>
+<li><a href="#semver" title="semver">semver</a></li>
+<li><a href="#kelver" title="kelver">kelver</a></li>
+</ol>
+</li>
+<li>
+<p><a href="#Definitions_of_Versioning_Schemes" title="Definitions of Versioning Schemes">Definitions of Versioning Schemes</a></p>
+</li>
+<li>
+<p><a href="#References" title="References">References</a></p>
+</li>
+</ol>
+<h2 id="Kelvin_Versioning" class="section-header"><a href="#Kelvin_Versioning" class="no_background">Kelvin Versioning</a></h2>
+<p><strong>Kelvin versioning</strong> (i.e. <strong>kelver</strong>) is an extremely uncommon versioning scheme,
+introduced by <a href="https://en.wikipedia.org/wiki/Curtis_Yarvin"><img src="en_wikipedia_org_favicon.ico" alt="" class="icon"><span class="name">Curtis Yarvin</span></a> at <a href="https://urbit.org"><img src="urbit_org_favicon.ico" alt="" class="icon"><span class="name">urbit</span></a>, that enumerates
+newer versions with lower natural numbers. The metaphor is between versions of a
+software project and degrees of <a href="https://en.wikipedia.org/wiki/Kelvin"><img src="en_wikipedia_org_favicon.ico" alt="" class="icon"><span class="name">Kelvin</span></a>, which is the <a href="https://en.wikipedia.org/wiki/SI_base_unit"><img src="en_wikipedia_org_favicon.ico" alt="" class="icon"><span class="name">SI base
+unit</span></a> of
+<a href="https://en.wikipedia.org/wiki/Temperature"><img src="en_wikipedia_org_favicon.ico" alt="" class="icon"><span class="name">temperature</span></a> where 0 degrees Kelvin
+--- written 0K and often referred to as <a href="https://en.wikipedia.org/wiki/Absolute_zero"><img src="en_wikipedia_org_favicon.ico" alt="" class="icon"><span class="name">"absolute
+zero"</span></a> --- is the measure of the
+total absence of kinetic energy.</p>
+<p>In this way, as a project's version approaches 0K, the amount of further changes
+allowed (i.e. the kinetic energy) approaches 0. A project with version a high
+degree is expected to experience many further changes --- it has high kinetic
+energy. A project with version a low degree is expected to experience few
+further changes --- it has low kinetic energy.</p>
+<h2 id="Semantic_Versioning" class="section-header"><a href="#Semantic_Versioning" class="no_background">Semantic Versioning</a></h2>
+<p><strong><a href="https://semver.org"><img src="/placeholder_favicon.png" alt="" class="icon"><span class="name">Semantic versioning</span></a></strong> (i.e. <strong>semver</strong>) is the most standard, and
+extremely common, versioning scheme used in production software. It encodes a
+project's version with three natural numbers, written <code>major.minor.patch</code>:</p>
+<ul>
+<li><strong>major</strong>: Versions with the same major version number are <a href="https://en.wikipedia.org/wiki/Backward_compatibility"><img src="en_wikipedia_org_favicon.ico" alt="" class="icon"><span class="name">backwards
+compatible</span></a>. In this
+way, an major version update indicates non-backwards-compatibile changes.</li>
+<li><strong>minor</strong>: A minor version update indicates backwards-compatible changes.</li>
+<li><strong>patch</strong>: A patch version update indicates backwards-compatible changes that
+only fix bugs.</li>
+</ul>
+<h2 id="The_Purposes_of_Versioning_Schemes" class="section-header"><a href="#The_Purposes_of_Versioning_Schemes" class="no_background">The Purposes of Versioning Schemes</a></h2>
+<p>The contrast between kelver and semver demonstrates some fundamentally different
+ideas about the purposes of versioning schemes. At bottom, a versioning scheme
+is a scheme for uniquely naming each version of a project. This description
+captures both kelver and semver, and also allows completely unconventional
+schemes such as the following:</p>
+<ul>
+<li><strong>randver</strong>: the version is a random version not already used by an existing
+version (this is how many layuser-facing version names are chosen for systems
+like macos and android)</li>
+<li><strong>hashver</strong>: the version is the hash of the project (this is essentially how
+github versions commits)</li>
+<li><strong>idver</strong>: the version <em>is</em> the project (in binary)</li>
+<li><strong>natver</strong>: the version starts at 0 and increments for each new version
+version</li>
+</ul>
+<h3 id="randver_%26_hashver" class="section-header"><a href="#randver_%26_hashver" class="no_background">randver &#x26; hashver</a></h3>
+<p>The hamartia of randver and hashver is that the versions of projects do not
+indicate anything about their relationship other that whether they are the same.</p>
+<p>Idver indicates slightly more than randver and hashver. Taking a <a href="https://en.wikipedia.org/wiki/Diff"><img src="en_wikipedia_org_favicon.ico" alt="" class="icon"><span class="name">diff</span></a> of
+two versions entirely describes the (syntactic) differences between those
+versions of the project. However, users don't care specifically about the syntax
+of a project; users care about the semantics of a project so they use the
+project's behaviors without knowing or understanding in particular <em>how</em> those
+behaviors are implemented. So, more developed versioning schemes have adopted
+the further purpose to conveniently encode important semantic relationships.
+From now on, "change" is used as shorthand for "semantic change".</p>
+<h3 id="natver" class="section-header"><a href="#natver" class="no_background">natver</a></h3>
+<p>Natver is the simplest step in the direction of satisfying this further purpose.
+For example, version 10 is a more developed version than version 2 and versions
+2 through 9 show how version 1 was incrementally developed in version 10.
+Additionally, there are more significant changes between versions 10
+and 100 than between version 1 and 10. Using digital encodings of natural
+numbers is the only acceptable way to implement this, but there has been an
+exception made from this for <a href="https://en.wikipedia.org/wiki/Donald_Knuth"><img src="en_wikipedia_org_favicon.ico" alt="" class="icon"><span class="name">Donald
+Knuth</span></a> who, after writing some of the
+most influencial work on <a href="https://en.wikipedia.org/wiki/The_Art_of_Computer_Programming"><img src="en_wikipedia_org_favicon.ico" alt="" class="icon"><span class="name">The Art of Computer
+Programming</span></a> and
+developing document and font rendering programs TeX and Metafont which are still
+used >60 years later, was allowed to <a href="https://en.wikipedia.org/wiki/TeX#TeX82"><img src="en_wikipedia_org_favicon.ico" alt="" class="icon"><span class="name">encode the natver of TeX in unary as the
+sequence of digits approaching π (where π is planned to be a locked
+version)</span></a>.</p>
+<p>Even this simple step, however, introduces many more ways to misuse the
+versioning scheme. In randver, hashver, and idver, releasing a new project
+version was trivial. But in natver, the useful information in the version has to
+be maintained, nontrivially, by the project developer. All of the sudden, many
+more factors are relevant to choosing when to make a new version than before.
+The developer has to be conscious now that, when they release a new version, it
+should be based on the immediately previous version of the project. It doesn't
+make sense for development to go backwards or have multiple branches because the
+versioning in monotone increasing and linear. So, the developer has to
+anticipate that the version they are releasing is strictly more advanced than
+the previous version. Additionally, each new version should have roughly the
+same amount of change. Otherwise, it's impossible to say if there was more
+change from version 1 to 10 or from version 10 to 100.</p>
+<h3 id="semver" class="section-header"><a href="#semver" class="no_background">semver</a></h3>
+<p>Beyond natver, there are many other kinds of historical semantic relationships
+that could be encoded in the version. Semver has been adopted as the standard
+way to simply encode what are widely agreed upon as the most important of these
+historical semantic relationships:</p>
+<ul>
+<li>a <strong>major</strong> version corresponds to a behavioral change that is not compatible with
+previous major versions</li>
+<li>a <strong>minor</strong> version corresponds to an additional behavior (i.e. feature) that is
+compatible with previous minor versions with the same major version</li>
+<li>a <strong>patch</strong> version corresponds to a change in implementation that does brings
+the actual behavior more in line with the intended/expected/specified
+behavior.</li>
+</ul>
+<p>Of course, these intricate ideas multiplies the potential for misuse and burdens
+upkeep. For example, the project developer can make a breaking change in a minor
+version update, add a new feature in a fix, make a breaking change in a fix,
+etc. The developer simply has to be trusted to use semver correctly, although
+"misuses" are often just bugs. More sophisticated versioning schemes like semver
+have huge advantages when used well and encourage good organization of semantic
+relationships between versions, but are also more difficult to use and
+practically force users to just trust the project developer. Semvar has been
+widely settled upon as the best way to select and encode a minimal set of
+semantic relationships that's worth the continuous effort.</p>
+<h3 id="kelver" class="section-header"><a href="#kelver" class="no_background">kelver</a></h3>
+<p>Historical semantic relationships are, however, only backwards-facing.
+Future-facing semantic relationships are also important and are most commonly
+captured in the concept of <em>stability</em>. It is seen as good practice on GitHub
+for a project to include a <a href="https://github.com/badges/stability-badges"><img src="github_com_favicon.ico" alt="" class="icon"><span class="name">stability
+badge</span></a>, so clearly stability is
+considered an important metric, but it is also very difficult to measure if not
+entirely ephemeral for some projects. This is certainly one reason that semver,
+and a very general versioning scheme, doesn't take a stance on encoding
+stability. Generally, where stability is relevant enough to measure, it is
+either measured at the top level of the project (above any particular version)
+or at the major vesion level. For example, a large and widely used project (e.g.
+a compiler, protocol, OS) might release a new major version every couples years.
+The cycle is generally like this:</p>
+<ul>
+<li>A new major version is releases as an <em>experimental</em> build.</li>
+<li>As the new major version gains adoption, patches are made as bugs are
+inevitably discovered and reported.</li>
+<li>Every so often, new minor features accumulate into new minor versions</li>
+<li>As the major version matures and the rate of bug appearance starts to level
+off, the stability increases from <em>experimental</em> to <em>unstable</em> to <em>stable</em>. Once the
+major version is considered <em>stable</em>, it takes it's place as the <em>latest
+version</em> of the project. Most users are expected to adopt this version of the
+project, but there will of course persist a diaspora of dependents out there
+that are never updated..</li>
+<li>Eventually, new feature proposals and experimental implementations that have
+major changes accumulate into a new major version proposal, which is released
+as an experimental build.</li>
+<li>As development slows on the <em>latest version</em>, it eventually loses its status
+as the <em>latest</em>, and the developers more or less agree that the buts worth
+fixing have laready been fixed. Finally, it becomes <em>frozen</em>, which indicates
+that regular updates are no longer expected and pretty much only patches of
+serious new bugs are expected.</li>
+<li>As more time passes, some projects that depend on a specific frozen version,
+age, become entrenched, and rely on that major version being availabel and a
+specific one of its minor/patch version to be cononical for its specified set
+of features and compatibilities. So, this specific version becomes <em>locked</em> --
+no more development is allowed (or at least, if there are changes, they will
+pretty mich just be ignored by the relevant community of dependents) on that
+major version.</li>
+</ul>
+<p>The details will be different for different kinds of projects --- open source software (<a href="https://github.com/ghc/ghc"><img src="github_com_favicon.ico" alt="" class="icon"><span class="name">GHC</span></a>), closed source software (<a href="https://www.adobe.com/acrobat/pdf-reader.html"><img src="/placeholder_favicon.png" alt="" class="icon"><span class="name">Adobe Reader</span></a>), frequently-updated applications (<a href="https://www.mozilla.org/en-US/firefox/new/"><img src="www_mozilla_org_favicon.ico" alt="" class="icon"><span class="name">Firefox</span></a>), consumer operating systems (<a href="https://www.apple.com/macos/monterey/"><img src="www_apple_com_favicon.ico" alt="" class="icon"><span class="name">MacOS</span></a>), widely used protocols (<a href="https://www.geeksforgeeks.org/differences-between-ipv4-and-ipv6/"><img src="www_geeksforgeeks_org_favicon.ico" alt="" class="icon"><span class="name">IPv4, IPv6</span></a>) --- but at the macro scale they all follow this general pattern of development.</p>
+<p>All of this is to say that stability is an integral part of organizing the
+development of software, in a way parallel to versioning. Yet still some sort of
+standard "stability versioning" (other than rough labels like "unstable" and
+"stable") are very rare. We return finally to kelver.</p>
+<p>Kelver is a sort of co-natver; natver counts <em>up</em> from the <em>start</em> while kelver
+counts <em>down</em> to the <em>end</em>. But in the same way that natver is only the first
+step towards semver in terms of encoding the most important compatibility
+(historical) relationships, perhaps kelver as simple as it is the first step
+towards encoding the most important stability (future-facing) relationships?</p>
+<p>I summarize the appeal of kelver, as I see it and as
+<a href="https://urbit.org/blog/toward-a-frozen-operating-system"><img src="urbit_org_favicon.ico" alt="" class="icon"><span class="name">urbit</span></a> and <a href="https://jtobin.io/kelvin-versioning"><img src="/placeholder_favicon.png" alt="" class="icon"><span class="name">Urbit
+developers</span></a> have described it, as its focus on the
+goal of making an finished, totally-frozen piece of software. Not all software
+has this goal in development (though perhaps more should), but for the software
+that does, kelver delivers.</p>
+<p>As with natver, however, kelver has some rough edges that modern software
+engineers expect to be smoothed out by now in their organizational systems, such
+as versioning. Kelver does not encode information about compatibility
+(historical semantic relationships), but let ignore that for the moment. The
+large immediate tension in kelver is that <strong>it's almost always unreasonable to
+expect the developer pick a reasonable starting temperature</strong>. Of course,
+overshooting the starting temperature is much more convenient than undershooting
+(since if you undershoot then you might run out), so the incentive is to have a
+way higher temperature than the project should have. And since the temperature
+of a project will start of very high, as the final stages of the project become
+more clear, huge drops in temperature will occur even if the number and
+significance of the changes made in the versions that lie along that curve of
+steeply-dropping temperature are not much if at all more than the changes that
+happened before that point. So if a user sees that the temperature has dropped
+recently from 100K to 10K, they don't know yet whether that's because there's
+been a lot of changes, or the developers just decided that the project is almost
+done. Given this tension, kelver incentivizes developers to overshoot
+temperature given uncertainty, and so the temperature only has much precision
+when its close to zero. In other words, until the temperature is very close to
+zero, it probably doesn't encode much if any useful information.</p>
+<p>Alternatively, even worse, if the developers undershoot the temperature because
+they were confident in some stability that they shouldn't have been, they're
+incenticized to pack large changes into just a few versions that are still close
+to zero. So in the end, you have to understand the developers very well in order
+to interpret how stable exactly version 15K is, and there's pretty much no way
+of telling how stable 1000K is.</p>
+<p>And these are exactly the sort of problems in natver that semver addresses (see
+section <a href="#semver"><img src="https://rybl.net" alt="" class="icon"><span class="name">semver</span></a>). Semver introduced the semantic "units" --- major
+changes, minor changes, and patch changes --- the quantify how much semantic
+change a new version represents, and kelver needs some similar kind of
+quantification.</p>
+<p>Here I propose an augmented kelver, <strong>staver</strong>, that preserves the spirit of the
+original kelver while vastly improving its usefulness, feasibility, and
+incentivization of good organization by encoding slightly more information.</p>
+<ul>
+<li><strong>staver</strong>: the version is a pair of natural numbers, the <em>stability</em> which
+counts down from a developer-chosen number, and the <em>patch</em> which counts up
+from 0, written <code>stability.patch</code>. A new <em>stability</em> version indicates a new
+feature or compatibility-breaking change (which should be the same, for the
+kind of projects that want this kind of versioning), and a new <em>patch</em> version
+indicates a bug fix that doesn't change the specified behavior of the current
+<em>stability</em> version.</li>
+</ul>
+<p>When the developer chooses a starting stability version, they may want to
+overshoot slightly in case they have to make more breaking changes down the road
+than they expected, but its much much more feasible to anticipate how many more new
+features you'll add and breaking changes you'll have to make than how many bugs
+you'll have to fix. And for the projects that desire some sort of
+stability-focused versioning like kelver or staver, new features are
+essentially synonymous with breaking changes, since a new feature is outside the
+specification of the previous stability version. Additionally, all bugs in the
+same stability version can be addressed without the worry of stability
+limitations, via patch versions. Kelver introduced a hack called "release
+candidates" which is similar to patch versions but don't count as real versions
+and in that way have none of the structure imposed upon them that software
+engineers learned to make great use of. Patch versions maintain that usefulness,
+which still enforcing the restrictions of kelver when it comes to breaking
+changes.</p>
+<p>Since it's so much more feasible for the developer to choose precise stability
+versions rather than being strongly incentivized to overshoot, the stability
+version can be expected to be much more precise. Of course, sometimes developers
+will still want to overshoot due to large uncertainties about the future of the
+project, but then as the future becomes more certain and the stability version
+falls quickly, it more sensitively captures the solidification of the future
+of the project than kelver where you can only really afford to start dropping
+the version by much once you are at the very end of a project.</p>
+<h2 id="Definitions_of_Versioning_Schemes" class="section-header"><a href="#Definitions_of_Versioning_Schemes" class="no_background">Definitions of Versioning Schemes</a></h2>
+<ul>
+<li><strong>randver</strong>: The version is a random version not already used by an existing
+version (this is how many layuser-facing version names are chosen for systems
+like macos and android)</li>
+<li><strong>hashver</strong>: The version is the hash of the project (this is essentially how
+github versions commits)</li>
+<li><strong>idver</strong>: The version <em>is</em> the project (in binary)</li>
+<li><strong>natver</strong>: the version starts at 0 and increments for each new version
+version</li>
+<li><strong>kelver</strong>: The version is a natural number counts down for each new version,
+and was initialized by the developers. The final version is 0K.</li>
+<li><strong>semver</strong>: the version is a triple of a <em>major</em>, <em>minor</em>, and <em>patch</em>
+version. A new major version indicates compatibility-breaking changes, a minor
+version indicates compatibility-presenving new features, and a patch version
+indicates a compatibility-preserving bug fix</li>
+<li><strong>staver</strong>: the version is a pair of a <em>stability</em> version and a <em>patch</em>
+version. The stability version counts down on each breaking change or new
+feature and was initialized by the developers, and the patch verson indicates
+a compatible bug fix that doesn't add new features. The final version is 0.N,
+whre N can still increment for bug fixes.</li>
+</ul>
+<h2 id="References" class="section-header"><a href="#References" class="no_background">References</a></h2>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Curtis_Yarvin" title="Curtis Yarvin"><img src="en_wikipedia_org_favicon.ico" alt="" class="icon">Curtis Yarvin</a></li>
+<li><a href="https://urbit.org" title="urbit"><img src="urbit_org_favicon.ico" alt="" class="icon">urbit</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Kelvin" title="Kelvin"><img src="en_wikipedia_org_favicon.ico" alt="" class="icon">Kelvin</a></li>
+<li><a href="https://en.wikipedia.org/wiki/SI_base_unit" title="SI base
+unit"><img src="en_wikipedia_org_favicon.ico" alt="" class="icon">SI base
+unit</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Temperature" title="temperature"><img src="en_wikipedia_org_favicon.ico" alt="" class="icon">temperature</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Absolute_zero" title="&#x22;absolute
+zero&#x22;"><img src="en_wikipedia_org_favicon.ico" alt="" class="icon">"absolute
+zero"</a></li>
+<li><a href="https://semver.org" title="Semantic versioning"><img src="/placeholder_favicon.png" alt="" class="icon">Semantic versioning</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Backward_compatibility" title="backwards
+compatible"><img src="en_wikipedia_org_favicon.ico" alt="" class="icon">backwards
+compatible</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Diff" title="diff"><img src="en_wikipedia_org_favicon.ico" alt="" class="icon">diff</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Donald_Knuth" title="Donald
+Knuth"><img src="en_wikipedia_org_favicon.ico" alt="" class="icon">Donald
+Knuth</a></li>
+<li><a href="https://en.wikipedia.org/wiki/The_Art_of_Computer_Programming" title="The Art of Computer
+Programming"><img src="en_wikipedia_org_favicon.ico" alt="" class="icon">The Art of Computer
+Programming</a></li>
+<li><a href="https://en.wikipedia.org/wiki/TeX#TeX82" title="encode the natver of TeX in unary as the
+sequence of digits approaching π (where π is planned to be a locked
+version)"><img src="en_wikipedia_org_favicon.ico" alt="" class="icon">encode the natver of TeX in unary as the
+sequence of digits approaching π (where π is planned to be a locked
+version)</a></li>
+<li><a href="https://github.com/badges/stability-badges" title="stability
+badge"><img src="github_com_favicon.ico" alt="" class="icon">stability
+badge</a></li>
+<li><a href="https://github.com/ghc/ghc" title="GHC"><img src="github_com_favicon.ico" alt="" class="icon">GHC</a></li>
+<li><a href="https://www.adobe.com/acrobat/pdf-reader.html" title="Adobe Reader"><img src="/placeholder_favicon.png" alt="" class="icon">Adobe Reader</a></li>
+<li><a href="https://www.mozilla.org/en-US/firefox/new/" title="Firefox"><img src="www_mozilla_org_favicon.ico" alt="" class="icon">Firefox</a></li>
+<li><a href="https://www.apple.com/macos/monterey/" title="MacOS"><img src="www_apple_com_favicon.ico" alt="" class="icon">MacOS</a></li>
+<li><a href="https://www.geeksforgeeks.org/differences-between-ipv4-and-ipv6/" title="IPv4, IPv6"><img src="www_geeksforgeeks_org_favicon.ico" alt="" class="icon">IPv4, IPv6</a></li>
+<li><a href="https://urbit.org/blog/toward-a-frozen-operating-system" title="urbit"><img src="urbit_org_favicon.ico" alt="" class="icon">urbit</a></li>
+<li><a href="https://jtobin.io/kelvin-versioning" title="Urbit
+developers"><img src="/placeholder_favicon.png" alt="" class="icon">Urbit
+developers</a></li>
+<li><a href="#semver" title="semver"><img src="https://rybl.net" alt="" class="icon">semver</a></li>
+</ul></article></main><footer></footer></body></html>

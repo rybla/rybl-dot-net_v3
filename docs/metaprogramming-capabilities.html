@@ -1,0 +1,110 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>rybl.net | Metaprogramming Capabilities</title><link rel="stylesheet" href="common.css"/><link rel="stylesheet" href="Top.css"/><link rel="stylesheet" href="Header.css"/><link rel="stylesheet" href="Footer.css"/><link rel="stylesheet" href="Raindrops.css"/><link rel="stylesheet" href="Markdown.css"/><link rel="stylesheet" href="Tag.css"/><link rel="stylesheet" href="Post.css"/></head><body><div id="raindrop_container"><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div></div><header><div class="logo"><img src="profile.png"/></div><div class="name"><div class="website_name"><a class="no_background" href="/">rybl.net</a></div><div class="separator"></div><div class="resource_name"><div>Metaprogramming Capabilities</div></div></div><div class="menu"><a href="index.html" class="item no_background"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon lucide lucide-library-icon lucide-library"><path d="m16 6 4 14"></path><path d="M12 6v14"></path><path d="M8 8v12"></path><path d="M4 4v16"></path></svg></a><a href="Tags.html" class="item no_background"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon lucide lucide-tag-icon lucide-tag"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"></path><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle></svg></a><a href="About.html" class="item no_background"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg></a><a href="https://github.com/rybla/" class="item no_background"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon lucide lucide-github-icon lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg></a></div></header><main><article><h1 id="Metaprogramming_Capabilities" class="section-header"><a href="#Metaprogramming_Capabilities" class="no_background">Metaprogramming Capabilities</a></h1>
+<ol>
+<li><a href="#Overview" title="Overview">Overview</a></li>
+<li><a href="#Macros" title="Macros">Macros</a></li>
+</ol>
+<h2 id="Overview" class="section-header"><a href="#Overview" class="no_background">Overview</a></h2>
+<p>A <em>metaprogram</em> is a program that operates on the syntax of a programming
+language as data. Many advanced programming languages provide some sort of
+metaprogramming capabilities, for example:</p>
+<ul>
+<li>Haskell
+<ul>
+<li><em>templates</em> (<em>TemplateHaskell</em>): splice syntax</li>
+<li><em>type classes</em>: splice function definitions</li>
+</ul>
+</li>
+<li>Agda
+<ul>
+<li><em>reflection</em>: inspect syntax</li>
+<li><em>macros</em>:  splice syntax - <em>syntax notations</em>: splice syntax</li>
+</ul>
+</li>
+<li>Coq
+<ul>
+<li><em>reflection</em> and  <em>templates</em> (<em>Template-Coq</em> via <em>MetaCoq</em>): inspect
+syntax, splice syntax</li>
+<li><em>notations</em>: splice syntax</li>
+<li><em>tactics</em>: splice terms, match on context</li>
+</ul>
+</li>
+<li>Lean
+<ul>
+<li><em>macros</em>: splice syntax</li>
+<li><em>notations</em>: splice syntax</li>
+<li><em>tactics</em>: splice terms, match on context</li>
+</ul>
+</li>
+<li>Rust
+<ul>
+<li><em>macros</em>: splice syntax</li>
+</ul>
+</li>
+<li>C++
+<ul>
+<li><em>templates</em>: splice function and class definitions (used for polymorphism)</li>
+<li><em>macros</em>: splice text</li>
+</ul>
+</li>
+<li>Python
+<ul>
+<li><em>meta classes</em>: splice classes</li>
+<li><em>eval</em>: interpret syntax</li>
+</ul>
+</li>
+<li>JavaScript
+<ul>
+<li><em>proxies</em>: intercept semantics</li>
+<li><em>reflection</em>: inspect syntax</li>
+<li><em>eval</em>: interpret syntax</li>
+</ul>
+</li>
+</ul>
+<p>Overall, I group these capabilities into the following categories:</p>
+<ul>
+<li><em>Reflection</em> — inspect syntax. Examples: reflection, eval.</li>
+<li><em>Reification</em> — splice syntax. Examples: macros, templates, Haskell type
+classes, Python meta classes.</li>
+<li><em>Dynamic semantics</em> — modify semantics. Examples: JavaScript proxies.</li>
+</ul>
+<h2 id="Macros" class="section-header"><a href="#Macros" class="no_background">Macros</a></h2>
+<p>Macros are common style of reification — splicing syntax. Generally, a language
+with macros provides a special syntax for defining macro functions, which are
+functions that are run at compile time and output syntax that is spliced as the
+call cite before the rest of compilation. These functions are written using the
+same language that the macros expand to, with a few extra operations relevant to
+reification.</p>
+<p>So far, macros sound just like general reification. But, general reification is
+very difficult. With the freedom to work over your program as generally as just
+a string, you lose of lot of the safety features that many languages try to
+provide, such as well-typeness, well-scoped news, well-formedness, etc. If you
+wrote the program you intend to splice directly, the compiler/interpreter can
+immediately tell you where things went wrong: type errors, scoping errors,
+syntax errors, etc. But if you compiler your metaprogram, the system cannot
+statically predict if the metaprogram will certainly produce well-typed,
+well-scoped, well-formed text where it is spliced. Each use of the metaprogram
+has to be checked itself, and so in essence the user only has dynamic guarantees
+about the behavior of the metaprogram (since run-time for the metaprogram is
+compile-time for the base program).</p>
+<p>Macros and templates are different approaches to solving this problem — that is,
+the problem of checking static guarantees of reification metaprograms.</p>
+<p><em>Templates</em> use a deep embedding of the language (encoding the entire
+syntactical structure of the base language as data in the base language
+available to work over by the macro) to ensure that the generated text
+necessarily reifies as well-formed, well-scoped, or perhaps even well-typed
+syntax. This is a very restrictive form of metaprogramming, because it doesn’t
+allow for the generation of several textual components that can be combined in
+some way to refit as good syntax. For example:</p>
+<ul>
+<li>Template Haskell has typed template metaprogramming, where an expression of
+type <code>Q a</code> is able to be reified into a term of type <code>a</code>.</li>
+<li>C++ class/function templates require a specific form which ensures that the
+generated classes/functions are well-formed.</li>
+</ul>
+<p><em>Macros</em> use a partially-parsed version of the language’s syntax as an
+intermediate representation to work over. So, the macro is required to work over
+expressions in this partial-parsed syntax (as opposed to unstructured text or
+fully well-formed syntax) that doesn’t necessarily require all of the same
+checks as for the base language (such as well-typedness or well-scopedness). In
+this way, the macro can still have some basic statically-checked properties,
+such as producing matching delimiters, well-scoped names, etc.</p></article></main><footer></footer></body></html>

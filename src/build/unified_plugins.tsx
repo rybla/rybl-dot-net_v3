@@ -378,10 +378,18 @@ export const getIconUrl: Effect.T<{ url_raw: string }, string> =
       const favicon_href = favicon_url.href;
       const favicon_extname = favicon_url.pathname.split(".").pop() || "ico";
 
-      const response = await fetch(favicon_href);
-      if (!response.ok) {
+      try {
+        const response = await fetch(favicon_href, {
+          redirect: "follow",
+          signal: AbortSignal.timeout(config.fetch_timeout),
+        });
+        if (!response.ok) {
+          return config.placeholder_favicon_filepath;
+        }
+      } catch (e: any) {
         return config.placeholder_favicon_filepath;
       }
+
       const name = url.hostname.replaceAll(".", "_");
       const favicon_filepath_relative = `${name}_favicon.${favicon_extname}`;
 

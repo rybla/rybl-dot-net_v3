@@ -60,6 +60,28 @@ namespace Effect {
     }
   };
 
+  export const getCache =
+    <A>(input: { key: string; default: T<{}, A> }) =>
+    async (ctx: Ctx.T): Promise<A> => {
+      await Effect.tell(`get cache at "${input.key}"`)(ctx);
+      const filepath = `cache/${input.key}.json`;
+      if (!fsSync.existsSync(filepath)) return await input.default({})(ctx);
+      return JSON.parse(await fs.readFile(filepath, { encoding: "utf8" }));
+    };
+
+  export const setCache =
+    <A>(input: { key: string; value: A }) =>
+    async (ctx: Ctx.T): Promise<void> => {
+      await Effect.tell(`set cache at "${input.key}"`)(ctx);
+      if (!fsSync.existsSync("cache")) fs.mkdir("cache", { recursive: true });
+      const filepath = `cache/${input.key}.json`;
+      await fs.writeFile(filepath, JSON.stringify(input.value, null, 4));
+    };
+
+  export const withCache: T<void, void> = (input) => async (ctx) => {
+    // TODO: wrapper around using cached values
+  };
+
   export const inputFile_text: T<{ filepath_relative: string }, string> =
     (input) => async (ctx) => {
       try {
@@ -141,7 +163,10 @@ namespace Effect {
           // already downloaded, so, don't need to download again
           return;
         } else {
-          const response = await fetch(input.url);
+          const response = await fetch(input.url, {
+            redirect: "follow",
+            signal: AbortSignal.timeout(config.fetch_timeout),
+          });
           if (!response.ok)
             throw new Error(`Failed to download file from ${input.url}`);
           const blob = await response.blob();
@@ -149,9 +174,7 @@ namespace Effect {
           const buffer = Buffer.from(arrayBuffer);
           await fs.mkdir(path.dirname(filepath_output), { recursive: true });
           await fs.writeFile(filepath_output, buffer);
-          await Effect.tell(`Downloaded ${input.url} to ${filepath_output}`)(
-            ctx,
-          );
+          await tell(`Downloaded ${input.url} to ${filepath_output}`)(ctx);
         }
       } catch (e: any) {
         throw new EffectError(label("useRemoteFile", input, e.toString()));

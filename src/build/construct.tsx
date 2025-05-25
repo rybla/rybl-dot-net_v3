@@ -1,6 +1,7 @@
 import PostPreview from "@/build/component/PostPreview";
 import Tag from "@/build/component/Tag";
 import TopComponent from "@/build/component/Top";
+import config from "@/config.json";
 import {
   rehypeCustomHeaders,
   remarkCustomDirectives,
@@ -20,6 +21,7 @@ import {
   Website,
 } from "@/types";
 import { encodeURIComponent_id, Ref, render_jsx } from "@/util";
+import { hash } from "crypto";
 import * as mdast from "mdast";
 import rehypeMathJaxSvg from "rehype-mathjax";
 import rehypeStringify from "rehype-stringify";
@@ -45,6 +47,8 @@ export const constructWebsite: Effect.T<{ website: Website }> =
           catch: (e) => async (ctx) => await Effect.tell(e.toString())(ctx),
         },
         (input) => async (ctx) => {
+          if (input.filepath === ".DS_Store") return;
+
           if (input.filepath.endsWith(".md")) {
             const resource = await constructMarkdown({
               filepath: input.filepath,
@@ -66,15 +70,20 @@ export const constructWebsite: Effect.T<{ website: Website }> =
       );
 
     const filepaths = await Effect.inputDir({ dirpath_relative: "." })(ctx);
-    await Effect.all({
-      opts: {
-        batch_size: 5,
-      },
-      input: {},
-      ks: filepaths.map(
-        (filepath) => () => constructResourceFromFilepath({ filepath }),
-      ),
-    })(ctx);
+    if (false) {
+      await Effect.all({
+        opts: {
+          batch_size: 5,
+        },
+        input: {},
+        ks: filepaths.map(
+          (filepath) => () => constructResourceFromFilepath({ filepath }),
+        ),
+      })(ctx);
+    } else {
+      for (const filepath of filepaths)
+        await constructResourceFromFilepath({ filepath })(ctx);
+    }
 
     await Effect.all({
       opts: {},
@@ -214,6 +223,24 @@ const constructAbout: Effect.T<{}, HtmlResource> = Effect.run(
 
 const constructMarkdown: Effect.T<{ filepath: string }, HtmlResource> =
   Effect.run({ label: "constructMarkdown" }, (input) => async (ctx) => {
+    const content_raw = await Effect.inputFile_text({
+      filepath_relative: input.filepath,
+    })(ctx);
+
+    if (config.using_cache) {
+      const cache = await Effect.getCache<
+        { hash: string; post: HtmlResource } | undefined
+      >({
+        key: input.filepath,
+        default: () => async () => undefined,
+      })(ctx);
+
+      if (cache !== undefined && cache.hash === hash("sha256", content_raw)) {
+        await Effect.tell(`using cached value at "${input.filepath}"`)(ctx);
+        return cache.post;
+      }
+    }
+
     const filebasename = input.filepath.slice(0, -".md".length);
 
     const titleRef: Ref<mdast.Heading> = Ref({
@@ -233,7 +260,7 @@ const constructMarkdown: Effect.T<{ filepath: string }, HtmlResource> =
         .use(remarkPostMetadata, { ctx, metadataRef })
         .use(remarkTitle, { ctx, metadataRef, titleRef })
         .use(remarkDirective)
-        .use(remarkCustomDirectives, { ctx })
+        // .use(remarkCustomDirectives, { ctx })
         .use(remarkGfm)
         .use(remarkMath)
         .use(remarkReferences, { ctx, metadataRef, referencesRef })
@@ -242,11 +269,7 @@ const constructMarkdown: Effect.T<{ filepath: string }, HtmlResource> =
         .use(rehypeMathJaxSvg)
         .use(rehypeCustomHeaders, { ctx, metadataRef })
         .use(rehypeStringify)
-        .process(
-          await Effect.inputFile_text({ filepath_relative: input.filepath })(
-            ctx,
-          ),
-        ),
+        .process(content_raw),
     );
 
     const titleString = showNode(titleRef.value);
@@ -270,6 +293,16 @@ const constructMarkdown: Effect.T<{ filepath: string }, HtmlResource> =
         </TopComponent>,
       ),
     };
+
+    if (config.using_cache) {
+      await Effect.setCache({
+        key: input.filepath,
+        value: {
+          hash: hash("sha256", content_raw),
+          post,
+        },
+      })(ctx);
+    }
 
     return post;
   });

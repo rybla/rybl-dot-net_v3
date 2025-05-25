@@ -55,7 +55,7 @@ export default function PostPreview(props: {
                 await unified()
                   .use(remarkParse)
                   .use(remarkDirective)
-                  .use(remarkCustomDirectives, { ctx: props.ctx })
+                  // .use(remarkCustomDirectives, { ctx: props.ctx })
                   .use(remarkGfm)
                   .use(remarkMath)
                   .use(remarkReferences, {

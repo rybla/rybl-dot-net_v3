@@ -1,0 +1,1579 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>rybl.net | Impe</title><link rel="stylesheet" href="common.css"/><link rel="stylesheet" href="Top.css"/><link rel="stylesheet" href="Header.css"/><link rel="stylesheet" href="Footer.css"/><link rel="stylesheet" href="Raindrops.css"/><link rel="stylesheet" href="Markdown.css"/><link rel="stylesheet" href="Tag.css"/><link rel="stylesheet" href="Post.css"/></head><body><div id="raindrop_container"><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div><div class="raindrop"></div></div><header><div class="logo"><img src="profile.png"/></div><div class="name"><div class="website_name"><a class="no_background" href="/">rybl.net</a></div><div class="separator"></div><div class="resource_name"><div>Impe</div></div></div><div class="menu"><a href="index.html" class="item no_background"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon lucide lucide-library-icon lucide-library"><path d="m16 6 4 14"></path><path d="M12 6v14"></path><path d="M8 8v12"></path><path d="M4 4v16"></path></svg></a><a href="Tags.html" class="item no_background"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon lucide lucide-tag-icon lucide-tag"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"></path><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle></svg></a><a href="About.html" class="item no_background"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg></a><a href="https://github.com/rybla/" class="item no_background"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon lucide lucide-github-icon lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg></a></div></header><main><article><h1 id="Impe" class="section-header"><a href="#Impe" class="no_background">Impe</a></h1>
+<ol>
+<li>
+<p><a href="#Introduction" title="Introduction">Introduction</a></p>
+</li>
+<li>
+<p><a href="#Design" title="Design">Design</a></p>
+<ol>
+<li><a href="#Grammar" title="Grammar">Grammar</a></li>
+<li><a href="#Variables" title="Variables">Variables</a></li>
+<li><a href="#Void_versus_Unit" title="Void versus Unit">Void versus Unit</a></li>
+</ol>
+</li>
+<li>
+<p><a href="#Implementation" title="Implementation">Implementation</a></p>
+<ol>
+<li>
+<p><a href="#Interpretation" title="Interpretation">Interpretation</a></p>
+<ol>
+<li><a href="#Organization" title="Organization">Organization</a></li>
+</ol>
+</li>
+<li>
+<p><a href="#Grammar" title="Grammar">Grammar</a></p>
+</li>
+<li>
+<p><a href="#Effects" title="Effects">Effects</a></p>
+<ol>
+<li><a href="#Logging" title="Logging">Logging</a></li>
+<li><a href="#Excepting" title="Excepting">Excepting</a></li>
+<li><a href="#Statefulness" title="Statefulness">Statefulness</a></li>
+</ol>
+</li>
+<li>
+<p><a href="#Parsing" title="Parsing">Parsing</a></p>
+<ol>
+<li>
+<p><a href="#Lexing_with_Parsec" title="Lexing with Parsec">Lexing with Parsec</a></p>
+</li>
+<li>
+<p><a href="#Parsing_with_Parsec" title="Parsing with Parsec">Parsing with Parsec</a></p>
+<ol>
+<li><a href="#Infixed_Operators" title="Infixed Operators">Infixed Operators</a></li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p><a href="#Namespaces" title="Namespaces">Namespaces</a></p>
+</li>
+<li>
+<p><a href="#Typechecking" title="Typechecking">Typechecking</a></p>
+</li>
+<li>
+<p><a href="#Executing" title="Executing">Executing</a></p>
+</li>
+<li>
+<p><a href="#Interpreting" title="Interpreting">Interpreting</a></p>
+</li>
+<li>
+<p><a href="#Main" title="Main">Main</a></p>
+<ol>
+<li><a href="#Command_Line_Options" title="Command Line Options">Command Line Options</a></li>
+<li><a href="#Interactive_REPL" title="Interactive REPL">Interactive REPL</a></li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p><a href="#Conclusions" title="Conclusions">Conclusions</a></p>
+</li>
+<li>
+<p><a href="#References" title="References">References</a></p>
+</li>
+</ol>
+<h2 id="Introduction" class="section-header"><a href="#Introduction" class="no_background">Introduction</a></h2>
+<p>This post documents the design and implementation of an interpreter for a very
+simple imperative programming lanugage, <em>Impe</em>, using Haskell. The goal is to
+demonstrate the convenience and advanced features and libraries that Haskell
+offers for programming language implementation. All the code used and referenced
+in this post can be found in this github repository:
+<a href="https://github.com/rybla/impe"><img src="github_com_favicon.ico" alt="" class="icon"><span class="name">riib/impe</span></a>.</p>
+<h2 id="Design" class="section-header"><a href="#Design" class="no_background">Design</a></h2>
+<h3 id="Grammar" class="section-header"><a href="#Grammar" class="no_background">Grammar</a></h3>
+<p>Grammar:</p>
+<pre><code>&#x3C;program>
+  ::= &#x3C;instruction> ...
+
+&#x3C;instruction>
+  ::= { &#x3C;instruction> ... }
+    | &#x3C;name>: &#x3C;type>;
+    | &#x3C;name> &#x3C;- &#x3C;expression>;
+    | &#x3C;name>: &#x3C;type> &#x3C;- expression;
+    | &#x3C;name>(&#x3C;name>: &#x3C;type>, ...): &#x3C;type> = &#x3C;instruction>
+    | &#x3C;name>(&#x3C;expression>, ...);
+    | if &#x3C;expression> then &#x3C;instruction> else &#x3C;instruction>
+    | while &#x3C;expression> do &#x3C;instruction>
+    | return &#x3C;expression>;
+    | pass;
+
+&#x3C;type>
+  ::= void
+    | unit
+    | int
+    | bool
+    | string
+    | (&#x3C;type>, ...) -> &#x3C;type>
+
+&#x3C;expression>
+  ::= unit
+    | &#x3C;bool>
+    | &#x3C;int>
+    | &#x3C;string>
+    | &#x3C;name>
+    | &#x3C;name>(&#x3C;expression>, ...)
+</code></pre>
+<h3 id="Variables" class="section-header"><a href="#Variables" class="no_background">Variables</a></h3>
+<p>Variables are <em>mutable</em> -- the value of a variable can be changed during the
+program's execution. An analogy: a variable is like a box that can have its
+contents replaced while still staying the same box (in the same place i.e.
+memory).</p>
+<p>Variables are <em>call by value</em> -- when a variable is mentioned (as an argument to
+a function call), it is immediately evaluated. This is opposed to <em>call by name</em>
+where an argument variable is passed by name and is then evaluated when it is
+needed in the function's execution.</p>
+<h3 id="Void_versus_Unit" class="section-header"><a href="#Void_versus_Unit" class="no_background">Void versus Unit</a></h3>
+<p>Typically when you want to ignore the output of a function, you can do just that
+without a second thought. But in this design, you must be conscious of it. The
+syntax for calling a procedure will be typechecked to require that the return
+type is in fact <code>void</code>. Many languages opt to use the <code>unit</code> type to reflect a
+trivial value, and this is fine. But <code>void</code> allows the power of a native
+requirement that the return value of a function <em>cannot</em> be useful. So perhaps
+eliminates some bugs.</p>
+<p>Additionally, <code>void</code>-return-typed functions cannot be well-typed in expressions,
+since no function can have a <code>void</code> parameter and there is no term of type
+<code>void</code>.</p>
+<p>The type <code>void</code> encodes a type "with no values". In a more standard type system,
+it should be impossible to have a function with the type <code>a -> void</code> for some
+type <code>a</code>, because then the function produces a value of a type with no values!
+But in Impe, <code>void</code> is interpreted to mean a type with values that are
+inaccessible. So, Impe's typing rules ensure that a function that returns <code>void</code>
+is never used somewhere where a value is expected, and a value is never used
+where <code>void</code> is expected.</p>
+<p>It would be possible to use <code>unit</code> in place of void, and the just have the
+programmer ignore the output of functions that return <code>unit</code> as it is trivial
+(this is how Haskell handles this, for example). But I liked the idea of using
+<code>void</code> in this way since I haven't seen it enforced like this in many other
+languages, but I makes for a useful little extra check that functions with
+outputs that shouldn't be used do in fact don't have their output used (even
+trivially).</p>
+<p>To ignore output of a non-<code>void</code>-returning function without cluttering
+namespace, you can do</p>
+<pre><code class="language-plain">{ _: t &#x3C;- f(e, ...); }
+</code></pre>
+<p>where <code>t</code> is the return type of function <code>f</code>.</p>
+<h2 id="Implementation" class="section-header"><a href="#Implementation" class="no_background">Implementation</a></h2>
+<h3 id="Interpretation" class="section-header"><a href="#Interpretation" class="no_background">Interpretation</a></h3>
+<p>To interpret some given source code, there are three stages:</p>
+<ol>
+<li><em>Parsing</em>: takes source code as input, gives an AST of the source code's
+program as output.</li>
+<li><em>Typechecking</em>: takes a program AST as input, checkes that the program is
+well-typed and gives the resulting typechecking context as output.</li>
+<li><em>Executing</em>: takes a program AST as input, executes the program and gives the
+resulting execution context as output.</li>
+</ol>
+<h4 id="Organization" class="section-header"><a href="#Organization" class="no_background">Organization</a></h4>
+<p>The <code>Language.Impe</code> modules contains a collection of submodules that define how
+the Impe programming language interprets Impe source code. For each of the three
+stages of interpretation, there is a corresponding independent module that does
+not import the module of any other stage of interpretation:</p>
+<ul>
+<li><code>Parsing</code>: parsing Impe source code into an Impe program</li>
+<li><code>Typechecking</code>: checking that an Impe program is well-typed</li>
+<li><code>Executing</code>: executing an Impe program's instructions imperatively</li>
+</ul>
+<p>There are a few functionalities that are shared between each of these stages. As
+the prime example, Impe's grammatical structure must be referencable in all
+three stages in order for <code>Parsing</code> to build, <code>Typechecking</code> to inspect, and
+<code>Executing</code>to traverse Impe programs. So, there is a common module <code>Grammar</code>
+that is imported by all of them.</p>
+<ul>
+<li><code>Grammar</code>: grammatical structure of an Impe program</li>
+</ul>
+<p>Additionally, the other functionalities used during interpretation are <em>logging</em>
+and <em>excepting</em>.</p>
+<ul>
+<li><code>Logging</code>: log messages concurrently with computation</li>
+<li><code>Excepting</code>: throw exception during computation</li>
+</ul>
+<p>Finally, to run an entire interpretation from source code to execution result, a
+module that exports an <code>interpretProgram</code> function is defined for convenience:</p>
+<ul>
+<li><code>Interpretation</code>: interpret an Impe program (from source code to execution
+result)</li>
+</ul>
+<h3 id="Grammar" class="section-header"><a href="#Grammar" class="no_background">Grammar</a></h3>
+<p><code>Language.Impe.Grammar</code></p>
+<p>The grammar given in the <em>Design</em> section was written in a formal notation for
+reading ease and concision. The following code block exhibits how the same
+grammar is defined in Haskell using algebraic data types (ADTs).</p>
+<pre><code class="language-haskell">data Program
+  = Program [Instruction]
+
+data Instruction
+  = Block [Instruction]
+  | Declaration Name Type
+  | Assignment Name Expression
+  | Initialization Name Type Expression
+  | Function Name [(Name, Type)] Type Instruction
+  | Branch Expression Instruction Instruction
+  | Loop Expression Instruction
+  | Return Expression
+  | ProcedureCall Name [Expression]
+  | Pass
+
+data Type
+  = VoidType
+  | UnitType
+  | IntType
+  | BoolType
+  | StringType
+  | FunctionType [Type] Type
+
+data Expression
+  = Unit
+  | Bool Bool
+  | Int Int
+  | String String
+  | Variable Name
+  | Application Name [Expression]
+
+newtype Name
+  = Name String
+</code></pre>
+<p>The <code>Grammar</code> module also defines for this data <code>Show</code> instances that map each
+grammar term to the source code that it would be parsed from.</p>
+<h3 id="Effects" class="section-header"><a href="#Effects" class="no_background">Effects</a></h3>
+<p>TODO: rewrite this... how much detail do I want to give? TODO: talk about
+handling effects</p>
+<p>Effects -- such as statefulness, logging, excepting, and IO -- are aggregated
+and ordered implicitly via Polysemy. All that's needed is notify Polysemy to do
+this is to use the <code>Member</code> typeclass constraint on the effect row of our <code>Sem</code>
+functions that use the effect. For example, if <code>f</code>uses the statefulness effect,
+<code>State</code>, with state <code>Int</code> and output <code>Bool</code>, it is type-annotate as follows:</p>
+<pre><code class="language-haskell">f :: Member (State Int) r => Sem r Bool
+f = (0 ==) . (`mod` 3) &#x3C;$> get
+</code></pre>
+<p>Additionally, <code>Sem r</code> is a monad, so there exists a convenient syntax and
+convention for handling such monadic computations e.g.</p>
+<pre><code class="language-haskell">g :: Member (State Int) r => Sem r Bool
+g = do
+  a &#x3C;- f
+  modify (+ 1)
+  b &#x3C;- f
+  return $ a &#x26;&#x26; b
+</code></pre>
+<p>The great power of Polysemy, however, comes into play when a single function
+performs multiple effects. Consider the following function that performs the
+<code>State</code>, <code>Reader</code>, and <code>Writer</code> effects:</p>
+<pre><code>h ::
+  ( Member (State Int) r,
+    Member (Reader Int) r,
+    Member (Writer Bool) r
+  ) => Sem r ()
+h = do
+  x &#x3C;- get
+  y &#x3C;- ask
+  tell $ x == y
+</code></pre>
+<h4 id="Logging" class="section-header"><a href="#Logging" class="no_background">Logging</a></h4>
+<p><code>Language.Impe.Logging</code></p>
+<p>The idea behind logging is to produce little messages that give some insight
+into what the Haskell program is doing at different points of evaluation. Each
+message is tagged with a <em>tag</em> corresponding to what kind of information it is
+(e.g. debug, warning, or output).</p>
+<p>Logs don't need to be very structured, since they are mostly useful as a little
+ad-hoc. So a log consists of just a <em>tag</em> and a message:</p>
+<pre><code class="language-haskell">data Log = Log Tag String
+
+data Tag
+  = Tag_Debug -- only debugging
+  | Tag_Warning -- non-breaking warnings for user
+  | Tag_Output -- messages for user
+</code></pre>
+<p>Polysemy provides a useful effect called <em>output</em> that is very similar to the
+<em>writer</em> effect, except is it specialized for writing lists of outputs that
+aren't to be interacted with inside within an output-performing computation
+(whereas the writer effect provides <em>listen</em> and <em>pass</em> actions in addition to
+<em>tell</em>; see
+<a href="https://hackage.haskell.org/package/polysemy-1.4.0.0/docs/Polysemy-Output.html"><img src="/placeholder_favicon.png" alt="" class="icon"><span class="name">Polysemy.Output</span></a>
+and
+<a href="https://hackage.haskell.org/package/polysemy-1.4.0.0/docs/Polysemy-Writer.html"><img src="/placeholder_favicon.png" alt="" class="icon"><span class="name">Polysemy.Writer</span></a>
+for details). Actually handling the logging effect will be done later on in the
+<em>Main</em> section, since for the most part logging is handled by IO.</p>
+<h4 id="Excepting" class="section-header"><a href="#Excepting" class="no_background">Excepting</a></h4>
+<p><code>Language.Impe.Excepting</code></p>
+<p>The idea behind excepting is to allow a computation to "escape" its normal
+control flow part-way through. In basic Haskell, this is usually modeling using
+the <code>Maybe</code> (or <code>Either</code> monad. As a simple example:</p>
+<pre><code class="language-haskell">-- x / y + z
+divide_then_add :: Int -> Int -> Int -> Maybe Int
+divide_then_add x y z = do
+  w &#x3C;- divide x y
+  return (w + z)
+
+-- x / y
+divide :: Int -> Int -> Maybe Int
+divide x y
+  | y == 0 -> Nothing
+  | otherwise -> return (x / y)
+</code></pre>
+<p>The function <code>divide</code> has a <em>exception</em> case that evaluates to <code>Nothing</code>, and a
+<em>success</em> case which evaluates to <code>return ...</code> where <code>return = Just</code> the
+<code>Monad Maybe</code> instance.</p>
+<p>Note that the desugaring of the <code>do</code> in <code>divide_then_add</code> is</p>
+<pre><code class="language-haskell">-- x / y + z
+divide_then_add :: Int -> Int -> Int -> Maybe Int
+divide_then_add x y z =
+  divide x y >>= \w ->
+  return (w + z)
+</code></pre>
+<p>In <code>divide_then_add</code>, the <code>Monad Maybe</code> instance provides the monadic bind
+function <code>(>>=)</code> exposed by desugaring of <code>do</code>. It's implemented as follows:</p>
+<pre><code class="language-haskell">(>>=) :: Maybe a -> (a -> Maybe b) -> Maybe b
+Just x >>= k = k x
+Nothing >>= _ = Nothing
+</code></pre>
+<p>So if <code>divide_then_add 1 0 1</code> is evaluated:</p>
+<ul>
+<li>in <code>divide 1 0 >>= ...</code>, <code>divide 1 0</code> excepts</li>
+<li>the second case of <code>(>>=)</code> is matched</li>
+<li><code>divide_then_add 1 0 1</code> evaluates to <code>Nothing</code></li>
+</ul>
+<p>This behavior effectively models the way an exception "escapes" the control
+flow, since the second case of <code>(>>=)</code> immediately finishes computation by
+ignoring the rest of the computation (the <em>continuation</em> <code>k</code>) and evaluating to
+<code>Nothing</code>.</p>
+<p><code>Maybe</code> is the very simplest way to model excepting. A slightly more
+sophisticated way is to use <code>Either e</code> where <code>e</code> is the type of data an
+exception contains (whereas <code>Maybe</code> doesn't allow an exception to contain any
+data).</p>
+<p>Polysemy provides an effect called <em>Error</em> which works just like <code>Either e</code> in
+the Polysemy framework. Using it's data type, <code>Error e</code>, the functions
+<code>divide_then_add</code> and <code>divide</code> can be rewritten as follows, with exception data
+of of type <code>String</code>:</p>
+<pre><code class="language-haskell">-- x / y + z
+divide_then_add :: Member (Error String) r => Int -> Int -> Int -> Sem r Int
+divide_then_add x y z = do
+  w &#x3C;- divide x y
+  return (w + z)
+
+-- x / y
+divide :: Member (Error String) r => Int -> Int -> Sem r Int
+divide x y
+  | y == 0 -> throwError $ printf "attempting to divide `%s`by `0`" (show x)
+  | otherwise -> return (x / y)
+</code></pre>
+<p>where Polysemy exposes the function</p>
+<pre><code class="language-haskell">throwError :: Member (Error e) r => e -> Sem r a
+</code></pre>
+<p>A main difference between Polysemy's <code>Error</code> and the more basic <code>Maybe</code> or
+<code>Either</code> is that a computation of type <code>Member (Error e) r => Sem r a</code> can't be
+directly inspected (i.e. pattern-matched on) to see whether it contains an
+exception or a success. Instead, Polysemy provides the handler</p>
+<pre><code class="language-haskell">runError :: Sem (Error e : r) a -> Sem r (Either e a)
+</code></pre>
+<p>to inspect the error status of a computation, where the effect row is headed by
+an <code>Error</code> effect. Since the error has been handled into <code>Either e a</code>, the error
+effect is safely removed from the head of the effect row.</p>
+<p>TODO: by default, each stage of interpretation will use the <em>logging</em> and
+<em>exepting</em> effects.</p>
+<h4 id="Statefulness" class="section-header"><a href="#Statefulness" class="no_background">Statefulness</a></h4>
+<p>TODO: how <code>State s</code> works TODO: pattern of describing state data type, and using
+lens fields that generate lenses using <code>makeLenses</code> via Templatehaskell</p>
+<h3 id="Parsing" class="section-header"><a href="#Parsing" class="no_background">Parsing</a></h3>
+<p>Parsing is the process of reading some input source code and yielding a program
+constructed by the program's language's grammar. The
+<a href="https://hackage.haskell.org/package/parsec"><img src="/placeholder_favicon.png" alt="" class="icon"><span class="name">Parsec</span></a> package provides a
+convenient framework for doing parsing using <em>monadic parsing combinators</em>. Read
+the details of the package to learn exactly how such combinators are
+implemented, but here will focus just on how to use them to write Impe's parser.</p>
+<p>Parsec breaks up parsing into two stages: defining a <em>lexer</em>, and defining the
+parsers for each grammatical structure. The lexer can be configured and
+generates some useful parsers that can recognize what counts as whitespace,
+identifiers, string literals, etc. The programmer-defined parsers are build from
+the generated parsers.</p>
+<h4 id="Lexing_with_Parsec" class="section-header"><a href="#Lexing_with_Parsec" class="no_background">Lexing with Parsec</a></h4>
+<p><code>Language.Impe.Lexing</code></p>
+<p>The Impe lexer (or as Parsec calls it, a <em>tokenParser</em>) is defined as follows:</p>
+<pre><code class="language-haskell">type LexStream = String
+
+type LexState = ()
+
+type LexMonad = Identity
+
+languageDef :: GenLanguageDef LexStream LexState LexMonad
+languageDef =
+  emptyDef
+    { commentStart = "/*",
+      commentEnd = "*/",
+      commentLine = "//",
+      identStart = letter,
+      identLetter = alphaNum &#x3C;|> oneOf ['_'],
+      reservedNames = ["while", "do", "if", "then", "else", "return", "pass"],
+      reservedOpNames = ["&#x3C;-", "&#x26;&#x26;", "||", "~", "+", "-", "*", "/", "^", "%", "=", ">", ">=", "&#x3C;", "&#x3C;=", "&#x3C;>"],
+      caseSensitive = True
+    }
+
+tokenParser :: TokenParser LexState
+tokenParser = makeTokenParser languageDef
+</code></pre>
+<p>The type <code>LexStream</code> indicates that the input stream to parse is a <code>String</code>. The
+type <code>LexState</code> indicates that parsing uses the trivial state <code>()</code>. The type
+<code>LexMonad</code> indicates that parsing is done within the <code>Identity </code>monad.</p>
+<p>The <code>languageDef</code> specifications are:</p>
+<ul>
+<li><code>commentStart</code>: the string "/*" starts a block comment</li>
+<li><code>commentEnd</code>: the string "*/" ends a block comment</li>
+<li><code>commentLine</code>: the string "//" starts a line comment</li>
+<li><code>identStart</code>: an identifier must start with a letter character</li>
+<li><code>identLetter</code>: an identifier's non-starting characters must be letters,
+numbers, or '_'</li>
+<li><code>reservedNames</code>: these names are reserved (i.e. cannot be identifiers)</li>
+<li><code>reservedOpNames</code>: these operators are reserved (i.e. cannot be used in
+identifiers)</li>
+<li><code>caseSensitive</code>: this language is case-sensitive</li>
+</ul>
+<p>The <code>tokenParser</code> is a <code>TokenParser</code> produced by <code>languageDef</code>. It provides a
+variety of useful parsers, such as</p>
+<pre><code>identifier :: Parser String
+</code></pre>
+<p>which is a <code>Parser</code> that parses the next identifier (which is of type <code>String</code>).</p>
+<h4 id="Parsing_with_Parsec" class="section-header"><a href="#Parsing_with_Parsec" class="no_background">Parsing with Parsec</a></h4>
+<p><code>Language.Impe.Parsing</code></p>
+<p>Now that the lexer is defined, the atomic parsers such as <code>identifier</code> can be
+built up to define parsers for each of Impe's grammatica constructs.</p>
+<p>First,</p>
+<pre><code class="language-haskell">program :: Parser Program
+program = do
+  insts &#x3C;- many instruction
+  eof
+  return $ Program insts
+</code></pre>
+<p>is a <code>Parser</code> that parses a complete program. Here, <code>many</code> is a parser
+combinator (provided by Parsec) that parses any number (including 0) of whatever
+<code>instruction</code> parses, consecutively as a list. Then <code>instruction</code> is defined as</p>
+<pre><code class="language-haskell">instruction :: Parser Instruction
+instruction =
+  block
+    &#x3C;|> pass
+    &#x3C;|> return_
+    &#x3C;|> try function
+    &#x3C;|> branch
+    &#x3C;|> loop
+    &#x3C;|> try initialization
+    &#x3C;|> try declaration
+    &#x3C;|> try assignment
+    &#x3C;|> try procedureCall
+</code></pre>
+<p>which makes use of a parser for each of the constructors of <code>Instruction</code>. This
+also uses two new parser combinators:</p>
+<ul>
+<li><code>p1 &#x3C;|> p2</code> does parser <code>p1</code>, but in the case of a parsing failure, then does
+parser <code>p2</code>. Note that if <code>p1</code> modified the parsing stream of state then that
+modification is propogated into the parsing of <code>p2</code>.</li>
+<li><code>try p</code> tries to do the parser <code>p</code>, but in the case of a parsing failure,
+<code>try</code> ignores how <code>p</code> may have modified the parsing stream or state and then
+continues.</li>
+</ul>
+<p>These combinators interact such that <code>try</code> needs to prefix the parsers that
+might consume some of the parsing stream before failing, and <code>try</code> doesn't need
+to prefix the parsers will fail immediately before making any such
+modifications.</p>
+<p>To demonstrate this behavior, consider the following parsers:</p>
+<pre><code class="language-haskell">ab = char 'a' >> char 'b'
+ac = char 'a' >> char 'c'
+
+ab_ac = ab &#x3C;|> ac
+ab_ac' = try ab &#x3C;|> ac
+</code></pre>
+<p>Parsers <code>ab_ac</code> and <code>ab_ac'</code> are very similar except that <code>ab_ac</code> does <code>ab</code>
+instead of <code>try ab</code> as the first argument of <code>(&#x3C;|>)</code>. The goal is that <code>ab_ac</code>
+and <code>ab_ac'</code> should each parse either the string "ab" or the string "ac". Here
+is how <code>ab_ac</code> processes the string "ac":</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>stream</th>
+<th>parsing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>"ac"</td>
+<td><code>ab &#x3C;|> ac</code> uses left arg: <code>ab</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>"ac" -> "c"</td>
+<td><code>ab</code> parses 'a'</td>
+</tr>
+<tr>
+<td>3</td>
+<td>"c"</td>
+<td><code>ab</code> expects 'b' but sees 'c', so fails</td>
+</tr>
+<tr>
+<td>4</td>
+<td>"c"</td>
+<td><code>ab &#x3C;|> ac</code> does right arg: <code>ac</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td>"c"</td>
+<td><code>ac</code> expects 'a' but sees 'c', so fails</td>
+</tr>
+</tbody>
+</table>
+<p>Here for <code>ab_ac</code>, in step 2, the 'a' in "ac" was parsed, so by step 5 only the
+string "c" is left.</p>
+<p>On the other hand, here is how <code>ab_ac'</code>processes the string "ac":</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>stream</th>
+<th>parsing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>"ac"</td>
+<td><code>try ab &#x3C;|> ac</code> does left arg: <code>try ab</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>"ac"</td>
+<td><code>try ab</code> caches current stream, then does <code>ab</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>"ac" -> "c"</td>
+<td><code>ab</code>parses 'a'</td>
+</tr>
+<tr>
+<td>4</td>
+<td>"c"</td>
+<td><code>ab</code>expects 'b' but sees 'c', so fails</td>
+</tr>
+<tr>
+<td>5</td>
+<td>"c" -> "ac"</td>
+<td><code>try ab</code> restores cached stream, and propogates failure</td>
+</tr>
+<tr>
+<td>6</td>
+<td>"ac"</td>
+<td><code>try ab &#x3C;|> ac</code> does right argument:<code>ac</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td>"ac" -> "c"</td>
+<td><code>char 'a'</code> parses 'a'</td>
+</tr>
+<tr>
+<td>8</td>
+<td>"c" -> ""</td>
+<td><code>char 'c'</code> parses 'c'</td>
+</tr>
+</tbody>
+</table>
+<p>Here for <code>ab_ac'</code>, the same first parse failure in <code>ab_ac</code> before arises on
+step 4. However, since <code>ab</code> was wrapped in a <code>try</code>, the 'a' parsed on step 3 is
+restored on step 5 where <code>try ab</code> handles <code>ab</code>'s failure by restoring the cache
+saved from step 2 and propogating the failure.</p>
+<p>This behavior of <code>try</code> manifests in the definition of <code>instruction</code> where, for
+example, <code>initialization</code> is wrapped in <code>try</code>. Here are the definitions of the
+<code>initialization</code> and <code>declaration</code> parsers.</p>
+<pre><code class="language-haskell">-- x : t &#x3C;- e;
+initialization :: Parser Instruction
+initialization = do
+  x &#x3C;- name
+  colon
+  t &#x3C;- type_
+  reservedOp "&#x3C;-"
+  e &#x3C;- expression
+  semi
+  return $ Initialization x t e
+
+-- x : t;
+declaration :: Parser Instruction
+declaration = do
+  x &#x3C;- name
+  colon
+  t &#x3C;- type_
+  semi
+  return $ Declaration x t
+</code></pre>
+<p>If <code>instruction</code> used merely <code>initialization</code> rather than <code>try initialization</code>,
+then the string "b: bool;" would be have "b", ":", and "bool" parsed from it by
+<code>initialization</code>, and then a failure. Then when <code>(&#x3C;|>)</code> does its right argument,
+the input stream it starts with is just ";" which will cause a parse error since
+nothing parses just ";". This is incorrect because "b : bool;" should be parsed
+successfully by <code>declaration</code>! The <code>try initialization</code> makes sure that the "b :
+bool" is restored back onto the stream before <code>(&#x3C;|>)</code> does its right argument.</p>
+<p>And that's most of what there is to standard parsing with Parsec! The only other
+major functions used here are these that deal with special strings and symbols:</p>
+<ul>
+<li><code>reserved :: String -> Parser String</code> -- given a reserved name (string) <code>rn</code>,
+parses <code>rn</code> from the stream</li>
+<li><code>reservedOp :: String -> Parser String</code> -- given a reserved operator name
+(string) <code>ro</code>, parses <code>ro</code> from the stream</li>
+<li><code>symbol :: String -> Parser String</code> -- given any symbol (string) <code>sym</code>, parses
+<code>sym</code> from the stream</li>
+<li><code>identifier :: Parser String</code> -- parses an identifier (string) from the
+stream, where the characters allowed to start and be contained in an
+identifier are defined in the Impe lexer</li>
+</ul>
+<h5 id="Infixed_Operators" class="section-header"><a href="#Infixed_Operators" class="no_background">Infixed Operators</a></h5>
+<p>Parsec offers a conventient little system for setting up the parsing of infixed
+operators (unary and binary) with specified <em>infixity levels</em> and <em>associative
+handedness</em> (left or right).</p>
+<ul>
+<li><em>infixity levels</em> define how "tightly" different infixed operators should be
+parsed e.g. the difference between parsing "a + b _ c" as "(a + b) _ c" and
+"a + (b * c)"</li>
+<li><em>associative handedness</em> defines which direction (left or right) several
+operators of the same infixity level should be parsed e.g. the difference
+between parsing "a + b + c + d" as "a + (b + (c + d))" and "((a + b) + c) + d"
+(this does not apply to unary operators)</li>
+</ul>
+<p>Here is the definition of the <code>expression</code> parser for Impe, relies on Parsec's
+<code>buildExpressionParser</code>:</p>
+<pre><code class="language-haskell">expression :: Parser Expression
+expression = buildExpressionParser ops expression'
+  where
+    ops =
+      [ [ binaryOp "^" AssocLeft ],
+        [ binaryOp "*" AssocLeft, binaryOp "/" AssocLeft ],
+        [ binaryOp "+" AssocLeft, binaryOp "-" AssocLeft ],
+        [ binaryOp "%" AssocLeft ],
+        [ binaryOp "&#x3C;=" AssocLeft, binaryOp "&#x3C;" AssocLeft, binaryOp ">=" AssocLeft, binaryOp ">" AssocLeft ],
+        [ binaryOp "=" AssocLeft ],
+        [ unaryOp "~" ],
+        [ binaryOp "&#x26;&#x26;" AssocLeft, binaryOp "||" AssocLeft ],
+        [ binaryOp "&#x3C;>" AssocLeft ]
+      ]
+    unaryOp opName =
+      Prefix do
+        reservedOp opName
+        return \a -> Application (Name opName) [a]
+    binaryOp opName assocHand =
+      flip Infix assocHand do
+        reservedOp opName
+        return \a b -> Application (Name opName) [a, b]
+</code></pre>
+<p>The local variable <code>ops</code> defines an <code>OperatorTable</code> which is a list of lists of
+<code>Operator</code>s. Each list in the table defines an infixity level, in order from
+highest to lowest tightness. Each <code>Operator</code> in each infixity level encodes a
+either a parser for the operator and whether it is <code>Prefix</code>ed or <code>Infixe</code>ed. The
+local functions <code>unaryOp</code> and <code>binaryOp</code> abstract this structure, which depends
+only on the operator name and associative handedness (which is left as a curried
+argument of <code>binaryOp</code>).</p>
+<ul>
+<li>
+<p>In <code>unaryOp</code>, the operator parser first parses the prefixed operator, and then
+returns a parsing computation, of type <code>Parser (Expression -> Expression)</code>,
+that takes the parsed argument of the operator and returns the grammatical
+structure for applying the operator to that argument.</p>
+</li>
+<li>
+<p>In <code>binaryOp</code>, the operator parser first parses the infixed operator, and the
+nreturns a parsing computation, of type
+<code>Parser (Expression -> Expression -> Expression)</code>, that takes the two parsed
+arguments of the operator and returns the grammatical structure for applying
+the operator to those arguments.</p>
+</li>
+</ul>
+<p>Finally, <code>buildExpressionParser</code> takes <code>expression'</code> as an argument, which is
+the parser for non-operator-application expressions. These are the expressions
+that the built expression parser parses to give as arguments to the parsers
+yielded by <code>unaryOp</code> and <code>binaryOp</code>. The parser <code>expression'</code> is defined, in the
+same general form as <code>instruction</code> as follows:</p>
+<pre><code class="language-haskell">expression' :: Parser Expression
+expression' =
+  parens expression
+    &#x3C;|> try unit
+    &#x3C;|> try bool
+    &#x3C;|> try int
+    &#x3C;|> try string
+    &#x3C;|> try application
+    &#x3C;|> try variable
+</code></pre>
+<p>where <code>unit</code>, <code>bool</code>, etc. are parsers for each of those kinds of expressions.</p>
+<h3 id="Namespaces" class="section-header"><a href="#Namespaces" class="no_background">Namespaces</a></h3>
+<p>TODO: describe goals, description of impl, and main interface</p>
+<h3 id="Typechecking" class="section-header"><a href="#Typechecking" class="no_background">Typechecking</a></h3>
+<p><code>Language.Impe.Typechecking</code></p>
+<p>Typechecking is the process of checking that program is <em>well-typed</em>, where a
+program is well-typed in Impe if the following conditions are met:</p>
+<ul>
+<li>for each application <code>f(e[1], ..., e[n])</code>, where <code>f : (a[1], ..., a[n]) -> b</code>,
+the type of <code>e[i]</code> <em>unifies</em> with type <code>a[i]</code> <code>f : (a[1], ..., a[n]) -> void</code>.</li>
+<li>for each function definition with a non-<code>void</code> return type, every internal
+branch of the function's body must have a <code>return</code> instruction</li>
+<li>for each function definition with a <code>void</code> return type, every internal branch
+of the function's body must <em>not</em> have a <code>return</code> instruction</li>
+<li>for each procedure call <code>f(e[1], ..., e[n])</code>, <code>f</code> has a type of the form</li>
+</ul>
+<p>More simply but in less detail, these requirements amount to:</p>
+<ul>
+<li>functions must be called on arguments of the appropriate types</li>
+<li>non-<code>void</code>-returning functions must always <code>return</code></li>
+<li><code>void</code>-returning functions must never <code>return</code></li>
+<li>procedure calls must be with <code>void</code>-returning functions</li>
+</ul>
+<p>Here, <em>unifies with</em> just means "syntactically equal". However, this is true
+only contentiously for Impe since there are neither first-class functions nor
+polymorphic types.</p>
+<pre><code class="language-hs">unifyTypes :: Type -> Type -> Typecheck r Type
+unifyTypes s t = do
+  log Tag_Debug $ printf "unify types: %s ~ %s" (show s) (show t)
+  if s == t
+    then return s
+    else throw $ Excepting.TypeIncompatibility s t
+</code></pre>
+<p>The method for typechecking a program according to these conditions will mostly
+follow a method called <em>bi-directional typechecking</em>, where typechecking is
+divided into two "directions":</p>
+<ul>
+<li><em>checking</em> that a given expression <code>e</code> has a type that unifies with given type
+<code>t</code></li>
+<li><em>synthesize</em> the type of a given expression <code>e</code></li>
+</ul>
+<p>To check that an application <code>f(e[1], ..., e[n])</code> is well-typed:</p>
+<ol>
+<li><em>synthesize</em> the type of <code>f</code>, yielding <code>(a[1], ..., a[n]) -> b</code></li>
+<li><em>synthesize</em> the types of arguments <code>e[1], ..., e[n]</code> to be types
+<code>t[1], ..., t[n]</code></li>
+<li><em>check</em> that, for each <em>i</em>, type <code>t[i]</code> unifies with type <code>a[n]</code></li>
+</ol>
+<p>This typechecking algorithm relies on the <em>synthesize</em> and <em>check</em>
+functionalities. An in particular, the <em>synthesize</em> functionality must have
+access to some sort of implicit <em>state</em> where typings are stored when they are
+functions and variables are declared. The stateful effect provided by Polysemy's
+is <code>State s</code>, where <code>s</code> is the type of the state data. The effect <code>State s</code>
+comes along with a basic interface, where <code>get</code> and <code>set</code> are defined using
+internal Polysemy details that are omitted here.</p>
+<pre><code class="language-haskell">-- returns the current state
+get :: Member (State s) r => Sem r s
+get = _ -- internal Polysemy details
+
+-- replaces the current state
+put :: Member (State s) r => s -> Sem r ()
+put = _ --- internal Polysemy details
+
+-- replaces the current state with its image under a function
+modify :: Member (State s) r => (s -> s) -> Sem r ()
+modify f = do
+  st &#x3C;- get
+  put (f st)
+</code></pre>
+<p>The state type for typechecking, or <em>typechecking context</em>, must store the types
+of variables and functions, and in some sort of structure that reflects nested
+scoping -- a <em>namespace</em>. The <code>Namespace</code> data typed defined previously will do.
+This is all that is needed for the typechecking context.</p>
+<pre><code class="language-haskell">data Context = Context
+  { _namespace :: Namespace Name Type
+  }
+
+emptyContext :: Context
+emptyContext =
+  Context
+    { _namespace = mempty
+    }
+
+makeLenses ''Context
+</code></pre>
+<p>Additionally a convenient alias for <em>typechecking computations</em> is defined
+below.</p>
+<pre><code class="language-haskell">type Typecheck r a =
+  ( Member (State Context) r,
+    Member (Error Excepting.Exception) r,
+    Member (Output Log) r
+  ) =>
+  Sem r a
+</code></pre>
+<p>The basic ways of interacting with the typechecking context are <em>declaring</em>
+(setting) the type of a name, and <em>declaring</em> (getting) the type of a name. The
+naming convention <code>synthesize&#x3C;x></code> indicates that the function synthesizes the
+type of grammatical data <code>&#x3C;x></code>.</p>
+<pre><code class="language-haskell">-- gets the type of `n`
+synthesizeName :: Name -> Typecheck r Type
+synthesizeName n =
+  gets (^. namespace . at n) >>= \case
+    Just t -> return t
+    Nothing -> throw $ Excepting.UndeclaredVariable n
+
+-- sets the type of `n` to be `t`
+declareName :: Name -> Type -> Typecheck r ()
+declareName n t = modify $ namespace %~ initialize n t
+</code></pre>
+<p>So now, how is a program typechecked? There are three parts:</p>
+<ol>
+<li>typecheck the prelude, implicitly included before a program</li>
+<li>typecheck the program's body -- its list of statements</li>
+<li>typecheck the program's <code>main</code> function, if it has one, to see that it has
+the expected type of a main function</li>
+</ol>
+<p>As a typechecking computation:</p>
+<pre><code class="language-haskell">typecheckProgram :: Program -> Typecheck r ()
+typecheckProgram = \case
+  Program insts -> do
+    log Tag_Debug "typecheck program"
+    typecheckPrelude
+    mapM_ (flip checkInstruction VoidType) insts
+    typecheckMain
+</code></pre>
+<p>Typechecking the prelude is a simple as loading the type information specified
+by the primitive functions in <code>Language.Impe.Primitive</code>.</p>
+<pre><code class="language-hs">typecheckPrelude :: Typecheck r ()
+typecheckPrelude = do
+  log Tag_Debug "typecheck prelude"
+  mapM_
+    (\(f, ss, t) -> declare f $ FunctionType ss t)
+    primitive_functions
+</code></pre>
+<p>Typechecking instructions is the most interesting. As used in
+<code>typecheckProgram</code>, the function <code>checkInstruction</code> is meant to take an
+instruction and a type and then <em>check</em> that the instruction <em>synthesizes</em> to a
+type unifies with the expected type. Using the bidirectional typechecking
+philosophy, <code>checkInstruction</code> should look like the following:</p>
+<pre><code class="language-hs">checkInstruction :: Instruction -> Type -> Typecheck r ()
+checkInstruction inst t = do
+  log Tag_Debug "check instruction"
+  t' &#x3C;- synthesizeInstruction inst
+  void $ unifyTypes t t'
+</code></pre>
+<p>Synthesizing the type of an instruction is where the actual inspection of data
+comes in. In short the strategy for <code>synthesizeInstruction</code> is:</p>
+<ul>
+<li><code>Return e</code> synthesizes to <code>synthesizeExpression e</code></li>
+<li><code>Branch e inst1 inst2</code> synthesizes to the unification of
+<code>synthesizeInstruction inst1</code> and <code>synthesizeInstruction inst2</code></li>
+<li><code>Loop e inst</code> synthesizes to <code>synthesizeInstruction inst</code></li>
+<li><code>Block insts</code> synthesizes to... hmmmm</li>
+<li>other instructions synthesize to <code>VoidType</code></li>
+</ul>
+<p>Synthesizing blocks is a bit tricky because there are multiple statements with
+synthesizable types -- how should those types be combined into the whole block's
+type?</p>
+<p>Define an <em>intermediate type</em> to be either a specified type or unspecified,
+which corresponds to <code>Maybe Type</code> in haskell. Intermediate types unify as
+follows:</p>
+<pre><code class="language-hs">unifyIntermediateTypes :: Maybe Type -> Maybe Type -> Typecheck r (Maybe Type)
+unifyIntermediateTypes mb_t1 mb_t2 = do
+  log Tag_Debug $ printf "unify intermediate types: %s ~ %s" (show mb_t1) (show mb_t2)
+  case (mb_t1, mb_t2) of
+    (Nothing, Nothing) -> return Nothing
+    (Nothing, Just t) -> return $ Just t
+    (Just s, Nothing) -> return $ Just s
+    (Just s, Just t) -> Just &#x3C;$> unifyTypes s t
+</code></pre>
+<p>Then the <code>synthesizeInstruction</code> strategy for a block is:</p>
+<ol>
+<li>fold over the block's statements, accumulating the block's type as a
+intermediate type starting unspecified</li>
+<li>for each fold iteration, unify the current statement's synthesized
+intermediate type with the accululator intermediate type</li>
+</ol>
+<p>For this strategy, a function
+<code>synthesizeInstructionStep :: Instruction -> Typecheck r (Maybe Type)</code> is needed
+to synthesize intermediate types. These intermediate types indicate that they do
+not contribute to specifying what the return type of a function should be if
+they appear in the body of a function. But, as in the original strategy for
+<code>synthesizeInstruction</code>, the instruction <code>Return expr</code> specifically does specify
+the return type of a function.</p>
+<p>One last thing before implementing <code>synthesizeInstruction</code> is how to account for
+nested scopes. Some structures -- blocks, functions, branches, loops, returns,
+and procedure calls -- generate a local scope where local typings are not
+exported globally. Since <code>_namespace</code> is a <code>Namespace</code>, it has an interface for
+handling nested scopes. All that's needed is a way to interface with the
+namespace local scoping operations at the <code>Typecheck</code> computation level.</p>
+<p>The following function <code>withLocalScope</code> does just this. It takes a typechecking
+computation <code>tch</code> as input, and then generates a local scope -- using
+namespace's <code>enterLocalScope</code> and <code>leaveLocalScope</code> -- for running the <code>tch</code>.</p>
+<pre><code class="language-hs">withLocalScope :: Typecheck r a -> Typecheck r a
+withLocalScope tch = do
+  log Tag_Debug $ printf "entering local scope"
+  modify $ namespace %~ enterLocalScope
+  a &#x3C;- tch
+  log Tag_Debug $ printf "leaving local scope"
+  modify $ namespace %~ leaveLocalScope
+  return a
+</code></pre>
+<p>Finally, all the tools for implementing <code>synthesizeInstruction</code> are available:</p>
+<pre><code class="language-hs">synthesizeInstruction :: Instruction -> Typecheck r Type
+synthesizeInstruction inst = do
+  log Tag_Debug "synthesize instruction"
+  synthesizeInstructionStep inst >>= \case
+    Just t -> return t
+    Nothing -> return VoidType
+
+synthesizeInstructionStep :: Instruction -> Typecheck r (Maybe Type)
+synthesizeInstructionStep inst_ = case inst_ of
+
+  Block insts -> withLocalScope do
+    log Tag_Debug "synthesize block"
+    ts &#x3C;- mapM synthesizeInstructionStep insts
+    foldM unifyIntermediateTypes Nothing ts
+
+  Declaration x t -> do
+    log Tag_Debug $ printf "synthesize declaration: %s" (show inst_)
+    when (t == VoidType) . throw $ Excepting.VariableVoid x
+    declareName x t
+    return Nothing
+
+  Assignment x e -> do
+    log Tag_Debug $ printf "synthesize assignment: %s" (show inst_)
+    t &#x3C;- synthesizeName x
+    t' &#x3C;- synthesizeExpression e
+    void $ unifyTypes t t'
+    return Nothing
+
+  Initialization x t e -> do
+    log Tag_Debug $ printf "synthesize initialization: %s" (show inst_)
+    -- declaration
+    when (t == VoidType) . throw $ Excepting.VariableVoid x
+    declareName x t
+    -- assignment
+    t' &#x3C;- synthesizeExpression e
+    void $ unifyTypes t t'
+    return Nothing
+
+  Function f prms t inst -> do
+    log Tag_Debug $ printf "synthesize function: %s" (show inst_)
+    declareName f $ FunctionType (snd &#x3C;$> prms) t
+    withLocalScope do
+      mapM_ (\(x, s) -> declareName x s) prms
+      checkInstruction inst t
+    return Nothing
+
+  Branch e inst1 inst2 -> do
+    log Tag_Debug $ printf "synthesize branch: %s" (show inst_)
+    checkExpression e BoolType
+    mbt1 &#x3C;- withLocalScope $ synthesizeInstructionStep inst1
+    mbt2 &#x3C;- withLocalScope $ synthesizeInstructionStep inst2
+    unifyIntermediateTypes mbt1 mbt2
+
+  Loop e inst -> do
+    log Tag_Debug $ printf "synthesize loop: %s" (show inst_)
+    checkExpression e BoolType
+    withLocalScope $ synthesizeInstructionStep inst
+
+  Return e -> do
+    log Tag_Debug $ printf "synthesize return: %s" (show inst_)
+    Just &#x3C;$> synthesizeExpression e
+
+  ProcedureCall f args -> do
+    log Tag_Debug $ printf "synthesize procedure call: %s" (show inst_)
+    synthesizeName f >>= \case
+      fType@(FunctionType ss t) -> do
+        unless (length args == length ss) . throw $
+          Excepting.ApplicationArgumentsNumber f fType (length ss) args
+        mapM_ (uncurry checkExpression) (zip args ss)
+        return t
+      fType ->
+        throw $ Excepting.ApplicationNonfunction f fType args
+    return Nothing
+
+  Pass ->
+    return Nothing
+</code></pre>
+<h3 id="Executing" class="section-header"><a href="#Executing" class="no_background">Executing</a></h3>
+<p><code>Language.Impe.Executing</code></p>
+<p>The setup for starting to implement <em>execution</em> is very similar to typechecking.
+There is a context that contains the information that is passed along implicitly
+during execution. Instead of type information, this context contains name
+bindings, as well a simple interface of IO.</p>
+<pre><code class="language-hs">data Context = Context
+  { _namespace :: Namespace Name Entry,
+    _inputLines :: [String],
+    _outputString :: String
+  }
+
+data Entry
+  = EntryValue (Maybe Value)
+  | EntryClosure (Maybe Closure)
+  | EntryPrimitiveFunction
+
+makeLenses ''Context
+
+type Execution r a =
+  ( Member (State Context) r,
+    Member (Error Excepting.Exception) r,
+    Member (Output Log) r
+  ) =>
+  Sem r a
+</code></pre>
+<p>To execute a program:</p>
+<ol>
+<li>load in prelude-defined variables and functions</li>
+<li>execute the program's statements</li>
+<li>call the main function (if there is one)</li>
+</ol>
+<pre><code class="language-hs">executeProgram :: Program -> Execution r ()
+executeProgram = \case
+  Program insts -> do
+    log Tag_Debug "execute program"
+    executePrelude
+    mapM_ executeInstruction insts
+    executeMain
+
+executePrelude :: Execution r ()
+executePrelude = do
+  log Tag_Debug "execute prelude"
+  -- primitive variables
+  mapM_
+    ( \(x, _, e) ->
+        do
+          declareVariable x
+          adjustVariable x =&#x3C;&#x3C; evaluateExpression e
+    )
+    primitive_variables
+  -- primitive functions
+  mapM_
+    (\(f, _, _) -> declarePrimitiveFunction f)
+    primitive_functions
+
+executeMain :: Execution r ()
+executeMain =
+  queryFunction' mainName >>= \case
+    Just _ -> do
+      log Tag_Debug "execute main"
+      void $ executeInstruction (ProcedureCall mainName [])
+    Nothing -> return ()
+</code></pre>
+<p>The main function needed to implement the above is the <code>executeInstruction</code>
+which describes how to <em>execute</em> a single instruction.</p>
+<pre><code class="language-hs">executeInstruction :: Instruction -> Execution r (Maybe Value)
+executeInstruction inst_ = case inst_ of
+  Block insts -> withLocalScope do
+    log Tag_Debug "execute block start"
+    mb_v &#x3C;-
+      foldM
+        ( \mb_v inst -> case mb_v of
+            Just v -> return $ Just v
+            Nothing -> executeInstruction inst
+        )
+        Nothing
+        insts
+    log Tag_Debug "execute block end"
+    return mb_v
+  Declaration x _ -> do
+    log Tag_Debug $ printf "execute declaration: %s" (show inst_)
+    declareVariable x
+    return Nothing
+  Assignment x e -> do
+    log Tag_Debug $ printf "execute assignment: %s" (show inst_)
+    adjustVariable x =&#x3C;&#x3C; evaluateExpression e
+    return Nothing
+  Initialization x _ e -> do
+    log Tag_Debug $ printf "execute initialization: %s" (show inst_)
+    declareVariable x -- declaration
+    adjustVariable x =&#x3C;&#x3C; evaluateExpression e -- assignment
+    return Nothing
+  Function f params _ inst -> do
+    log Tag_Debug $ printf "execute function definition: %s" (show inst_)
+    declareFunction f
+    adjustFunction f (fst &#x3C;$> params, inst)
+    return Nothing
+  Branch e inst1 inst2 -> do
+    log Tag_Debug $ printf "execute branch: %s" (show inst_)
+    evaluateExpression e >>= \case
+      Bool True -> withLocalScope $ executeInstruction inst1
+      Bool False -> withLocalScope $ executeInstruction inst2
+      v -> throw $ Excepting.ValueMaltyped e BoolType v
+  Loop e inst -> do
+    log Tag_Debug $ printf "execute loop: %s" (show inst_)
+    evaluateExpression e >>= \case
+      Bool True -> do
+        log Tag_Debug $ printf "evaluate loop condition to true: %s" (show e)
+        executeInstruction inst >>= \case
+          Just v -> do
+            log Tag_Debug $ printf "execute loop iteration to return value: %s" (show v)
+            return $ Just v
+          Nothing ->
+            withLocalScope $ executeInstruction $ Loop e inst
+      Bool False -> do
+        log Tag_Debug $ printf "evaluate loop condition to false: %s" (show e)
+        return Nothing
+      v -> throw $ Excepting.ValueMaltyped e BoolType v
+  Return e -> do
+    log Tag_Debug $ printf "execute return: %s" (show inst_)
+    Just &#x3C;$> evaluateExpression e
+  ProcedureCall f args -> do
+    log Tag_Debug $ printf "execute procedure call: %s" (show inst_)
+    queryFunction f >>= \case
+      -- closure
+      Left ((xs, inst), scp) -> withLocalScope do
+        -- evaluate arguments in local scope
+        log Tag_Debug $ printf "evaluate arguments: %s" (show args)
+        vs &#x3C;- mapM evaluateExpression args
+        -- init param vars in local scope (will be GC'ed by `withLocalScope`)
+        log Tag_Debug $ printf "initialize paramater variables: %s" (show xs)
+        mapM_ (uncurry initializeVariable) (zip xs vs)
+        --
+        log Tag_Debug $ printf "enter function scope"
+        withScope scp do
+          -- execute instruction in function scope
+          log Tag_Debug $ printf "execute closure instruction in function scope"
+          void $ executeInstruction inst
+      -- primitive function
+      Right pf -> withLocalScope do
+        -- evaluate arguments in outer scope
+        vs &#x3C;- mapM evaluateExpression args
+        -- execute primitive function
+        void $ executePrimitiveFunction pf vs
+    -- ignore result
+    return Nothing
+  Pass ->
+    return Nothing
+
+executePrimitiveFunction :: Name -> [Expression] -> Execution r (Maybe Value)
+executePrimitiveFunction f args = do
+  log Tag_Debug $ printf "execute primitive function: %s(%s)" (show f) (showArgs args)
+  case (f, args) of
+    -- bool
+    (Name "~", [Bool p]) -> return . Just $ Bool (not p)
+    (Name "&#x26;&#x26;", [Bool p, Bool q]) -> return . Just $ Bool (p &#x26;&#x26; q)
+    (Name "||", [Bool p, Bool q]) -> return . Just $ Bool (p || q)
+    (Name "show_bool", [b]) -> return . Just $ String (show b)
+    -- int
+    (Name "+", [Int x, Int y]) -> return . Just $ Int (x + y)
+    (Name "-", [Int x, Int y]) -> return . Just $ Int (x - y)
+    (Name "*", [Int x, Int y]) -> return . Just $ Int (x * y)
+    (Name "/", [Int x, Int y]) -> return . Just $ Int (x `div` y)
+    (Name "^", [Int x, Int y]) -> return . Just $ Int (x ^ y)
+    (Name "%", [Int x, Int y]) -> return . Just $ Int (x `mod` y)
+    (Name "=", [Int x, Int y]) -> return . Just $ Bool (x == y)
+    (Name ">", [Int x, Int y]) -> return . Just $ Bool (x > y)
+    (Name ">=", [Int x, Int y]) -> return . Just $ Bool (x >= y)
+    (Name "&#x3C;", [Int x, Int y]) -> return . Just $ Bool (x &#x3C; y)
+    (Name "&#x3C;=", [Int x, Int y]) -> return . Just $ Bool (x &#x3C;= y)
+    (Name "show_int", [i]) -> return . Just $ String (show i)
+    -- string
+    (Name "&#x3C;>", [String a, String b]) -> return . Just $ String (a &#x3C;> b)
+    (Name "write", [String a]) -> writeOutput a >> return Nothing
+    (Name "read", []) ->
+      readNextInput >>= \case
+        Just s -> return . Just $ String s
+        Nothing -> throw Excepting.EndOfInput
+    -- uninterpreted
+    _ ->
+      throw $ Excepting.UninterpretedPrimitiveFunction f args
+</code></pre>
+<p>Note that <code>executePrimitiveFunction</code> is hard-coded to execute all the functions
+specified in the <code>Primitive</code> module. This is not an ideal organization, since it
+requires the maintainance of two different locations to match each other. This
+is error-prone, but for this casual project it is satisfactory. Additionally,
+many other changes to the primitives system are required to make it
+well-organized at all. The primitives system is really kind of ad-hoc in this
+implementation of Impe.</p>
+<p>Next, a definition of <em>evaluation</em> is needed. The difference between execution
+and evaluation is that execution does not have any results, whereas evaluation
+yields a result i.e. a value. Most instructions do not evaluate to anything, so
+the <code>evaluateInstruction</code> function makes sure that any time an instruction is
+expected to evaluate to something and it doesn't actually, there's an error.
+However, if typechecking is correct then this should never happen in practice.</p>
+<pre><code class="language-hs">evaluateInstruction :: Instruction -> Execution r Value
+evaluateInstruction inst = do
+  log Tag_Debug $ printf "evaluate instruction: %s" (show inst)
+  executeInstruction inst >>= \case
+    Just v -> return v
+    Nothing -> throw $ Excepting.InstructionNoReturn inst
+</code></pre>
+<p>Finally, evaluating an expression is very simple. Most kinds of expressions are
+already values, all of them except for variables and function applications.
+Variables are not values since they can be dereferenced. Function applications
+are not values since they can be reduced by calling the functions on the given
+arguments and returning the result.</p>
+<pre><code class="language-hs">evaluateExpression :: Expression -> Execution r Value
+evaluateExpression e_ = case e_ of
+  Variable x -> do
+    log Tag_Debug $ printf "evaluate variable: %s" (show e_)
+    queryVariable x
+  Application f args -> do
+    log Tag_Debug $ printf "evaluate application: %s" (show e_)
+    queryFunction f >>= \case
+      -- constructed function
+      Left ((xs, inst), scp) -> withLocalScope do
+        -- evaluate arguments in local scope
+        vs &#x3C;- mapM evaluateExpression args
+        -- init param vars in local scope (will be GC'ed by `withLocalScope`)
+        mapM_ (uncurry initializeVariable) (zip xs vs)
+        withScope scp do
+          -- declare argument bindings in inner scope
+          mapM_ (uncurry adjustVariable) (zip xs vs)
+          -- evaluate instruction, returning result
+          evaluateInstruction inst
+      -- primitive function
+      Right pf -> withLocalScope do
+        -- evaluate arguments in outer scope
+        args' &#x3C;- mapM evaluateExpression args
+        -- hand-off to execute primitive function
+        executePrimitiveFunction pf args' >>= \case
+          Just v -> return v
+          Nothing -> throw $ Excepting.ExpressionNoValue e_
+  v -> return v
+</code></pre>
+<p>Throughout these functions, a few helper functions for interfacing with the
+context have gone undefined. The are straightforward to implement from the
+<code>get</code>, <code>modify</code>, and the <code>At</code> instance of <code>Namespace</code>. Additionally, functions
+like <code>queryVariable</code> and <code>queryFunction</code> throw exceptions when the queried name
+is not in the namespace (which should never happen in practice if typechecking
+is correct). See the source code for the details on these functions.</p>
+<pre><code class="language-hs">queryVariable :: Name -> Execution r Value
+queryVariable x =
+  gets (^. namespace . at x) >>= \case
+    Just (EntryValue (Just val)) ->
+      return val
+    Just (EntryValue Nothing) ->
+      throw $ Excepting.VariableUninitializedMention x
+    Just (EntryClosure _) ->
+      throw $ Excepting.VariableNo x
+    Just EntryPrimitiveFunction ->
+      throw $ Excepting.VariableNo x
+    Nothing ->
+      throw $ Excepting.VariableUndeclaredMention x
+</code></pre>
+<h3 id="Interpreting" class="section-header"><a href="#Interpreting" class="no_background">Interpreting</a></h3>
+<p>Now to combine it all together! To <em>interpret</em> a program is, following the three
+steps outlined in <a href="#Interpretation"><img src="https://rybl.net" alt="" class="icon"><span class="name">Interpetation</span></a>, to pass the results from
+each step to the next, all inside of an effect monad that handles logging and
+exceptions. Even more, polysemy makes it each to include different state
+effects, so the interpretation effect can include the state effects from
+typechecking and execution as well -- all in the <code>Interpretation</code> monad:</p>
+<pre><code class="language-hs">type Interpretation r a =
+  ( Member (Output Log) r,
+    Member (State Typechecking.Context) r,
+    Member (State Executing.Context) r,
+    Member (Error Exception) r
+  ) =>
+  Sem r a
+</code></pre>
+<p>Decorated with loggs and the relevant type annotations:</p>
+<pre><code class="language-hs">interpretProgram :: String -> String -> Interpretation r ()
+interpretProgram filename source = do
+  -- parse
+  log Tag_Debug $ "parsing source"
+  prgm &#x3C;- parseProgram filename source
+  log Tag_Debug $ printf "parsed program:\n\n%s\n" (show prgm)
+  -- typecheck
+  log Tag_Debug $ "typechecking program"
+  Typechecking.typecheckProgram prgm
+  tchCtx &#x3C;- get :: Member (State Typechecking.Context) r => Sem r Typechecking.Context
+  log Tag_Debug $ printf "typechecked context:\n\n%s\n" (show tchCtx)
+  -- execute
+  log Tag_Debug $ printf "executing program"
+  Executing.executeProgram prgm
+  exeCtx &#x3C;- get :: Member (State Executing.Context) r => Sem r Executing.Context
+  log Tag_Debug $ printf "executed context:\n\n%s\n" (show exeCtx)
+</code></pre>
+<p>The function <code>interpretProgram</code> takes a source file, parses its program,
+typechecks that program, and executes the type-safe program. If there are any
+exceptions along the way, the flow is escaped with the relevant exception in
+tact.</p>
+<p>The core library for <code>impe</code> is now complete.</p>
+<p>Now all is needed is a way to handle an <code>Interpretation</code>.</p>
+<h3 id="Main" class="section-header"><a href="#Main" class="no_background">Main</a></h3>
+<p>The executable program that runs Impe.</p>
+<p>Modules <code>Main</code>, <code>Main.Output</code>, and <code>Main.Excepting</code>.</p>
+<p>The package <code>impe</code> comes with a library that defines all the internals of the
+Impe language, and an executable for interpreting Impe programs according to
+Impe's definition. So far the executable has two functionalities:</p>
+<ol>
+<li>interpret an Impe source file</li>
+<li>facilitate an Impe interactive REPL</li>
+</ol>
+<p>To organize this executable and some options about how to interpret Impe
+programs, some command line options will be useful.</p>
+<h4 id="Command_Line_Options" class="section-header"><a href="#Command_Line_Options" class="no_background">Command Line Options</a></h4>
+<p>Modules <code>Main.Config.Grammar</code>and <code>Main.Config.Parsing</code>. Using
+<code>options-applicative</code>.</p>
+<p>The <code>options-applicative</code> library offers a convenient way to define a parser for
+command line options. A configuration for running the executable is a record as
+follows:</p>
+<pre><code class="language-hs">data Config = Config
+  { mode :: Mode,
+    verbosity :: Verbosity,
+    source_filename :: Maybe String,
+    input_filename :: Maybe String,
+    output_filename :: Maybe String
+  }
+</code></pre>
+<p>The parser takes a form very similar to a <code>parsec</code> parser, but
+<code>options-applicative</code> implicitly includes features for handling command line
+arguments such as optional arguments, flags, and "help" message annotations.</p>
+<pre><code class="language-hs">config :: ParserInfo Grammar.Config
+config =
+  info
+    ( helper
+        &#x3C;*> version
+        &#x3C;*> ( Grammar.Config
+                &#x3C;$> mode
+                &#x3C;*> verbosity
+                &#x3C;*> source_filename
+                &#x3C;*> input_filename
+                &#x3C;*> output_filename
+            )
+    )
+    (fullDesc &#x3C;> progDesc "impe" &#x3C;> header "the impe language")
+
+mode :: Parser Grammar.Mode
+mode =
+  flag
+    Grammar.Mode_Interpret
+    Grammar.Mode_Interact
+    (short 'i' &#x3C;> long "interactive" &#x3C;> help "interactive REPL")
+
+version :: Parser (a -> a)
+version =
+  infoOption
+    (unwords [showVersion Paths_impe.version, $(gitHash)])
+    (long "version" &#x3C;> help "show version")
+
+verbosity :: Parser Grammar.Verbosity
+verbosity = do
+  option
+    parseVerbosity
+    ( metavar "VERBOSITY"
+        &#x3C;> short 'v'
+        &#x3C;> long "verbosity"
+        &#x3C;> value (Grammar.verbosities ! "normal")
+        &#x3C;> help "verbosity modes: debug, normal, quiet, silent, arrogant"
+    )
+
+parseVerbosity :: ReadM Grammar.Verbosity
+parseVerbosity =
+  eitherReader $
+    ( \s ->
+        case Grammar.verbosities !? s of
+          Just vrb -> return vrb
+          Nothing -> Left $ printf "Unrecognized verbosity `%s'" s
+    )
+      . Prelude.filter (not . Char.isSpace)
+
+source_filename :: Parser (Maybe String)
+source_filename =
+  Just
+    &#x3C;$> ( strArgument
+            ( metavar "SOURCE"
+                &#x3C;> help "source filename"
+            )
+        )
+    &#x3C;|> pure Nothing
+
+input_filename :: Parser (Maybe String)
+input_filename =
+  Just
+    &#x3C;$> strOption
+      ( metavar "INPUT"
+          &#x3C;> long "in"
+          &#x3C;> help "input data filename"
+      )
+    &#x3C;|> pure Nothing
+
+output_filename :: Parser (Maybe String)
+output_filename =
+  Just
+    &#x3C;$> strOption
+      ( metavar "OUTPUT"
+          &#x3C;> long "out"
+          &#x3C;> help "output data filename"
+      )
+    &#x3C;|> pure Nothing
+</code></pre>
+<p>The basic way to read the above definitions is that there are a selection of
+basic <code>Parser</code> constructions:</p>
+<ul>
+<li><code>strArgument</code> -- a string-valued argument</li>
+<li><code>info</code> -- prints out a message</li>
+<li><code>flag</code> -- optional</li>
+<li><code>option</code>, <code>strOption</code> -- optional with an argument</li>
+</ul>
+<p>These constructors take a few relevant arguments and one last big argument
+composed by a bunch of <code>&#x3C;></code>'ed together pieces. This argument is the <em>modifier</em>,
+and its components are <em>fields</em>. <code>options-applicative</code> implicitly assigns a
+variety of default values that are overriden when a specific field is <code>&#x3C;></code>'ed on
+the modifier.</p>
+<p>Then the <code>config</code> parser's functionality can be lifted into an open polysemy
+effect monad to be used in <code>Main</code> as follows:</p>
+<pre><code class="language-hs">parseConfig :: Member (Embed IO) r => Sem r Grammar.Config
+parseConfig = embed $ execParser config
+</code></pre>
+<h4 id="Interactive_REPL" class="section-header"><a href="#Interactive_REPL" class="no_background">Interactive REPL</a></h4>
+<p>Modules <code>Main.Interacting</code>, <code>Main.Interacting.Grammar</code>,
+<code>Main.Interacting.Lexing</code>, <code>Main.Interacting.Parsing</code>.</p>
+<p>Using Polysemy-organized effects.</p>
+<p>This interactive REPL turned out to be much more annoying to implement that
+originally antifipated. But it works.</p>
+<p>The basic idea of a REPL -- a read-evaluate-print loop -- is to allow the user
+to, repeatedly, type in an expression and then print out the evaluated result
+(if the expression has one). Since Impe has statements as well as expressions,
+either can be used in the REPL. Additionally the REPL provides a few
+metacommands for the sake of being user- and debugging-friendly, such as
+printing the context, printing a help message, and quiting the REPL.</p>
+<p>Here is a little grammar for REPL expressions, where <code>Instruction</code> and
+<code>Expression</code> come from <code>Language.Impe.Grammar</code>.</p>
+<pre><code class="language-hs">data Command
+  = Command_Instruction Instruction
+  | Command_Expression Expression
+  | Command_MetaCommand MetaCommand
+  deriving (Show)
+
+data MetaCommand
+  = MetaCommand_Context
+  | MetaCommand_Quit
+  | MetaCommand_Help
+  deriving (Show)
+</code></pre>
+<p>The details are omitted, but a simple parsec parser can be derived for this
+language, where:</p>
+<ul>
+<li>an instruction is input as ""</li>
+<li>an expression is input as "<div></div> " or "<div></div> "</li>
+<li>a metacommand is input as ":"</li>
+</ul>
+<p>Finally, the REPL itself is implemented in a slightly convoluted way, which
+takes advantage of polysemy.</p>
+<pre><code class="language-hs">interact ::
+  ( Member (Output Log) r,
+    Member (State Typechecking.Context) r,
+    Member (State Executing.Context) r,
+    Member (Error MainExcepting.Exception) r,
+    Member (Reader Config) r,
+    Member (Embed IO) r
+  ) =>
+  Sem r ()
+</code></pre>
+<p>Since the type of <code>interact</code> is defined as an open effect monad, <code>interact</code> can
+be trivially embedded in the <code>main</code> program earlier without the need for special
+lifting.</p>
+<p>Back to interacting, the situation is that interpreting can have side-effects,
+such as logging and excepting, which need to be dealt with in the REPL.
+Interpretation excepting should not exit the REPL, so it needs to be caught and
+then somehow projected to the user while not escaping the REPLoop. Logging is
+handled according to the <em>verbosity</em> configuration given by the command line
+arguments.</p>
+<p>So, there is an <code>interact</code> function which checks each REPL loop by making sure
+that the loop should continue (i.e. that the user has not quit yes), handles any
+exceptions that arise from interpreting, and prints any output yielded from
+execution. The <code>interactStep</code> function does the actual work of interaction with
+the user, exposing the effects of logging (output) and excepting that are
+handled by <code>interact</code>.</p>
+<pre><code class="language-hs">interact ::
+  ( Member (Output Log) r,
+    Member (State Typechecking.Context) r,
+    Member (State Executing.Context) r,
+    Member (Error MainExcepting.Exception) r,
+    Member (Reader Config) r,
+    Member (Embed IO) r
+  ) =>
+  Sem r ()
+interact = do
+  continue &#x3C;-
+    (runWriter . runError :: Sem (Error ImpeExcepting.Exception : Writer String : r) Bool -> Sem r (String, Either ImpeExcepting.Exception Bool)) interactStep >>= \case
+      (out, Left err) -> do
+        -- write to output
+        writeOutputAppended out
+        -- log output error
+        log Tag_Output $ show err
+        -- continue
+        return True
+      (out, Right b) -> do
+        -- write to output
+        writeOutputAppended out
+        -- continue?
+        return b
+  if continue
+    then interact
+    else log Tag_Output "[impe - interact] quit"
+
+interactStep ::
+  ( Member (Output Log) r,
+    Member (State Typechecking.Context) r,
+    Member (State Executing.Context) r,
+    Member (Error ImpeExcepting.Exception) r,
+    Member (Error MainExcepting.Exception) r,
+    Member (Writer String) r,
+    Member (Embed IO) r
+  ) =>
+  Sem r Bool
+interactStep = do
+  -- prompt
+  embed do
+    putStr "> "
+    hFlush stdout
+  src &#x3C;- embed getLine
+  -- parse command
+  log Tag_Debug $ "parsing command"
+  cmd &#x3C;- parseCommand src
+  log Tag_Debug $ printf "parsed command: %s" (show cmd)
+  -- handle command
+  b &#x3C;-
+    parseCommand src >>= \case
+      Command_Instruction inst -> do
+        -- interpret input
+        (mb_v, t) &#x3C;- interpretInstructionParsed inst
+        -- handle outputs
+        Executing.tellOutputString
+        Executing.resetOutputString
+        -- result
+        case mb_v of
+          Just v -> log Tag_Output $ printf "returns %s :: %s\n" (show v) (show t)
+          Nothing -> return ()
+        -- continue
+        return True
+      Command_Expression expr -> do
+        -- interpret input
+        (v, t) &#x3C;- interpretExpressionParsed expr
+        -- handle outputs
+        Executing.tellOutputString
+        Executing.resetOutputString
+        -- result
+        log Tag_Output $ printf "%s :: %s\n" (show v) (show t)
+        -- continue
+        return True
+      Command_MetaCommand mtacmd -> interpretMetaCommand mtacmd
+  return b
+
+interpretMetaCommand ::
+  ( Member (Output Log) r,
+    Member (State Typechecking.Context) r,
+    Member (State Executing.Context) r,
+    Member (Error ImpeExcepting.Exception) r,
+    Member (Error MainExcepting.Exception) r,
+    Member (Embed IO) r
+  ) =>
+  MetaCommand ->
+  Sem r Bool
+interpretMetaCommand = \case
+  MetaCommand_Context -> do
+    -- log contexts
+    tchCtx &#x3C;- get :: Member (State Typechecking.Context) r => Sem r Typechecking.Context
+    log Tag_Output $ printf "typechecking context:\n\n%s\n" (show tchCtx)
+    exeCtx &#x3C;- get :: Member (State Executing.Context) r => Sem r Executing.Context
+    log Tag_Output $ printf "executing context:\n\n%s\n" (show exeCtx)
+    -- continue
+    return True
+  MetaCommand_Help -> do
+    log Tag_Output . intercalate "\n" $
+      [ "[impe - interact] help",
+        "  &#x3C;instruction>      execute instruction",
+        "  :e &#x3C;expression>    evaluate expression",
+        "  :context / :c      print context",
+        "  :help    / :h      print help",
+        "  :quit    / :q      quit"
+      ]
+    -- continue
+    return True
+  MetaCommand_Quit ->
+    -- quit
+    return False
+</code></pre>
+<h2 id="Conclusions" class="section-header"><a href="#Conclusions" class="no_background">Conclusions</a></h2>
+<p>TODO</p>
+<h2 id="References" class="section-header"><a href="#References" class="no_background">References</a></h2>
+<ul>
+<li><a href="https://github.com/rybla/impe" title="riib/impe"><img src="github_com_favicon.ico" alt="" class="icon">riib/impe</a></li>
+<li><a href="https://hackage.haskell.org/package/polysemy-1.4.0.0/docs/Polysemy-Output.html" title="Polysemy.Output"><img src="/placeholder_favicon.png" alt="" class="icon">Polysemy.Output</a></li>
+<li><a href="https://hackage.haskell.org/package/polysemy-1.4.0.0/docs/Polysemy-Writer.html" title="Polysemy.Writer"><img src="/placeholder_favicon.png" alt="" class="icon">Polysemy.Writer</a></li>
+<li><a href="https://hackage.haskell.org/package/parsec" title="Parsec"><img src="/placeholder_favicon.png" alt="" class="icon">Parsec</a></li>
+<li><a href="#Interpretation" title="Interpetation"><img src="https://rybl.net" alt="" class="icon">Interpetation</a></li>
+</ul></article></main><footer></footer></body></html>
