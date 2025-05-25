@@ -1,14 +1,7 @@
 import config from "@/config.json";
-import Effect from "@/effect";
+import Effect from "@/Effect";
 import { Reference, ResourceMetadata, ResourceMetadata_Schema } from "@/types";
-import {
-  defined,
-  do_,
-  encodeURIComponent_id,
-  indentString,
-  Ref,
-  Tree,
-} from "@/util";
+import { do_, encodeURIComponent_id, indentString, Ref, Tree } from "@/util";
 import { extract_faviconUrl_from_url } from "@/web_util";
 import * as hast from "hast";
 import * as mdast from "mdast";
@@ -26,7 +19,13 @@ export function showNode(node: mdast.Node): string {
 }
 
 export const remarkTitle: Plugin<
-  [{ metadataRef: Ref<ResourceMetadata>; titleRef: Ref<mdast.Heading> }],
+  [
+    {
+      ctx: Effect.Ctx.T;
+      metadataRef: Ref<ResourceMetadata>;
+      titleRef: Ref<mdast.Heading>;
+    },
+  ],
   mdast.Root,
   mdast.Root
 > = (opts) => async (root) => {
@@ -39,7 +38,7 @@ export const remarkTitle: Plugin<
 };
 
 export const remarkPostMetadata: Plugin<
-  [{ metadataRef: Ref<ResourceMetadata> }],
+  [{ ctx: Effect.Ctx.T; metadataRef: Ref<ResourceMetadata> }],
   mdast.Root,
   mdast.Root
 > = (opts) => async (root) => {
@@ -54,7 +53,13 @@ export const remarkPostMetadata: Plugin<
 };
 
 export const remarkReferences: Plugin<
-  [{ metadataRef: Ref<ResourceMetadata>; referencesRef: Ref<Reference[]> }],
+  [
+    {
+      ctx: Effect.Ctx.T;
+      metadataRef: Ref<ResourceMetadata>;
+      referencesRef: Ref<Reference[]>;
+    },
+  ],
   mdast.Root,
   mdast.Root
 > = (opts) => async (root) => {
@@ -192,7 +197,7 @@ export const remarkReferences: Plugin<
 };
 
 export const remarkTableOfContents: Plugin<
-  [{ metadataRef: Ref<ResourceMetadata> }],
+  [{ ctx: Effect.Ctx.T; metadataRef: Ref<ResourceMetadata> }],
   mdast.Root,
   mdast.Root
 > = (opts) => (root) => {
@@ -262,7 +267,7 @@ export const remarkTableOfContents: Plugin<
 };
 
 export const rehypeCustomHeaders: Plugin<
-  [{ metadataRef: Ref<ResourceMetadata> }],
+  [{ ctx: Effect.Ctx.T; metadataRef: Ref<ResourceMetadata> }],
   hast.Root,
   hast.Root
 > = (opts) => (root) => {
@@ -286,10 +291,23 @@ export const rehypeCustomHeaders: Plugin<
   });
 };
 
-export const remarkCustomDirectives: Plugin<[{}], mdast.Root, mdast.Root> =
-  (opts) => (root) => {
-    // console.log("remarkCustomDirectives");
+export const remarkCustomDirectives_: Plugin<
+  [{ ctx: Effect.Ctx.T }],
+  mdast.Root,
+  mdast.Root
+> = (opts) => (root) =>
+  Effect.run({ label: "remarkCustomDirectives" }, () => async (ctx) => {
+    const nodes: ContainerDirective | LeafDirective | TextDirective = [];
     visit(root, (node) => {
+      if (
+        node.type === "containerDirective" ||
+        node.type === "leafDirective" ||
+        node.type === "textDirective"
+      )
+        nodes.push(node);
+    });
+
+    for (const node of nodes) {
       if (
         node.type === "containerDirective" &&
         node.name === "example_containerDirective"
@@ -314,34 +332,71 @@ export const remarkCustomDirectives: Plugin<[{}], mdast.Root, mdast.Root> =
         node.data.hProperties = node.data.hProperties ?? {};
         node.data.hProperties.class = "example_textDirective";
         node.children = [{ type: "text", value: "example_textDirective" }];
-      } else if (
-        node.type === "containerDirective" &&
-        node.name === "thumbnail"
-      ) {
-        node.data = node.data ?? {};
-        node.data.hProperties = node.data.hProperties ?? {};
-        node.data.hProperties.class = "containerDirective_thumbnail";
-        const attributes = defined(node.attributes);
-        const title = defined(attributes.title);
-        const url = defined(attributes.url);
-        node.children.splice(0, 0, {
-          type: "heading",
-          depth: 2,
-          children: [
-            {
-              type: "text",
-              value: title,
-            },
-          ],
-        });
-      } else if (node.type === "leafDirective" && node.name === "youtube") {
-        console.log(JSON.stringify(node, null, 4));
+      } else {
+        Effect.tell(`unhandled directive: ${JSON.stringify(node, null, 4)}`);
       }
-    });
-  };
+    }
+  })({})(opts.ctx);
+
+export const remarkCustomDirectives: Plugin<
+  [{ ctx: Effect.Ctx.T }],
+  mdast.Root,
+  mdast.Root
+> = (opts) => async (root) => {
+  // console.log("remarkCustomDirectives");
+  visit(root, (node) => {
+    if (
+      node.type === "containerDirective" &&
+      node.name === "example_containerDirective"
+    ) {
+      node.data = node.data ?? {};
+      node.data.hProperties = node.data.hProperties ?? {};
+      node.data.hProperties.class = "example_containerDirective";
+    } else if (
+      node.type === "leafDirective" &&
+      node.name === "example_leafDirective"
+    ) {
+      node.data = node.data ?? {};
+      node.data.hProperties = node.data.hProperties ?? {};
+      node.data.hProperties.class = "example_leafDirective";
+      node.children = [{ type: "text", value: "example_leafDirective" }];
+    } else if (
+      node.type === "textDirective" &&
+      node.name === "example_textDirective"
+    ) {
+      node.data = node.data ?? {};
+      node.data.hName = "span";
+      node.data.hProperties = node.data.hProperties ?? {};
+      node.data.hProperties.class = "example_textDirective";
+      node.children = [{ type: "text", value: "example_textDirective" }];
+    } else if (
+      node.type === "containerDirective" &&
+      node.name === "thumbnail"
+    ) {
+      node.data = node.data ?? {};
+      node.data.hProperties = node.data.hProperties ?? {};
+      node.data.hProperties.class = "containerDirective_thumbnail";
+      const attributes = await Effect.defined(node.attributes);
+      const title = Effect.defined(attributes.title);
+      const url = Effect.defined(attributes.url);
+      node.children.splice(0, 0, {
+        type: "heading",
+        depth: 2,
+        children: [
+          {
+            type: "text",
+            value: title,
+          },
+        ],
+      });
+    } else if (node.type === "leafDirective" && node.name === "youtube") {
+      console.log(JSON.stringify(node, null, 4));
+    }
+  });
+};
 
 const plugin: Plugin<
-  [{ metadataRef: Ref<ResourceMetadata> }],
+  [{ ctx: Effect.Ctx.T; metadataRef: Ref<ResourceMetadata> }],
   mdast.Root,
   mdast.Root
 > = (opts) => (root) => {};
@@ -372,7 +427,7 @@ export async function getIconUrl(url_raw: string): Promise<string> {
 
     const favicon_url = await extract_faviconUrl_from_url(
       `${url.protocol}//${hostname}`,
-    );
+    )(opts.sctx);
 
     const { favicon_href, favicon_filepath_relative } = await do_(async () => {
       const default_result = {

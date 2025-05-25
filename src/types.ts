@@ -1,4 +1,5 @@
 import { z } from "zod";
+import Effect from "./Effect";
 
 /**
  * Everything that describes a website.
@@ -16,18 +17,21 @@ export type Website = {
  * @param website
  * @param resource
  */
-export async function addResource(website: Website, resource: Resource) {
+export const addResource: Effect.T<
+  { website: Website; resource: Resource },
+  void
+> = (input) => async (ctx) => {
   if (
-    website.resources.find(
-      (resource_old) => resource_old.route === resource.route,
+    input.website.resources.find(
+      (resource_old) => resource_old.route === input.resource.route,
     ) !== undefined
   ) {
-    throw new Error(
-      `attempted to add a new Resource to a Website that already has a Resource at that Route: ${resource.route}`,
+    throw new Effect.EffectError(
+      `attempted to add a new Resource to a Website that already has a Resource at that Route: ${input.resource.route}`,
     );
   }
-  website.resources.push(resource);
-}
+  input.website.resources.push(input.resource);
+};
 
 /**
  * A thing that exists in a {@link Website}.

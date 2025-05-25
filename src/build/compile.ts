@@ -1,24 +1,29 @@
-import { addResource, HtmlResource, Website } from "@/types";
-import path from "path";
-import config from "@/config.json";
-import Effect from "@/effect";
+import Effect from "@/Effect";
+import { Website } from "@/types";
 
 /**
  * Compiles a constructored {@link Website} to output files.
  *
  * @param website
  */
-export default async function compile(website: Website) {
-  console.log("compile");
-  for (const resource of website.resources) {
-    console.log(`compile: ${resource.route}`);
-    if (resource.type === "html") {
-      Effect.outputFile_text(resource.route, resource.content);
-    } else if (resource.type === "raw") {
-      Effect.useLocalFile(resource.route);
-    } else {
-      // @ts-expect-error
-      const _: Resource = resource;
+export const compileWebsite: Effect.T<{ website: Website }, void> = Effect.run(
+  { label: "compileWebsite" },
+  (input) => async (ctx) => {
+    for (const resource of input.website.resources) {
+      Effect.tell(`compile: ${resource.route}`)(ctx);
+      if (resource.type === "html") {
+        await Effect.outputFile_text({
+          filepath_relative: resource.route,
+          content: resource.content,
+        })(ctx);
+      } else if (resource.type === "raw") {
+        await Effect.useLocalFile({ filepath_relative: resource.route })(ctx);
+      } else {
+        // @ts-expect-error
+        const _: Resource = resource;
+      }
     }
-  }
-}
+  },
+);
+
+export default compileWebsite;

@@ -35,11 +35,11 @@ export const intercalate = <A>(xss: A[][], sep: A[]): A[] => {
   return ys;
 };
 
-export const defined = <A>(a: A | undefined | null): A => {
-  if (a === undefined) throw Error("expected to be defined, but was undefined");
-  if (a === null) throw Error("expected to be defined, but was null");
-  return a;
-};
+// export const defined = <A>(a: A | undefined | null): A => {
+//   if (a === undefined) throw Error("expected to be defined, but was undefined");
+//   if (a === null) throw Error("expected to be defined, but was null");
+//   return a;
+// };
 
 export const ifDefined = <A, B>(
   a: A | undefined | null,

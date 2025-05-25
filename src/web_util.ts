@@ -1,13 +1,15 @@
 import { JSDOM } from "jsdom";
+import Effect from "@/Effect";
 
-export async function extract_faviconUrl_from_url(
-  pageUrlString: string,
-): Promise<URL | undefined> {
+export const extract_faviconUrl_from_url: Effect.T<
+  { pageUrlString: string },
+  URL | undefined
+> = (input) => async (ctx) => {
   let pageUrl: URL;
   try {
-    pageUrl = new URL(pageUrlString);
+    pageUrl = new URL(input.pageUrlString);
   } catch (e) {
-    console.error("Invalid page URL:", pageUrlString, e);
+    await Effect.tell(`Invalid page URL: ${input.pageUrlString}`)(ctx);
     return undefined;
   }
 
@@ -18,17 +20,17 @@ export async function extract_faviconUrl_from_url(
     });
 
     if (!response.ok) {
-      console.error(
+      await Effect.tell(
         `Failed to fetch HTML: ${response.status} ${response.statusText} from ${pageUrl.toString()}`,
-      );
+      )(ctx);
       return undefined;
     }
 
     const contentType = response.headers.get("content-type");
     if (!contentType || !contentType.toLowerCase().includes("text/html")) {
-      console.error(
+      await Effect.tell(
         `Expected HTML content, but got ${contentType} from ${pageUrl.toString()}`,
-      );
+      )(ctx);
       return undefined;
     }
 
@@ -60,13 +62,9 @@ export async function extract_faviconUrl_from_url(
           // to keep the function focused on extraction as per typical interpretations.
           return faviconUrl;
         } catch (e) {
-          // console.warn(
-          //   `Invalid or unresolvable href for selector ${selector}: "${linkElement.href}" on page ${pageUrl.toString()}`,
-          //   e,
-          // );
-          console.warn(
+          await Effect.tell(
             `Invalid or unresolvable href for selector ${selector}: "${linkElement.href}" on page ${pageUrl.toString()}`,
-          );
+          )(ctx);
         }
       }
     }
@@ -85,10 +83,9 @@ export async function extract_faviconUrl_from_url(
           return fallbackFaviconUrl;
         }
       } catch (headError) {
-        // console.warn(
-        //   `HEAD request for /favicon.ico failed for ${pageUrl.origin}, trying GET. Error:`,
-        //   headError,
-        // );
+        await Effect.tell(
+          `HEAD request for /favicon.ico failed for ${pageUrl.origin}, trying GET. Error: ${headError}`,
+        )(ctx);
       }
 
       if (!headResponse || !headResponse.ok) {
@@ -121,16 +118,16 @@ export async function extract_faviconUrl_from_url(
         }
       }
     } catch (e) {
-      // console.warn(
-      //   `Error checking or fetching /favicon.ico for ${pageUrl.origin}`,
-      //   e,
-      // );
+      await Effect.tell(
+        `Error checking or fetching /favicon.ico for ${pageUrl.origin}`,
+      )(ctx);
     }
 
     return undefined;
   } catch (error) {
-    // console.error(`Error processing ${pageUrlString}:`, error);
-    console.error(`Error extracting favicon from ${pageUrlString}`);
+    await Effect.tell(`Error extracting favicon from ${input.pageUrlString}`)(
+      ctx,
+    );
     return undefined;
   }
-}
+};
