@@ -28,28 +28,28 @@ So, how can the mayor best recruit people to construct the garden?
 Additionally, for the sake of simplicity, let us assume the following (which can
 be relaxed later):
 
-- There are \\( n \\) residents of Perindale.
-- Each resident gains \\( X \\) utility from the garden being constructed
+- There are $$ n $$ residents of Perindale.
+- Each resident gains $$ X $$ utility from the garden being constructed
 - All the residents are the same with respect to factors influencing the funding
   and construction of the garden
-- Constructing the garden costs \\( C \\) utility.
+- Constructing the garden costs $$ C $$ utility.
 - The garden cannot be constructed partially; if not turned into a garden, the
   lot will be bought by an out-of-town euntrepenuer and turned into a private
-  helicopter landing pad, from which residents get \\( 0 \\) utility.
+  helicopter landing pad, from which residents get $$ 0 $$ utility.
 - Each resident acts perfectly rationally (i.e. maximizes expected utility based
   on their beliefs).
 
 ### Proposal 1: Simple Donations
 
 The first idea that comes to the mayor's mind is to simply ask Perindale
-residents to donate \\( D \\) utility each, where \\( D \leq C/(n - 1) \\) i.e.
+residents to donate $$ D $$ utility each, where $$ D \leq C/(n - 1) $$ i.e.
 the garden would still be constructed if one resident decided not to contribute
-(we shall consider the case \\( D = C/(n-1) \\) in the next section).
-Additionally, \\(( D < X \\)) i.e. each resident's donation would be smaller
+(we shall consider the case $$ D = C/(n-1) $$ in the next section).
+Additionally, $$( D < X $$) i.e. each resident's donation would be smaller
 than the amount they value the garden.
 
-Since each resident gains \\( X \\) utility from a constructed garden and is
-being asked to donate \\( D \\) utility, each resident is in the same position
+Since each resident gains $$ X $$ utility from a constructed garden and is
+being asked to donate $$ D $$ utility, each resident is in the same position
 with respect to deciding what to do. So, the mayor asks an aribtrary resident,
 Jo, how they would decide, and then generalizes this result to all residents.
 
@@ -63,20 +63,26 @@ two situations:
 The table below shows the utility payoffs to Jo and the other residents given
 Jo's desicion (leftmost column) and the other residents' desicion (topmost row).
 
-| **Jo, others** | **others donate** | **others refrain** | | **donate** | \\(
-X - D, (n-1) (X - D) \\) | \\( -D, 0 \\) | | **refrain** | \\( X , (n-1) (X - D)
-\\) | \\( 0, 0 \\) |
+$$
+\begin{array}{c|c|c}
+  \textbf{Jo}, \textbf{others} & \textbf{others donate} & \textbf{others refrain} \\
+  \hline
+  \textbf{Jo donates} & X - D , (n-1) (X - D) & -D , 0 \\
+  \hline
+  \textbf{Jo refrains} & X , (n-1) (X - D) & 0 , 0
+\end{array}
+$$
 
 Then, Jo decides as follows, there are two cases for what Jo believes and so how
 they will decide:
 
 1. Suppose that Jo believes that every other resident will donate. Then Jo
-   decides not to donate since \\( X \geq X - D \\) i.e. Jo still recieves the
+   decides not to donate since $$ X \geq X - D $$ i.e. Jo still recieves the
    utility of the constructed garden without having to pay. Here, Jo is a _free
    rider_.
 2. Suppose that Jo believes that every other resident will refrain. Then Jo
-   decides not to donate since \\( 0 \geq -D \\) their donation will only go
-   towards a partial garden that is worth \\( 0 \\) utility.
+   decides not to donate since $$ 0 \geq -D $$ their donation will only go
+   towards a partial garden that is worth $$ 0 $$ utility.
 
 The mayor realies the tragic situation (more specifically, _prisoner's
 dillemma_): in either case, Jo decides not to contribute. And since Jo is an
@@ -105,7 +111,7 @@ removes the incentive for Jo to not contribute if Jo believes that the other
 residents will contribute. Additionally, the mayor wants to avoid wasting
 resources. So, they write up the following **assurance contract**:
 
-> I promise to donate \\( D \\) utility if and only if every other resident also
+> I promise to donate $$ D $$ utility if and only if every other resident also
 > signs this contract. Otherwise, I refraine from donating.
 
 The mayor consults Jo again, asking what they would do with this proposal. Jo
@@ -117,18 +123,24 @@ has the same two possible situations to expect:
 The table below shows the new utility payoffs to Jo and the other residents'
 desicions.
 
-| **Jo, others** | **others promise** | **others refrain** | | **promise** | \\(
-X - D, (n - 1) (X - D) \\) | \\( 0, 0 \\) | | **refrain** | \\( 0 , 0 \\) | \\(
-0, 0 \\) |
+$$
+\begin{array}{c|c|c}
+  \textbf{Jo}, \textbf{others} & \textbf{others promise} & \textbf{others refrain} \\
+  \hline
+  \textbf{Jo donates} & X - D , (n - 1) (X - D) & 0 , 0 \\
+  \hline
+  \textbf{Jo refrains} & 0 , 0 & 0 , 0
+\end{array}
+$$
 
 Then, Jo decides how to act based on their belief:
 
 1. Suppose that Jo believes that every other resident will promise. Then Jo
-   decides to donate since \\( X - D \geq 0 \\) i.e. Jo prefers to donate and
+   decides to donate since $$ X - D \geq 0 $$ i.e. Jo prefers to donate and
    then enjoy the garden over getting nothing.
 2. Suppose that Jo believes that every other resident will refrain. Then Jo is
    indifferent between donating and refraining since both given them a payoff of
-   \\( 0 \\).
+   $$ 0 $$.
 
 The mayor has made some progress! There will never be free riders since it is
 strictly better to donate than refrain when Jo believes that others will donate.
@@ -152,11 +164,11 @@ donate, not just indifferent about it, and even if they are pessimistic about
 the others. In other words, that donating is a dominant strategy. The mayor
 thinks for a while, and finally writes the following contract:
 
-> I promise to donate \\( D \\) utility if and only if every other resident also
-> signs this contract. Otherwise, I donate \\( 0 \\) and the mayor pays me \\( F
-> \\) utility.
+> I promise to donate $$ D $$ utility if and only if every other resident also
+> signs this contract. Otherwise, I donate $$ 0 $$ and the mayor pays me $$ F
+> $$ utility.
 
-Where \\( D \leq C/n \\) i.e. the garden is still constructed if just one
+Where $$ D \leq C/n $$ i.e. the garden is still constructed if just one
 resident decides not to sign.
 
 The mayor reflects on the contract, it does feel a little risky. If enough of
@@ -168,18 +180,24 @@ favor in the end.
 The mayor finds Jo and presents the new contract. Jo follows the same method of
 consideration from earlier, where the table below shows the new utility payoffs.
 
-| **Jo, others** | **others promise** | **others refrain** | | **promise** | \\(
-X - D, (n - 1) (X - D) \\) | \\( F, 0 \\) | | **refrain** | \\( 0 , 0 \\) | \\(
-0, 0 \\) |
+$$
+\begin{array}{c|c|c}
+  \textbf{Jo}, \textbf{others} & \textbf{others promise} & \textbf{others refrain} \\
+  \hline
+  \textbf{Jo promises} & X - D , (n - 1) (X - D) & F , 0 \\
+  \hline
+  \textbf{Jo refrains} & 0, 0 & 0 , 0
+\end{array}
+$$
 
 Jo considers the new circumstances, and explains his updated belief-dependent
 desicions:
 
 1. Suppose that Jo believes that every other resident will promise. Then Jo
-   decides to donate since \\( X - D > 0 \\) i.e. Jo prefers to donate and then
+   decides to donate since $$ X - D > 0 $$ i.e. Jo prefers to donate and then
    enjoy the garden over getting nothing.
 2. Suppose that Jo believes that every other resident will refrain. Then Jo
-   decides to donate since \\( F > 0 \\) i.e. Jo opts in to be paid by the mayor
+   decides to donate since $$ F > 0 $$ i.e. Jo opts in to be paid by the mayor
    since the garden isn't going to be constructed anyway.
 
 "Aha!" the mayor exclaims. Jo concedes that this proposed contract, no matter
@@ -187,7 +205,7 @@ their beliefs, yields a situation where Jo is always incentivized to sign. Since
 every other resident will also follow this logic, this implies that every
 resident will sign! And so the garden is garunteed to be fully funded.
 
-Even though the mayor had to include a clause about paying \\( F \\) to signers
+Even though the mayor had to include a clause about paying $$ F $$ to signers
 when there aren't enough signers, the mayor can expect this situation never to
 arise as long as the residents of Perindale are true to their perfect
 rationality.
@@ -198,7 +216,7 @@ TODO: generalized definition and justification
 
 ## Complications
 
-All about deciding the optimal value of \\( F \\).
+All about deciding the optimal value of $$ F $$.
 
 ### Buffering
 
@@ -279,8 +297,15 @@ following story:
 For each scenario, the sentences (in years) are arranged below. The entry "x, y"
 represents that prisoner A gets a sentnce
 
-| **A , B** | **cooperate** | **defect** | | **cooperate** | 2 , 2 | 5 , 1 | |
-**defect** | 1 , 5 | 4 , 4 |
+$$
+\begin{array}{c|c|c}
+  \textbf{A}, \textbf{B} & \textbf{cooperate} & \textbf{defect} \\
+  \hline
+  \textbf{cooperate} & 2 , 2 & 5 , 1 \\
+  \hline
+  \textbf{defect} & 1 , 5 & 4 , 4
+\end{array}
+$$
 
 The prisoners have no opportunity to communicate before making their desicions,
 since they are in separate cells. From the table above, it is clear that the

@@ -10,5 +10,6 @@
   "using_cache": true,
   "fetch_timeout": 5000,
   "using_batched_posts": true,
-  "batched_posts_batch_size": 10
+  "batched_posts_batch_size": 10,
+  "ignored_assets_regexps": ["\\.DS_Store"]
 }

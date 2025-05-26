@@ -4,7 +4,7 @@ tags:
   - academics
   - economics
 abstract:
-  Over the last 18 years, student loan debt has increased 28% -- from $0.49
+  Over the last 18 years, student loan debt has increased 28% –– from $0.49
   trillion (not 2021-inflation adjusted as $0.33 trillion) in 2003 to $1.75
   trillion in 2021. And there are increases of similar magnitudes of the number
   of students taking on debt. There have been many popular calls for the

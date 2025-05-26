@@ -33,6 +33,10 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 
+const ignored_assets_regexes = config.ignored_assets_regexps.map(
+  (s) => new RegExp(s),
+);
+
 export const constructWebsite: Effect.T<{ website: Website }> =
   (input) => async (ctx) => {
     const website = input.website;
@@ -47,10 +51,13 @@ export const constructWebsite: Effect.T<{ website: Website }> =
           catch: (e) => async (ctx) => await Effect.tell(e.toString())(ctx),
         },
         (input) => async (ctx) => {
-          if (input.filepath === ".DS_Store") return;
+          if (
+            ignored_assets_regexes.some((regex) => regex.test(input.filepath))
+          )
+            return;
 
           if (input.filepath.endsWith(".md")) {
-            const resource = await constructMarkdown({
+            const resource = await constructPost({
               filepath: input.filepath,
             })(ctx);
             await addResource({ website, resource })(ctx);
@@ -131,7 +138,9 @@ const constructIndex: Effect.T<{ posts: HtmlResource[] }, HtmlResource> =
         >
           <div class="previews">
             {input.posts.map((post) => (
-              <PostPreview ctx={ctx} post={post} />
+              <div class="item">
+                <PostPreview ctx={ctx} post={post} />
+              </div>
             ))}
           </div>
         </TopComponent>,
@@ -165,7 +174,7 @@ const constructTags: Effect.T<{ posts: HtmlResource[] }, HtmlResource> =
             </>
           }
         >
-          <div class="Tags">
+          <div class="tags">
             {Array.from(tags).map((tag) => {
               const id = encodeURIComponent_id(tag);
               return (
@@ -177,7 +186,9 @@ const constructTags: Effect.T<{ posts: HtmlResource[] }, HtmlResource> =
                     !post.metadata.tags?.includes(tag) ? (
                       <></>
                     ) : (
-                      <PostPreview ctx={ctx} post={post} />
+                      <div class="item">
+                        <PostPreview ctx={ctx} post={post} />
+                      </div>
                     ),
                   )}
                 </>
@@ -221,8 +232,9 @@ const constructAbout: Effect.T<{}, HtmlResource> = Effect.run(
   },
 );
 
-const constructMarkdown: Effect.T<{ filepath: string }, HtmlResource> =
-  Effect.run({ label: "constructMarkdown" }, (input) => async (ctx) => {
+const constructPost: Effect.T<{ filepath: string }, HtmlResource> = Effect.run(
+  { label: "constructPost" },
+  (input) => async (ctx) => {
     const content_raw = await Effect.inputFile_text({
       filepath_relative: input.filepath,
     })(ctx);
@@ -262,7 +274,7 @@ const constructMarkdown: Effect.T<{ filepath: string }, HtmlResource> =
         .use(remarkDirective)
         // .use(remarkCustomDirectives, { ctx })
         .use(remarkGfm)
-        .use(remarkMath)
+        .use(remarkMath, { singleDollarTextMath: false })
         .use(remarkReferences, { ctx, metadataRef, referencesRef })
         .use(remarkTableOfContents, { ctx, metadataRef })
         .use(remarkRehype)
@@ -289,7 +301,9 @@ const constructMarkdown: Effect.T<{ filepath: string }, HtmlResource> =
             </>
           }
         >
-          <article>{content as "safe"}</article>
+          {/* NOTE: I turned off <article> since webkit makes the headings a different font-size */}
+          {/* <article>{content as "safe"}</article> */}
+          <div class="content">{content as "safe"}</div>
         </TopComponent>,
       ),
     };
@@ -305,4 +319,5 @@ const constructMarkdown: Effect.T<{ filepath: string }, HtmlResource> =
     }
 
     return post;
-  });
+  },
+);

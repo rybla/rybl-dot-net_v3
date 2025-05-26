@@ -1,4 +1,10 @@
-article {
-    backdrop-filter: var(--panel--backdrop-filter);
-    background: color-mix(in hsl, white, transparent 80%);
+main {
+    .content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+
+        background: var(--panel--background);
+        backdrop-filter: var(--panel--backdrop-filter);
+    }
 }

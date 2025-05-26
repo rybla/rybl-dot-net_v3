@@ -12,10 +12,6 @@ html {
     }
 }
 
-code {
-    font-family: Iosevka, monospace;
-}
-
 body {
     margin: 0;
     padding: 0;
@@ -27,7 +23,7 @@ body {
     color: var(--body--foreground);
 
     font-family: Spectral, serif;
-    font-size: 16pt;
+    font-size: 14pt;
     line-height: 1.5em;
 }
 
@@ -39,6 +35,10 @@ main {
 
     margin: auto;
     max-width: calc(min(var(--main--width), 100vw));
+}
+
+code {
+    font-family: Iosevka, monospace;
 }
 
 *:target {

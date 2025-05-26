@@ -22,12 +22,12 @@ export default function PostPreview(props: {
   return (
     <div class="PostPreview">
       {ifDefined(props.post.name, <></>, (name) => (
-        <div class="name">
-          <h2>
+        <div class="name section-header">
+          <h1>
             <a href={props.post.route} class="no_background" safe>
               {name}
             </a>
-          </h2>
+          </h1>
         </div>
       ))}
       {ifDefined(props.post.metadata.pubDate, <></>, (pubDate) => (
@@ -57,7 +57,7 @@ export default function PostPreview(props: {
                   .use(remarkDirective)
                   // .use(remarkCustomDirectives, { ctx: props.ctx })
                   .use(remarkGfm)
-                  .use(remarkMath)
+                  .use(remarkMath, { singleDollarTextMath: false })
                   .use(remarkReferences, {
                     ctx: props.ctx,
                     metadataRef: Ref<ResourceMetadata>({

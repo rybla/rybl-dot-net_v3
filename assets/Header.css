@@ -3,20 +3,27 @@ header {
 
     margin: auto;
     width: calc(min(var(--main--width), 100vw));
-    /* width: 100vw; */
-
-    /*
-    TODO:
-        - children of header to stretch horizontally
-            - &>.logo should center its contents horizontally
-        - children of &>.name stretch vertically
-    */
 
     display: flex;
     flex-direction: column;
     gap: 0.2em;
     align-items: stretch;
     justify-content: stretch;
+
+    filter: invert(100%);
+
+    a {
+        /* color: white; */
+        color: black;
+        background: none;
+        box-shadow: none;
+
+        &:hover {
+            background: none;
+            /* box-shadow: 0 -0.1em 0 0 white inset; */
+            box-shadow: 0 -0.1em 0 0 black inset;
+        }
+    }
 
     & > .logo {
         display: flex;
@@ -27,6 +34,8 @@ header {
         & > img {
             width: 1.8em;
             height: 1.8em;
+
+            /* filter: invert(1); */
         }
     }
 
@@ -37,7 +46,6 @@ header {
         /* justify-content: center; */
         /* gap: 0.5em; */
         min-height: 2em;
-
         font-size: 1em;
 
         & > .website_name {
@@ -49,11 +57,17 @@ header {
             flex-direction: column;
             align-items: flex-end;
             justify-content: center;
+
+            & > a {
+                /* color: white; */
+                color: black;
+            }
         }
 
         & > .separator {
             flex: 0 0 0.1em;
             /* width: 0.1em; */
+            /* background: white; */
             background: black;
         }
 
@@ -66,6 +80,9 @@ header {
             flex-direction: column;
             align-items: flex-start;
             justify-content: center;
+
+            /* color: white; */
+            color: black;
         }
     }
 
@@ -80,6 +97,9 @@ header {
         & > a {
             /* this is needed since there's no text in the row */
             padding-bottom: 0.2em;
+
+            /* color: white; */
+            color: black;
         }
     }
 }

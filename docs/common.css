@@ -37,7 +37,9 @@
         transparent 90%
     );
 
-    --panel--backdrop-filter: blur(3px);
+    /* --panel--background: color-mix(in hsl, white, transparent 60%); */
+    --panel--background: transparent;
+    --panel--backdrop-filter: invert(80%) blur(5px);
 }
 
 @font-face {

@@ -9,7 +9,7 @@ export default function Header(props: { resource_name: string }) {
       </div>
       <div class="name">
         <div class="website_name">
-          <a class="no_background" href="/" safe>
+          <a href="/" safe>
             {config.website_name}
           </a>
         </div>
@@ -19,16 +19,16 @@ export default function Header(props: { resource_name: string }) {
         </div>
       </div>
       <div class="menu">
-        <a href="index.html" class="item no_background">
+        <a href="index.html" class="item">
           <Icon.Library />
         </a>
-        <a href="Tags.html" class="item no_background">
+        <a href="Tags.html" class="item">
           <Icon.Tag />
         </a>
-        <a href="About.html" class="item no_background">
+        <a href="About.html" class="item">
           <Icon.Info />
         </a>
-        <a href="https://github.com/rybla/" class="item no_background">
+        <a href="https://github.com/rybla/" class="item">
           <Icon.GitHub />
         </a>
       </div>

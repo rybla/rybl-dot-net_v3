@@ -2,8 +2,8 @@
     /* --raindrop_slowness: 50; */
     --raindrop_slowness: 10;
 
-    --raindrop_container--background-color--top: hsl(224deg, 17%, 50%);
-    --raindrop_container--background-color--bottom: hsl(224deg, 17%, 30%);
+    --raindrop_container--background-color--top: hsl(224deg, 17%, 20%);
+    --raindrop_container--background-color--bottom: hsl(224deg, 17%, 0%);
 }
 
 #raindrop_container {
